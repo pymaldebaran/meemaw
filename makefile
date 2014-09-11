@@ -1,16 +1,9 @@
 CXX=clang++
 FLAGS=-std=c++03 -Wall
-all:
 
 clean:
 	@echo === cleaning...
 	rm -fr build/*
-
-test:
-	@echo === compiling tests...
-	$(CXX) $(FLAGS) test/test.cpp -o bin/test -Iinclude/
-	@echo === running tests...
-	bin/test
 
 format:
 	@echo === formating files...
@@ -19,5 +12,15 @@ format:
 lint:
 	@echo === checking quality of files...
 	cppcheck test/test.cpp
+
+test:
+	@echo === compiling tests...
+	$(CXX) $(FLAGS) test/test.cpp -o bin/test -Iinclude/
+
+runtest: test
+	@echo === running tests...
+	bin/test --success
+
+all: clean format lint test runtest
 
 .PHONY: all clean test
