@@ -1,6 +1,8 @@
 CXX=clang++
 FLAGS=-std=c++11 -Wall
 
+all: test
+
 clean:
 	@echo === cleaning...
 	rm -fr build/*
@@ -13,14 +15,20 @@ lint:
 	@echo === checking quality of files...
 	cppcheck test/test.cpp
 
-test:
+test: parser.o lexer.o
 	@echo === compiling tests...
-	$(CXX) $(FLAGS) test/test.cpp -o bin/test -Iinclude/
+	$(CXX) $(FLAGS) test/test.cpp -o bin/test -Iinclude/ build/parser.o build/lexer.o
+
+parser.o: src/parser.cpp
+	@echo === compiling parser
+	$(CXX) $(FLAGS) -c src/parser.cpp -o build/parser.o -Iinclude/
+
+lexer.o: src/lexer.cpp
+	@echo === compiling lexer
+	$(CXX) $(FLAGS) -c src/lexer.cpp -o build/lexer.o -Iinclude/
 
 runtest: test
 	@echo === running tests...
 	bin/test --success
 
-all: clean format lint test runtest
-
-.PHONY: all clean test
+.PHONY: clean test runtest
