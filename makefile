@@ -1,5 +1,5 @@
 CXX=clang++
-FLAGS=-std=c++03 -Wall
+FLAGS=-std=c++11 -Wall
 
 clean:
 	@echo === cleaning...
