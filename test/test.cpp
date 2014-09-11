@@ -14,7 +14,7 @@ private:
 public:
     // Constructor
     explicit Lexer(std::istream& strm)
-    : stream(strm) {}
+    : stream(strm), floatValue(0.0) {}
 
     // floatValue getter
     float getFloatValue()
@@ -25,7 +25,8 @@ public:
 
     // Reads another token from the lexer and updates CurTok with its results
     int getNextToken() {
-        return 0;
+        floatValue = 1.0;
+        return TOK_FLOAT;
     }
 };
 
