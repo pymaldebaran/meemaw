@@ -9,12 +9,14 @@ const int TOK_FLOAT = -1;
 // Lexer for the MeeMaw language
 class Lexer {
 private:
-    std::istream& stream; // input stream to parse
-    float floatValue; // Filled in if curTok == TOK_FLOAT
+    std::istream& stream;   // input stream to parse
+    float floatValue;       // Filled in if curTok == TOK_FLOAT
 public:
     // Constructor
     explicit Lexer(std::istream& strm)
-    : stream(strm), floatValue(0.0) {}
+        : stream(strm), floatValue(0.0)
+    {
+    }
 
     // floatValue getter
     float getFloatValue()
@@ -24,7 +26,8 @@ public:
     }
 
     // Reads another token from the lexer and updates CurTok with its results
-    int getNextToken() {
+    int getNextToken()
+    {
         floatValue = 1.0;
         return TOK_FLOAT;
     }
