@@ -3,6 +3,7 @@
 #include "catch.hpp"
 
 #include <chrono>
+#include <string>
 
 // The lexer returns tokens [0-255] if it is an unknown character, otherwise
 // one of these for known things.
@@ -78,6 +79,35 @@ int Lexer::getNextToken()
 }
 
 
+// Base class for all expression nodes.
+class ExprAST {
+public:
+    // Gets a textual representation of the node
+    virtual std::string dump() = 0;
+};
+
+
+// Parser for the MeeMaw language.
+// Generate the Abstract Syntax Tree for each token parsed.
+class Parser {
+private:
+    Lexer& lexer;
+public:
+    explicit Parser(Lexer& lexer);
+
+    // Parse float literals
+    // numberexpr ::= number
+    ExprAST* parseFloat();
+};
+
+Parser::Parser(Lexer& lex) :
+    lexer(lex)
+{}
+
+ExprAST* Parser::parseFloat() {
+    return nullptr;
+}
+
 // TESTS /////////////////////////////////////
 //maximum difference between 2 floats to be considered equal
 const float F_EPSILON = std::numeric_limits<float>::min() * 10.0;
@@ -134,4 +164,17 @@ TEST_CASE("Lexer categorise float"){
 
         REQUIRE(tokId == static_cast<int>(c));
     }
+}
+
+TEST_CASE("Parser generate AST for float"){
+    std::stringstream test;         // stream to parse by lexer
+    Lexer lex = Lexer(test);        // the lexer
+    Parser parser = Parser(lex);    // the parser
+
+    test << "1.0";
+
+    ExprAST* ast = parser.parseFloat();
+
+    REQUIRE(ast != nullptr);
+    REQUIRE(ast->dump() == "FloatExprAST(value=1.0)");
 }
