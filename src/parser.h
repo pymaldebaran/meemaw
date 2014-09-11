@@ -21,9 +21,9 @@ private:
 public:
     explicit Parser(Lexer& lexer);
 
-    // Parse float literals
-    // numberexpr ::= number
-    ExprAST* parseFloat();
+    // Parse top level expression
+    // top ::= expression
+    ExprAST* parseTopLevelExpr();
 };
 
 #endif // PARSER_H

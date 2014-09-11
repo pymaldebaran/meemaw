@@ -6,6 +6,6 @@ Parser::Parser(Lexer& lex) :
     lexer(lex)
 {}
 
-ExprAST* Parser::parseFloat() {
+ExprAST* Parser::parseTopLevelExpr() {
     return nullptr;
 }

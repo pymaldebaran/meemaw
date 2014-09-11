@@ -73,7 +73,7 @@ TEST_CASE("Parser generate AST for float"){
 
     test << "1.0";
 
-    ExprAST* ast = parser.parseFloat();
+    ExprAST* ast = parser.parseTopLevelExpr();
 
     REQUIRE(ast != nullptr);
     REQUIRE(ast->dump() == "FloatExprAST(value=1.0)");
