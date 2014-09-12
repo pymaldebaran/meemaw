@@ -2,6 +2,7 @@
 #define PARSER_H
 
 #include <string>
+#include <vector>
 
 class Lexer;
 
@@ -11,6 +12,8 @@ class Lexer;
 enum class AstType {
     NONE = 0, //should never happen, only the base class use it
     FLOAT_LITTERAL = 1,
+    PROTOTYPE = 2,
+    FUNCTION = 3,
 };
 
 // Base class for all expression nodes.
@@ -39,6 +42,36 @@ public:
     float getValue();
 };
 
+class ProtoTypeAST : public ExprAST {
+private:
+    std::string name; // name of the function
+    std::vector<std::string> args; // arguments name of the function
+public:
+    // Constructor
+    explicit ProtoTypeAST();
+
+    // name getter
+    std::string getName();
+
+    // args getter
+    std::vector<std::string> getArgs();
+};
+
+class FunctionAST : public ExprAST {
+private:
+    ProtoTypeAST* prototype; // prototype of the function
+    ExprAST* body; // body of the function
+public:
+    // constructor
+    explicit FunctionAST();
+
+    // prototype getter
+    ProtoTypeAST* getPrototype();
+
+    // body getter
+    ExprAST* getBody();
+};
+
 
 // Parser for the MeeMaw language.
 // Generate the Abstract Syntax Tree for each token parsed.
@@ -49,8 +82,12 @@ public:
     explicit Parser(Lexer& lexer);
 
     // Parse top level expression
-    // top ::= expression
+    // top ::= floatlitexp
     ExprAST* parseTopLevelExpr();
+
+    // Parse float litteral expression
+    // floatlitexp ::= float
+    FloatExpAST* parseFloatLitteral();
 };
 
 #endif // PARSER_H

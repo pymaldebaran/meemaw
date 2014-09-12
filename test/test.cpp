@@ -67,15 +67,43 @@ TEST_CASE("Lexer categorise float"){
 }
 
 TEST_CASE("Parser generate AST for float"){
-    std::stringstream test;         // stream to parse by lexer
-    Lexer lex = Lexer(test);        // the lexer
-    Parser parser = Parser(lex);    // the parser
+    SECTION("Parsing a float expression generate a float expression AST node"){
+        std::stringstream test;         // stream to parse by lexer
+        Lexer lex = Lexer(test);        // the lexer
+        Parser parser = Parser(lex);    // the parser
 
-    test << "1.0";
+        test << "1.0";
 
-    ExprAST* ast = parser.parseTopLevelExpr();
+        FloatExpAST* ast = parser.parseFloatLitteral();
 
-    REQUIRE(ast != nullptr);
-    REQUIRE(ast->getAstType() == AstType::FLOAT_LITTERAL);
-    REQUIRE(static_cast<FloatExpAST*>(ast)->getValue() == 1.0);
+        REQUIRE(ast != nullptr);
+        REQUIRE(ast->getAstType() == AstType::FLOAT_LITTERAL);
+        REQUIRE(ast->getValue() == 1.0);
+    }
+
+    SECTION("Parser recognise float expression as a top level expression"){
+        std::stringstream test;         // stream to parse by lexer
+        Lexer lex = Lexer(test);        // the lexer
+        Parser parser = Parser(lex);    // the parser
+
+        test << "1.0";
+
+        ExprAST* ast = parser.parseTopLevelExpr();
+
+        REQUIRE(ast != nullptr);
+        REQUIRE(ast->getAstType() == AstType::FUNCTION);
+
+        FunctionAST* funcAst = static_cast<FunctionAST*>(ast);
+
+        REQUIRE(funcAst->getPrototype() != nullptr);
+        REQUIRE(funcAst->getPrototype()->getAstType() == AstType::PROTOTYPE);
+        ProtoTypeAST* protoAst = static_cast<ProtoTypeAST*>(funcAst->getPrototype());
+        REQUIRE(protoAst->getName() == "");
+        REQUIRE(protoAst->getArgs().empty());
+
+        REQUIRE(funcAst->getBody() != nullptr);
+        REQUIRE(funcAst->getBody()->getAstType() == AstType::FLOAT_LITTERAL);
+        FloatExpAST* bodyAst = static_cast<FloatExpAST*>(funcAst->getBody());
+        REQUIRE(bodyAst->getValue() == 1.0);
+    }
 }

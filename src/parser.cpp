@@ -26,6 +26,34 @@ float FloatExpAST::getValue() {
     return value;
 }
 
+ProtoTypeAST::ProtoTypeAST() :
+    ExprAST(AstType::PROTOTYPE)
+{}
+
+std::string ProtoTypeAST::getName() {
+    return name;
+}
+
+std::vector<std::string> ProtoTypeAST::getArgs() {
+    return args;
+}
+
+FunctionAST::FunctionAST() :
+    ExprAST(AstType::FUNCTION)
+{}
+
+ProtoTypeAST* FunctionAST::getPrototype() {
+    return prototype;
+}
+
+ExprAST* FunctionAST::getBody() {
+    return body;
+}
+
 ExprAST* Parser::parseTopLevelExpr() {
+    return nullptr;
+}
+
+FloatExpAST* Parser::parseFloatLitteral() {
     return nullptr;
 }
