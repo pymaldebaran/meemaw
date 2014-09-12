@@ -3,8 +3,7 @@
 #include <cstdlib>
 #include <stdexcept>
 
-int Lexer::gettok()
-{
+int Lexer::gettok() {
     lastChar = stream.get();
 
     // Float: [0-9.]+
@@ -35,11 +34,9 @@ Lexer::Lexer(std::istream& strm) :
     floatValue(0.0),
     currentToken(TOK_NONE),
     lastChar(' ')
-{
-}
+{}
 
-float Lexer::getFloatValue()
-{
+float Lexer::getFloatValue() const {
     if (currentToken != TOK_FLOAT) {
         char buffer[100];
         //TODO write a helper function to represent token const
@@ -49,7 +46,6 @@ float Lexer::getFloatValue()
     return floatValue;
 }
 
-int Lexer::getNextToken()
-{
+int Lexer::getNextToken() {
     return currentToken = gettok();
 }

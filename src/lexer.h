@@ -25,7 +25,7 @@ public:
     explicit Lexer(std::istream& strm);
 
     // floatValue getter
-    float getFloatValue();
+    float getFloatValue() const;
 
     // Reads another token from the lexer and updates CurTok with its results
     int getNextToken();

@@ -7,7 +7,7 @@
 class Lexer;
 
 // Specify ExprAST type without using RTTI.
-// This is only usefull for tesing purpose and should not be used in actual 
+// This is only usefull for tesing purpose and should not be used in actual
 // code.
 enum class AstType {
     NONE = 0, //should never happen, only the base class use it
@@ -19,7 +19,7 @@ enum class AstType {
 // Base class for all expression nodes.
 class ExprAST {
 private:
-    AstType astType; // used to determine type at runtime (tests only)
+    const AstType astType; // used to determine type at runtime (tests only)
 protected:
     // Constructor for member initialisation in derived classes
     explicit ExprAST(AstType ast);
@@ -28,48 +28,48 @@ public:
     explicit ExprAST();
 
     // astType getter
-    AstType getAstType();
+    const AstType getAstType() const;
 };
 
 class FloatExpAST : public ExprAST {
 private:
-    float value; // value of the float litteral
+    const float value; // value of the float litteral
 public:
     // Constructor
-    explicit FloatExpAST(float val);
+    explicit FloatExpAST(const float val);
 
     // value getter
-    float getValue();
+    const float getValue() const;
 };
 
 class ProtoTypeAST : public ExprAST {
 private:
-    std::string name; // name of the function
-    std::vector<std::string> args; // arguments name of the function
+    const std::string name;                 // name of the function
+    const std::vector<std::string> args;    // arguments name of the function
 public:
     // Constructor
-    explicit ProtoTypeAST(std::string theName, std::vector<std::string> theArgs);
+    explicit ProtoTypeAST(const std::string theName, const std::vector<std::string> theArgs);
 
     // name getter
-    std::string getName();
+    const std::string getName() const;
 
     // args getter
-    std::vector<std::string> getArgs();
+    const std::vector<std::string> getArgs() const;
 };
 
 class FunctionAST : public ExprAST {
 private:
-    ProtoTypeAST* prototype; // prototype of the function
-    ExprAST* body; // body of the function
+    ProtoTypeAST* prototype;    // prototype of the function
+    ExprAST* body;              // body of the function
 public:
     // constructor
     explicit FunctionAST(ProtoTypeAST* proto, ExprAST* theBody);
 
     // prototype getter
-    ProtoTypeAST* getPrototype();
+    ProtoTypeAST* getPrototype() const;
 
     // body getter
-    ExprAST* getBody();
+    ExprAST* getBody() const;
 };
 
 

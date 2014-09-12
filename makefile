@@ -9,7 +9,9 @@ clean:
 
 format:
 	@echo === formating files...
-	uncrustify -c uncrustify.cfg test/test.cpp --replace --no-backup
+	uncrustify -c uncrustify.cfg test/*.cpp --replace --no-backup
+	uncrustify -c uncrustify.cfg src/*.cpp --replace --no-backup
+	uncrustify -c uncrustify.cfg src/*.h --replace --no-backup
 
 lint:
 	@echo === checking quality of files...

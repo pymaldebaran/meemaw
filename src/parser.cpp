@@ -14,7 +14,7 @@ ExprAST::ExprAST() :
     astType(AstType::NONE)
 {}
 
-AstType ExprAST::getAstType() {
+const AstType ExprAST::getAstType() const {
     return astType;
 }
 
@@ -23,21 +23,21 @@ FloatExpAST::FloatExpAST(float val) :
     value(val)
 {}
 
-float FloatExpAST::getValue() {
+const float FloatExpAST::getValue() const {
     return value;
 }
 
-ProtoTypeAST::ProtoTypeAST(std::string theName, std::vector<std::string> theArgs) :
+ProtoTypeAST::ProtoTypeAST(const std::string theName, const std::vector<std::string> theArgs) :
     ExprAST(AstType::PROTOTYPE),
     name(theName),
     args(theArgs)
 {}
 
-std::string ProtoTypeAST::getName() {
+const std::string ProtoTypeAST::getName() const {
     return name;
 }
 
-std::vector<std::string> ProtoTypeAST::getArgs() {
+const std::vector<std::string> ProtoTypeAST::getArgs() const {
     return args;
 }
 
@@ -47,16 +47,16 @@ FunctionAST::FunctionAST(ProtoTypeAST* proto, ExprAST* theBody) :
     body(theBody)
 {}
 
-ProtoTypeAST* FunctionAST::getPrototype() {
+ProtoTypeAST* FunctionAST::getPrototype() const {
     return prototype;
 }
 
-ExprAST* FunctionAST::getBody() {
+ExprAST* FunctionAST::getBody() const {
     return body;
 }
 
 ExprAST* Parser::parseTopLevelExpr() {
-    if (ExprAST* expr = parseFloatLitteralExpr()) {
+    if (ExprAST * expr = parseFloatLitteralExpr()) {
         // Make an anonymous proto.
         ProtoTypeAST* proto = new ProtoTypeAST("", std::vector<std::string>());
         return new FunctionAST(proto, expr);
@@ -67,6 +67,7 @@ ExprAST* Parser::parseTopLevelExpr() {
 
 FloatExpAST* Parser::parseFloatLitteralExpr() {
     FloatExpAST* result = new FloatExpAST(lexer.getFloatValue());
+
     lexer.getNextToken(); // consume the float
     return result;
 }
