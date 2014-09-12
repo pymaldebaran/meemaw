@@ -5,7 +5,7 @@ all: test
 
 clean:
 	@echo === cleaning...
-	rm -fr build/*
+	rm -fr build/* bin/*
 
 format:
 	@echo === formating files...
@@ -19,7 +19,7 @@ lint:
 
 test: parser.o lexer.o
 	@echo === compiling tests...
-	$(CXX) $(FLAGS) test/test.cpp -o bin/test -Iinclude/ build/parser.o build/lexer.o
+	$(CXX) $(FLAGS) test/test.cpp -o bin/test -Iinclude/ build/parser.o build/lexer.o `llvm-config --cppflags --ldflags --libs core engine`
 
 parser.o: src/parser.cpp
 	@echo === compiling parser

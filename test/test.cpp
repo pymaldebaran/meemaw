@@ -2,11 +2,24 @@
 #define CATCH_CONFIG_MAIN
 #include "catch.hpp"
 
+#include "llvm/Support/TargetSelect.h"
+#include "llvm/ExecutionEngine/ExecutionEngine.h"
+#include "llvm/ExecutionEngine/GenericValue.h"
+#include "llvm/IR/Value.h"
+#include "llvm/IR/LLVMContext.h"
+#include "llvm/IR/Module.h"
+
 #include <chrono>
 #include <string>
+#include <memory>
 
 #include "../src/lexer.h"
 #include "../src/parser.h"
+
+class CodeGenerator {
+public:
+    llvm::Value* codeGen(ExprAST* ast) { return nullptr; }
+};
 
 // TESTS /////////////////////////////////////
 //maximum difference between 2 floats to be considered equal
@@ -108,4 +121,38 @@ TEST_CASE("Parser generate AST for float") {
         FloatExpAST* bodyAst = static_cast<FloatExpAST*>(funcAst->getBody());
         REQUIRE(bodyAst->getValue() == 1.0);
     }
+}
+
+TEST_CASE("Code generated for float expression is correct") {
+    std::stringstream test;         // stream to parse by lexer
+    Lexer lex = Lexer(test);        // the lexer
+    Parser parser = Parser(lex);    // the parser
+    CodeGenerator gen = CodeGenerator(); // the code generator
+
+    // LLVM stuff
+    // TODO: put all this in a class... but witch one
+    llvm::InitializeNativeTarget();
+    llvm::LLVMContext& context = llvm::getGlobalContext();
+
+    // Make the module, which holds all the code.
+    std::unique_ptr<llvm::Module> owner = std::unique_ptr<llvm::Module>(new llvm::Module("Test module", context));
+    llvm::Module* module = owner.get();
+
+    // create a JIT Engine (This takes ownership of the module).
+    llvm::ExecutionEngine* execEngine = llvm::EngineBuilder(module).setEngineKind(llvm::EngineKind::JIT).create();
+
+    test << "1.0";
+
+    lex.getNextToken();
+    ExprAST* ast = parser.parseTopLevelExpr();
+    llvm::Value* code = gen.codeGen(ast);
+
+    REQUIRE(code != nullptr);
+    //TODO add some test about the module content
+
+    llvm::Function* funcCode = static_cast<llvm::Function*>(code);
+    const std::vector<llvm::GenericValue> noArgs = std::vector<llvm::GenericValue>();
+
+    float result = execEngine->runFunction(funcCode, noArgs).FloatVal;
+    REQUIRE(result == 1.0);
 }
