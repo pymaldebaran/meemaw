@@ -7,6 +7,7 @@
 // one of these for known things.
 const int TOK_FLOAT = -1;
 const int TOK_EOF   = -2;
+const int TOK_NONE  = -255;
 
 // Lexer for the MeeMaw language
 class Lexer {

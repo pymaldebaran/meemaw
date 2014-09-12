@@ -36,7 +36,7 @@ private:
     float value; // value of the float litteral
 public:
     // Constructor
-    explicit FloatExpAST();
+    explicit FloatExpAST(float val);
 
     // value getter
     float getValue();

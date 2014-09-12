@@ -18,8 +18,9 @@ AstType ExprAST::getAstType() {
     return astType;
 }
 
-FloatExpAST::FloatExpAST() :
-    ExprAST(AstType::FLOAT_LITTERAL)
+FloatExpAST::FloatExpAST(float val) :
+    ExprAST(AstType::FLOAT_LITTERAL),
+    value(val)
 {}
 
 float FloatExpAST::getValue() {
@@ -55,5 +56,7 @@ ExprAST* Parser::parseTopLevelExpr() {
 }
 
 FloatExpAST* Parser::parseFloatLitteralExpr() {
-    return nullptr;
+    FloatExpAST* result = new FloatExpAST(lexer.getFloatValue());
+    lexer.getNextToken(); // consume the float
+    return result;
 }

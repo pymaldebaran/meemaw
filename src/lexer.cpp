@@ -1,5 +1,8 @@
 #include "lexer.h"
 
+#include <cstdlib>
+#include <stdexcept>
+
 int Lexer::gettok()
 {
     lastChar = stream.get();
@@ -30,14 +33,19 @@ int Lexer::gettok()
 Lexer::Lexer(std::istream& strm) :
     stream(strm),
     floatValue(0.0),
-    currentToken(0),
+    currentToken(TOK_NONE),
     lastChar(' ')
 {
 }
 
 float Lexer::getFloatValue()
 {
-    //TODO check if currentToken == TOK_FLOAT
+    if (currentToken != TOK_FLOAT) {
+        char buffer[100];
+        //TODO write a helper function to represent token const
+        snprintf(buffer, 100, "Lexer error: accessing float value but current token is %d not TOK_FLOAT(%d).\n", currentToken, TOK_FLOAT);
+        throw std::logic_error(buffer);
+    }
     return floatValue;
 }
 

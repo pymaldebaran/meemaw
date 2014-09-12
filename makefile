@@ -29,6 +29,6 @@ lexer.o: src/lexer.cpp
 
 runtest: test
 	@echo === running tests...
-	bin/test --success
+	bin/test
 
 .PHONY: clean test runtest

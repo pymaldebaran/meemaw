@@ -74,6 +74,7 @@ TEST_CASE("Parser generate AST for float"){
 
         test << "1.0";
 
+        lex.getNextToken();
         FloatExpAST* ast = parser.parseFloatLitteralExpr();
 
         REQUIRE(ast != nullptr);
@@ -88,6 +89,7 @@ TEST_CASE("Parser generate AST for float"){
 
         test << "1.0";
 
+        lex.getNextToken();
         ExprAST* ast = parser.parseTopLevelExpr();
 
         REQUIRE(ast != nullptr);
