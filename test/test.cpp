@@ -76,5 +76,6 @@ TEST_CASE("Parser generate AST for float"){
     ExprAST* ast = parser.parseTopLevelExpr();
 
     REQUIRE(ast != nullptr);
-    REQUIRE(ast->dump() == "FloatExprAST(value=1.0)");
+    REQUIRE(ast->getAstType() == AstType::FLOAT_LITTERAL);
+    REQUIRE(static_cast<FloatExpAST*>(ast)->getValue() == 1.0);
 }
