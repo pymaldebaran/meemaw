@@ -48,7 +48,7 @@ private:
     std::vector<std::string> args; // arguments name of the function
 public:
     // Constructor
-    explicit ProtoTypeAST();
+    explicit ProtoTypeAST(std::string theName, std::vector<std::string> theArgs);
 
     // name getter
     std::string getName();
@@ -63,7 +63,7 @@ private:
     ExprAST* body; // body of the function
 public:
     // constructor
-    explicit FunctionAST();
+    explicit FunctionAST(ProtoTypeAST* proto, ExprAST* theBody);
 
     // prototype getter
     ProtoTypeAST* getPrototype();
