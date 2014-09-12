@@ -87,7 +87,7 @@ public:
 
     // Parse float litteral expression
     // floatlitexp ::= float
-    FloatExpAST* parseFloatLitteral();
+    FloatExpAST* parseFloatLitteralExpr();
 };
 
 #endif // PARSER_H

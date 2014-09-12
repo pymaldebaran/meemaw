@@ -54,6 +54,6 @@ ExprAST* Parser::parseTopLevelExpr() {
     return nullptr;
 }
 
-FloatExpAST* Parser::parseFloatLitteral() {
+FloatExpAST* Parser::parseFloatLitteralExpr() {
     return nullptr;
 }
