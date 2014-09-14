@@ -1,0 +1,1286 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"bas",
+				"basicBlk"
+			],
+			[
+				"veri",
+				"verifyError"
+			],
+			[
+				"ret",
+				"returnValue"
+			],
+			[
+				"code",
+				"codeGenerator"
+			],
+			[
+				"pro",
+				"prototype"
+			],
+			[
+				"codegen",
+				"codeGenerator"
+			],
+			[
+				"Func",
+				"function"
+			],
+			[
+				"prototype",
+				"prototype"
+			],
+			[
+				"Code",
+				"CodeGenerator"
+			],
+			[
+				"si",
+				"size"
+			],
+			[
+				"arg",
+				"args"
+			],
+			[
+				"TEST",
+				"TEST_CASE"
+			],
+			[
+				"th",
+				"theBody"
+			],
+			[
+				"proto",
+				"prototype"
+			],
+			[
+				"get",
+				"getNextToken"
+			],
+			[
+				"str",
+				"string"
+			],
+			[
+				"ast",
+				"ast"
+			],
+			[
+				"run",
+				"runtest"
+			],
+			[
+				"last",
+				"lastChar"
+			],
+			[
+				"flo",
+				"floatValue"
+			],
+			[
+				"float",
+				"float"
+			],
+			[
+				"inc",
+				"include"
+			],
+			[
+				"floa",
+				"float"
+			],
+			[
+				"is",
+				"istream"
+			],
+			[
+				"tok",
+				"tok_float"
+			],
+			[
+				"param",
+				"parameters	(local, instance)"
+			],
+			[
+				"pa",
+				"parameters	statement"
+			],
+			[
+				"file",
+				"file	(builtin, class)"
+			],
+			[
+				"S",
+				"SHARPNESS_DEFAULT	statement"
+			],
+			[
+				"HE",
+				"HEIGHT_DEFAULT	(global, instance)"
+			],
+			[
+				"DEFAULT",
+				"WIDTH_DEFAULT"
+			],
+			[
+				"end",
+				"endblock"
+			],
+			[
+				"met",
+				"method"
+			],
+			[
+				"fla",
+				"flask	import"
+			],
+			[
+				"de",
+				"default	statement"
+			],
+			[
+				"validate",
+				"validate()	(attribute, function)"
+			],
+			[
+				"fl",
+				"flask	import"
+			],
+			[
+				"print",
+				"print	(builtin, function)"
+			],
+			[
+				"IMG_",
+				"IMG_AWB	(global, instance)"
+			],
+			[
+				"IMG",
+				"IMG_HEIGHT"
+			],
+			[
+				"play",
+				"play_world"
+			],
+			[
+				"to",
+				"to_location"
+			],
+			[
+				"pie",
+				"piece	(local, instance)"
+			],
+			[
+				"PIECE_",
+				"PIECE_PAWN"
+			],
+			[
+				"PIE",
+				"PIECE_HEN"
+			],
+			[
+				"piece",
+				"piece"
+			],
+			[
+				"M",
+				"MAXIMAL_Y"
+			],
+			[
+				"PIECE",
+				"PIECE_HEN"
+			],
+			[
+				"pla",
+				"place_piece"
+			],
+			[
+				"remove",
+				"remove_piece"
+			],
+			[
+				"def",
+				"def	Function"
+			],
+			[
+				"rem",
+				"remove_piece"
+			],
+			[
+				"ba",
+				"board"
+			],
+			[
+				"class",
+				"classmethod	(builtin, class)"
+			],
+			[
+				"P",
+				"PLAYER_1	(imported, instance)"
+			],
+			[
+				"asser",
+				"assert_equal	(imported, instance)"
+			],
+			[
+				"PLAYER",
+				"PLAYER_1"
+			],
+			[
+				"PI",
+				"PIECE_PAWN	(global, instance)"
+			],
+			[
+				"else",
+				"else"
+			],
+			[
+				"PL",
+				"PLAYER_1	(global, instance)"
+			],
+			[
+				"PLAYER_",
+				"PLAYER_2"
+			],
+			[
+				"TES",
+				"TEST_PIECE_TO_DROP	(local, instance)"
+			],
+			[
+				"TEST_PL",
+				"TEST_PLAYER_FOR_DROP"
+			],
+			[
+				"TEST_P",
+				"TEST_PIECE_TO_DROP"
+			],
+			[
+				"PLA",
+				"PLAYER_1"
+			],
+			[
+				"TestD",
+				"TestDobutsuShogiGame"
+			],
+			[
+				"dobutsushogigame",
+				"dobutsushogigame"
+			],
+			[
+				"DobutsuShogi",
+				"DobutsuShogiGame"
+			],
+			[
+				"TEST_",
+				"TEST_LOCATION"
+			],
+			[
+				"lo",
+				"location"
+			],
+			[
+				"Shogi",
+				"ShogiGame"
+			],
+			[
+				"Test",
+				"TestShogiGame"
+			],
+			[
+				"Sho",
+				"ShogiGame"
+			],
+			[
+				"pi",
+				"PIECE_NONE"
+			],
+			[
+				"Pi",
+				"PIECE_NONE"
+			],
+			[
+				"Sh",
+				"ShogiGame"
+			],
+			[
+				"NON",
+				"PIECE_NONE"
+			],
+			[
+				"BOAR",
+				"BOARD_MINIMAL_X"
+			],
+			[
+				"BOA",
+				"BOARD_MAXIMAL_X"
+			],
+			[
+				"BO",
+				"BOARD_MAXIMAL_X"
+			]
+		]
+	},
+	"buffers":
+	[
+		{
+			"file": "src/parser.cpp",
+			"settings":
+			{
+				"buffer_size": 6924,
+				"line_ending": "Unix"
+			}
+		}
+	],
+	"build_system": "Packages/Makefile/Make.sublime-build",
+	"command_palette":
+	{
+		"height": 116.0,
+		"selected_items":
+		[
+			[
+				"git status",
+				"Git: Status"
+			],
+			[
+				"inst",
+				"Package Control: Install Package"
+			],
+			[
+				"err",
+				"SublimeLinter: Show All Errors"
+			],
+			[
+				"gdb",
+				"SublimeGDB: Stop Debugging"
+			],
+			[
+				"trai",
+				"Trailing Spaces: Delete Trailing Spaces"
+			],
+			[
+				"rebui",
+				"CTags: Rebuild Tags"
+			],
+			[
+				"rebuild",
+				"CTags: Rebuild Tags"
+			],
+			[
+				"ins",
+				"Package Control: Install Package"
+			],
+			[
+				"remo",
+				"Package Control: Remove Package"
+			],
+			[
+				"remove",
+				"Package Control: Remove Package"
+			],
+			[
+				"lint",
+				"SublimeLinter: Show All Errors"
+			],
+			[
+				"error",
+				"SublimeLinter: Show All Errors"
+			],
+			[
+				"all er",
+				"SublimeLinter: Show All Errors"
+			],
+			[
+				"erro",
+				"SublimeLinter: Show All Errors"
+			],
+			[
+				"in",
+				"Package Control: Install Package"
+			],
+			[
+				"insta",
+				"Package Control: Install Package"
+			],
+			[
+				"install",
+				"Package Control: Install Package"
+			],
+			[
+				"up",
+				"Convert Case: Upper Case"
+			],
+			[
+				"remov",
+				"Package Control: Remove Package"
+			],
+			[
+				"ena",
+				"Package Control: Enable Package"
+			],
+			[
+				"list",
+				"Package Control: List Packages"
+			],
+			[
+				"enab",
+				"Package Control: Enable Package"
+			],
+			[
+				"git sta",
+				"Git: Status"
+			],
+			[
+				"pack",
+				"Package Control: Upgrade Package"
+			],
+			[
+				"pac",
+				"Preferences: Package Control Settings – User"
+			],
+			[
+				"stx c++",
+				"Set Syntax: C/C++(11)"
+			],
+			[
+				"tra",
+				"Trailing Spaces: Delete Trailing Spaces"
+			],
+			[
+				"sets c++",
+				"Set Syntax: C/C++(11)"
+			],
+			[
+				"stx ini",
+				"Set Syntax: INI"
+			],
+			[
+				"tr",
+				"Trailing Spaces: Delete Trailing Spaces"
+			],
+			[
+				"upp",
+				"Convert Case: Upper Case"
+			],
+			[
+				"lowe",
+				"Convert Case: Lower Case"
+			],
+			[
+				"ini",
+				"Set Syntax: INI"
+			],
+			[
+				"c++",
+				"Set Syntax: C++"
+			],
+			[
+				"comme",
+				"Toggle Comment"
+			],
+			[
+				"stx todo",
+				"Set Syntax: ToDone"
+			],
+			[
+				"stx spe",
+				"Set Syntax: RPM Spec"
+			],
+			[
+				"lower",
+				"Convert Case: Lower Case"
+			],
+			[
+				"synt mar",
+				"Set Syntax: Markdown Extended"
+			],
+			[
+				"comm",
+				"Toggle Comment"
+			],
+			[
+				"low",
+				"Convert Case: Lower Case"
+			],
+			[
+				"upper",
+				"Convert Case: Upper Case"
+			],
+			[
+				"stx jin",
+				"Set Syntax: HTML (Jinja Templates)"
+			],
+			[
+				"Package Control: re",
+				"Package Control: Remove Package"
+			],
+			[
+				"tit",
+				"Convert Case: Title Case"
+			],
+			[
+				"Titl",
+				"Convert Case: Title Case"
+			],
+			[
+				"stx html j",
+				"Set Syntax: HTML (Jinja Templates)"
+			],
+			[
+				"stx html",
+				"Set Syntax: HTML (Jinja Templates)"
+			],
+			[
+				"stx ji",
+				"Set Syntax: Jinja Templates"
+			],
+			[
+				"open",
+				"View: Toggle Open Files in Side Bar"
+			],
+			[
+				"stx ht",
+				"Set Syntax: HTML"
+			],
+			[
+				"stx j",
+				"Set Syntax: Jinja Templates"
+			],
+			[
+				"spa",
+				"Trailing Spaces: Delete Trailing Spaces"
+			],
+			[
+				"stx htm",
+				"Set Syntax: HTML (Jinja Templates)"
+			],
+			[
+				"space",
+				"Indentation: Convert to Spaces"
+			],
+			[
+				"html",
+				"Set Syntax: HTML (Jinja Templates)"
+			],
+			[
+				"synt pyt",
+				"Set Syntax: Python"
+			],
+			[
+				"synt bas",
+				"Set Syntax: Shell Script (Bash)"
+			],
+			[
+				"synt js",
+				"Set Syntax: JSON"
+			],
+			[
+				"indent",
+				"Indentation: Convert to Spaces"
+			],
+			[
+				"commen",
+				"Toggle Comment"
+			],
+			[
+				"UP",
+				"Convert Case: Upper Case"
+			],
+			[
+				"LOW",
+				"Convert Case: Lower Case"
+			],
+			[
+				"UPP",
+				"Convert Case: Upper Case"
+			],
+			[
+				"syn todo",
+				"Set Syntax: ToDone"
+			],
+			[
+				"spac",
+				"Indentation: Convert to Spaces"
+			],
+			[
+				"Package Control: remove",
+				"Package Control: Remove Package"
+			],
+			[
+				"Package Control: ",
+				"Package Control: Remove Package"
+			],
+			[
+				"menu",
+				"View: Toggle Menu"
+			],
+			[
+				"syn mark",
+				"Set Syntax: Markdown Extended"
+			],
+			[
+				"syn ma",
+				"Set Syntax: Markdown Extended"
+			],
+			[
+				"syn mar",
+				"Set Syntax: Markdown Extended"
+			],
+			[
+				"previ",
+				"Markdown Preview: Python Markdown: Preview in Browser"
+			],
+			[
+				"prev",
+				"Markdown Preview: Python Markdown: Preview in Browser"
+			],
+			[
+				"pre",
+				"Markdown Preview: Python Markdown: Preview in Browser"
+			],
+			[
+				"preview",
+				"Markdown Preview: Python Markdown: Preview in Browser"
+			],
+			[
+				"pyth",
+				"Set Syntax: PythonImproved"
+			],
+			[
+				"restr",
+				"Set Syntax: Sublime reStructuredText"
+			],
+			[
+				"rest",
+				"Set Syntax: Sublime reStructuredText"
+			],
+			[
+				"tab",
+				"Indentation: Convert to Tabs"
+			],
+			[
+				"unfol",
+				"Code Folding: Unfold All"
+			],
+			[
+				"ss",
+				"Set Syntax: INI"
+			],
+			[
+				"sssh",
+				"Set Syntax: Shell Script (Bash)"
+			],
+			[
+				"ind",
+				"Indentation: Reindent Lines"
+			],
+			[
+				"git comm",
+				"Git: Commit"
+			],
+			[
+				"git stat",
+				"Git: Status"
+			],
+			[
+				"git add",
+				"Git: Add Current File"
+			],
+			[
+				"git lo",
+				"Git: Log Current File"
+			],
+			[
+				"Package Control: inst",
+				"Package Control: Install Package"
+			],
+			[
+				"Package Control: ins",
+				"Package Control: Install Package"
+			]
+		],
+		"width": 433.0
+	},
+	"console":
+	{
+		"height": 220.0,
+		"history":
+		[
+			"clear()",
+			"ls",
+			"import urllib.request,os; pf = 'Package Control.sublime-package'; ipp = sublime.installed_packages_path(); urllib.request.install_opener( urllib.request.build_opener( urllib.request.ProxyHandler()) ); open(os.path.join(ipp, pf), 'wb').write(urllib.request.urlopen( 'http://sublime.wbond.net/' + pf.replace(' ','%20')).read()) "
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"expanded_folders":
+	[
+		"/home/pym/Documents/programmation/meemaw",
+		"/home/pym/Documents/programmation/meemaw/include",
+		"/home/pym/Documents/programmation/meemaw/src",
+		"/home/pym/Documents/programmation/meemaw/test"
+	],
+	"file_history":
+	[
+		"/home/pym/.config/sublime-text-3/Packages/User/Preferences.sublime-settings",
+		"/home/pym/Documents/programmation/meemaw/test/test.cpp",
+		"/home/pym/Documents/programmation/meemaw/src/parser.cpp",
+		"/home/pym/Documents/programmation/meemaw/makefile",
+		"/usr/include/llvm/ExecutionEngine/ExecutionEngine.h",
+		"/home/pym/Documents/programmation/meemaw/.gitignore",
+		"/home/pym/Documents/programmation/meemaw/meemaw.sublime-project",
+		"/home/pym/.config/sublime-text-3/Packages/User/SublimeGDB.sublime-settings",
+		"/home/pym/.config/sublime-text-3/Packages/SublimeGDB/SublimeGDB.sublime-settings",
+		"/home/pym/Documents/programmation/meemaw/src/lexer.cpp",
+		"/home/pym/Documents/programmation/meemaw/src/parser.h",
+		"/home/pym/Documents/programmation/meemaw/src/codegenerator.cpp",
+		"/home/pym/Documents/programmation/meemaw/src/codegenerator.h",
+		"/home/pym/.config/sublime-text-3/Packages/Default/Preferences.sublime-settings",
+		"/home/pym/.config/sublime-text-3/Packages/CTags/Default.sublime-keymap",
+		"/home/pym/.config/sublime-text-3/Packages/User/SublimeLinter.sublime-settings",
+		"/home/pym/.config/sublime-text-3/Packages/SublimeLinter/Default (Linux).sublime-keymap",
+		"/home/pym/.config/sublime-text-3/Packages/User/Default (Linux).sublime-keymap",
+		"/home/pym/.config/sublime-text-3/Packages/User/Base File.sublime-settings",
+		"/home/pym/.config/sublime-text-3/Packages/DocBlockr/Base File.sublime-settings",
+		"/home/pym/.config/sublime-text-3/Packages/User/Package Control.sublime-settings",
+		"/home/pym/.config/sublime-text-3/Packages/Package Control/Package Control.sublime-settings",
+		"/home/pym/.config/sublime-text-3/Packages/User/Git.sublime-settings",
+		"/home/pym/.config/sublime-text-3/Packages/Git/Git.sublime-settings",
+		"/home/pym/Documents/programmation/meemaw/src/lexer.h",
+		"/home/pym/Documents/programmation/meemaw/uncrustify.cfg",
+		"/home/pym/Documents/programmation/meemaw/src/lexer.hpp",
+		"/home/pym/Dropbox/perso/recherche boulot/candidature_pole_emploi_2012_09_06.txt",
+		"/home/pym/Dropbox/perso/recherche boulot/offre et candidature prof de math lycee pro 20140908.txt",
+		"/home/pym/Documents/Under Construction/serveur raspberry pi/installation.todo",
+		"/home/pym/Documents/programmation/meemaw/README.md",
+		"/home/pym/Documents/programmation/meemaw/test/test.cpp.uncrustify",
+		"/home/pym/Documents/programmation/meemaw/include/catch.hpp",
+		"/home/pym/.sync/btsync.conf",
+		"/home/pym/Documents/programmation/meemaw/LICENSE",
+		"/home/pym/.config/sublime-text-3/Packages/User/ToDone.sublime-settings",
+		"/home/pym/Téléchargements/btsync-master/btsync.spec",
+		"/home/pym/Téléchargements/btsync-master/btsync-pre",
+		"/home/pym/Téléchargements/.sync/settings.dat",
+		"/var/tmp/.fr-PQXN0Y/vlsub-master/README.md",
+		"/home/pym/Documents/Atelier de Game Design Clandestin/en cours/B52/V0.1 aka vacance gaetan/B52.todo",
+		"/home/pym/Documents/Atelier de Game Design Clandestin/en cours/B52/V0.1 aka vacance gaetan/règles.md",
+		"/home/pym/Documents/Atelier de Game Design Clandestin/en cours/Invasion la dernière chance/V4.0/Invasion La dernière chance.todo",
+		"/home/pym/.config/sublime-text-3/Packages/User/Markdown Extended.sublime-settings",
+		"/home/pym/Documents/Atelier de Game Design Clandestin/en cours/kish ki ki/V0.3/kish ki ki.todo",
+		"/home/pym/Documents/Atelier de Game Design Clandestin/en cours/kish ki ki/V0.3/gen_a_imprimer.sh",
+		"/home/pym/Documents/Atelier de Game Design Clandestin/en cours/B52/V0.1/règles.md",
+		"/home/pym/Documents/Atelier de Game Design Clandestin/en cours/kish ki ki/V0.2/règles.md",
+		"/home/pym/Documents/Atelier de Game Design Clandestin/en cours/kish ki ki/V0.2/gen_a_imprimer.sh",
+		"/home/pym/Documents/Atelier de Game Design Clandestin/en cours/Invasion la dernière chance/V4.0/gen_a_imprimer.sh",
+		"/home/pym/Documents/Atelier de Game Design Clandestin/stand by/Jeu Gouvernance Partagée/Jeux Gouvernance Collaborative avec Main d'Oeuvre.markdown",
+		"/home/pym/Documents/old/la vache libre/Installer Bittorrent Sync proprement/article installation btsync.markdown",
+		"/home/pym/Projets/Sul da Bahia/rpitimelapse/rpitimelapse.py",
+		"/home/pym/Projets/Atelier de Game Design Clandestin/en cours/Les cartographes/V3.3/les cartographes V3.3.todo",
+		"/home/pym/Projets/Atelier de Game Design Clandestin/en cours/Invasion la dernière chance/V2.0/Invasion La dernière chance.todo",
+		"/home/pym/Projets/Atelier de Game Design Clandestin/en cours/Invasion la dernière chance/V2.0/gen_a_imprimer.sh",
+		"/home/pym/Projets/Atelier de Game Design Clandestin/en cours/Invasion la dernière chance/V4.0/Invasion La dernière chance.todo",
+		"/home/pym/.config/sublime-text-3/Packages/ToDone/Settings/ToDone.sublime-settings",
+		"/home/pym/Projets/Atelier de Game Design Clandestin/en cours/Invasion la dernière chance/V4.0/Invasion La dernière chance.md",
+		"/home/pym/Projets/Atelier de Game Design Clandestin/en cours/Invasion la dernière chance/V3.0/Invasion La dernière chance.todo",
+		"/home/pym/Projets/Atelier de Game Design Clandestin/en cours/Invasion la dernière chance/V3.0/gen_a_imprimer.sh",
+		"/home/pym/Projets/Sul da Bahia/feuille chanson/V3.1/gen_livret.sh",
+		"/home/pym/Projets/Sul da Bahia/feuille chanson/V2.2/gen_livret.sh",
+		"/home/pym/Projets/Sul da Bahia/test/les param.txt",
+		"/home/pym/Projets/Sul da Bahia/test/test.py",
+		"/home/pym/Projets/Sul da Bahia/test/templates/param.html",
+		"/home/pym/Projets/Sul da Bahia/test/templates/index.html",
+		"/home/pym/Projets/Sul da Bahia/test/templates/layout.html",
+		"/home/pym/Projets/Sul da Bahia/test/parameters.yaml",
+		"/home/pym/Projets/Sul da Bahia/feuille chanson/V2.1/gen_livret.sh",
+		"/home/pym/Projets/Sul da Bahia/test/templates/test.html",
+		"/home/pym/Projets/Sul da Bahia/test/templates/param_test.html",
+		"/home/pym/Projets/Sul da Bahia/test/templates/login.html",
+		"/var/tmp/css-toggle-switch-gh-pages/README.md",
+		"/var/tmp/css-toggle-switch-gh-pages/test/index.html",
+		"/home/pym/.config/sublime-text-3/Packages/User/HTML.sublime-settings",
+		"/home/pym/Projets/Atelier de Game Design Clandestin/en cours/Invasion la dernière chance/Invasion La dernière chance.md",
+		"/home/pym/Projets/Atelier de Game Design Clandestin/nom_et_bio_400_car.txt",
+		"/home/pym/Projets/Atelier de Game Design Clandestin/en cours/Invasion la dernière chance/Pitch_400_car_Invasion_La_derniere_chance.txt",
+		"/home/pym/.config/sublime-text-3/Packages/User/Markdown (Standard).sublime-settings",
+		"/home/pym/.config/sublime-text-3/Packages/MarkdownEditing/Markdown (Standard).sublime-settings",
+		"/home/pym/.config/sublime-text-3/Packages/User/Bold and Italic Markers.tmPreferences",
+		"/home/pym/Projets/Sul da Bahia/rpitimelapse/RaspiLapseCam.py",
+		"/run/media/pym/fc254b57-8fff-4f96-9609-ea202d871acf/home/pi/RaspiLapseCam.py",
+		"/run/media/pym/fc254b57-8fff-4f96-9609-ea202d871acf/home/pi/old_scripts/encode_to_timelapse_avi.sh",
+		"/run/user/1000/gvfs/sftp:host=192.168.1.6,user=pi/home/pi/RaspiLapseCam.py",
+		"/run/user/1000/gvfs/sftp:host=192.168.1.6,user=pi/home/pi/shoot_cam_with_date.sh",
+		"/home/pym/Projets/Atelier de Game Design Clandestin/en cours/regard croisé 2014/Règles du jeu tresors publics.md",
+		"/home/pym/Projets/Atelier de Game Design Clandestin/en cours/regard croisé 2014/occupy le jeu.todo",
+		"/home/pym/Projets/Atelier de Game Design Clandestin/en cours/regard croisé 2014/Règles du jeu Occupy.md",
+		"/home/pym/Projets/adjuvance/mise en place CRM/checklist Adjuvance CRM.md",
+		"/home/pym/Projets/adjuvance/mise en place CRM/Todo Adjuvance conversion leads en comptes et contacts.todo",
+		"/home/pym/Projets/Atelier de Game Design Clandestin/en cours/Les cartographes/V3.3/todo list.md",
+		"/home/pym/.config/sublime-text-3/Packages/ToDone/Monokai_todone.hidden-tmTheme",
+		"/home/pym/Projets/Under Construction/Regards Croisés 2014/OCCUPY avec aux milles lieux.md",
+		"/home/pym/Projets/Atelier de Game Design Clandestin/en cours/Les cartographes/V3.2/todo list.md",
+		"/home/pym/Encfs/fichiers initiaux/fusionnés/merge.py",
+		"/home/pym/.config/sublime-text-3/Packages/User/Pylinter.sublime-settings",
+		"/home/pym/.config/sublime-text-3/Packages/SublimeCodeIntel/SublimeCodeIntel.sublime-settings",
+		"/home/pym/.config/sublime-text-3/Packages/User/SublimeCodeIntel.sublime-settings",
+		"/home/pym/.config/sublime-text-3/Packages/SublimePythonIDE/SublimePython.sublime-settings",
+		"/home/pym/.config/sublime-text-3/Packages/User/SublimePython.sublime-settings",
+		"/home/pym/Encfs/fichiers initiaux/initiaux/Fichiers prospects/Summit2010_Attendees.txt",
+		"/home/pym/Encfs/fichiers initiaux/initiaux/Fichiers prospects/MAILING ANNONCEURS.txt",
+		"/home/pym/Projets/adjuvance/mise en place CRM/modèles/modele_leads_sugar_crm_modifié.csv",
+		"/home/pym/Encfs/fichiers initiaux/normalisés/CF_xlsx_leads.csv",
+		"/home/pym/Projets/adjuvance/mise en place CRM/modèles/modele_leads_sugar_crm.csv",
+		"/home/pym/Projets/adjuvance/mise en place CRM/modèles/modele_affaires_sugar_crm.csv",
+		"/home/pym/Projets/adjuvance/mise en place CRM/modele_contacts_sugar_crm.csv",
+		"/home/pym/Projets/adjuvance/mise en place CRM/modele_leads_sugar_crm.csv",
+		"/home/pym/Projets/adjuvance/mise en place CRM/modele_affaires_sugar_crm.csv",
+		"/home/pym/bin/wipe_confirm.sh",
+		"/var/tmp/test/test.txt",
+		"/home/pym/Projets/secured/test.txt",
+		"/home/pym/Projets/Atelier de Game Design Clandestin/en cours/Jeu capoeira/V0.3/regles.md",
+		"/home/pym/Projets/Atelier de Game Design Clandestin/en cours/Jeu capoeira/V0.3/mdtopdf.sh",
+		"/home/pym/Projets/Atelier de Game Design Clandestin/en cours/Les cartographes/V3.2/livret de règles/regles.md",
+		"/home/pym/Projets/Atelier de Game Design Clandestin/en cours/Les cartographes/V3.2/livret de règles/compilation.md",
+		"/home/pym/Projets/Atelier de Game Design Clandestin/en cours/Lien vers Jeu Revolution Industrielle/Règles de jeu.md",
+		"/home/pym/Projets/Jeux de rôle/INS-MV/compilation.md",
+		"/home/pym/Projets/Jeux de rôle/INS-MV/LudoSatanis_-_Le_Teaser.md",
+		"/home/pym/Dropbox/perso/administratif/demande_inscription_liste_electorale_paris_REF_2013_12_27.txt",
+		"/home/pym/Projets/Atelier de Game Design Clandestin/en cours/Jeu Revolution Industrielle/ReadMe.md",
+		"/home/pym/Dropbox/Draft/partagé avec Cécile/Cadeau de noël 2013.md",
+		"/var/tmp/test/test.md",
+		"/home/pym/Projets/Jeux de rôle/INS-MV/Makefile",
+		"/home/pym/Projets/Atelier de Game Design Clandestin/en cours/Jeu Revolution Industrielle/Règles de jeu.md",
+		"/home/pym/Projets/programmation/dobutsushogi/dobutsushogigame_tests.py"
+	],
+	"find":
+	{
+		"height": 35.0
+	},
+	"find_in_files":
+	{
+		"height": 82.0,
+		"where_history":
+		[
+			""
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"ErrStr",
+			"EngineBuilder",
+			"ExecutionEngine(",
+			"->codeGen",
+			"Light",
+			"codeGenerator.",
+			"module",
+			"llvm::Module* module",
+			"Module",
+			"codeGen()",
+			"logic",
+			"CodeGen",
+			"gencode",
+			"dump",
+			"nl_collapse_empty_body",
+			"ExprAST::getAstType",
+			"FloatExpAST",
+			"wrap",
+			"LastChar",
+			"indent_with_tabs",
+			"version",
+			"rm",
+			"partisan",
+			"boucli",
+			"tab",
+			"finaldir",
+			"version",
+			"',\n",
+			"(.*)$",
+			"tab",
+			"^=== (.*) ===$",
+			"^= (.*) =",
+			"^=== (.*) ===",
+			"^== (.*) ==",
+			"== (.*) ==",
+			"tmp_file_name",
+			"3ème",
+			"2ème",
+			"1er",
+			"défau",
+			"eco",
+			"econo",
+			"marchan",
+			"fileName",
+			"tmpFileName",
+			"folderToSave",
+			"folderToSaveNoRoot",
+			"initTime",
+			"DELAY_IN_SECONDS",
+			"imgHeight",
+			"imgWidth",
+			"thè",
+			"thématique",
+			"main",
+			"quartier",
+			"joueur",
+			"trophé",
+			"(.*) ([0-9][0-9][0-9][0-9][0-9]) (.*)",
+			"([0-9][0-9]) ([0-9][0-9][0-9])",
+			"\"",
+			" $",
+			"^([a-zàâäçéèêëîïôöùûü.-]*) (.*)",
+			"\"",
+			" $",
+			"/home/pym/Encfs/fichiers initiaux/pret a importer/",
+			"(.*)([0-9][0-9][0-9][0-9][0-9])(.*)",
+			"^ ",
+			" ([0-9][0-9]) ([0-9][0-9][0-9]) ",
+			" *$",
+			"(.*)([0-9][0-9][0-9][0-9][0-9])(.*)",
+			" ([0-9][0-9]) ([0-9][0-9][0-9]) ",
+			" 74 350 ",
+			" ([0-9][0-9]) ([0-9][0-9][0-9]) ",
+			" *$",
+			"non",
+			"^ ",
+			"à valider",
+			".",
+			"^ ",
+			" *$",
+			"^ ",
+			" *$",
+			"(.*)\\t(.*)",
+			"\\t$",
+			"(.*)\\t(.*)",
+			"\\t$",
+			" $",
+			"(.*)([0-9][0-9][0-9][0-9][0-9])(.*)",
+			"^non$",
+			"non mais transfère",
+			"^ ",
+			" $",
+			"^([a-zàâäçéèêëîïôöùûü.-]*) (.*)",
+			"^ ",
+			" $",
+			"(.*) ([0-9][0-9][0-9][0-9][0-9]) -? ?(.*)",
+			"(.*) -? ?([0-9][0-9][0-9][0-9][0-9]) -? ?(.*)",
+			" $",
+			".",
+			" $",
+			"/",
+			" $",
+			".",
+			"^([a-zàâäçéèêëîïôöùûü.-]*) (.*)",
+			" $",
+			"^([a-zàâäçéèêëîïôöùûü.-]*) (.*)",
+			" $",
+			"^([a-zàâäçéèêëîïôöùûü.-]*) (.*)",
+			" $",
+			".",
+			"^([a-zàâäçéèêëîïôöùûü.-]*) (.*)",
+			" $",
+			" ",
+			" $",
+			"Nora@noras.com",
+			" $",
+			"^ ",
+			"^S ",
+			"^ ",
+			" $",
+			"^ ",
+			" $",
+			"^([a-zàâäçéèêëîïôöùûü.-]*) (.*)",
+			"^ ",
+			" $",
+			"^([a-zàâäçéèêëîïôöùûü.-]*) (.*)",
+			"^ ",
+			" $"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+			"errStr",
+			"CodeGenerator* codeGenerator",
+			"codeGen(llvm::Module* module)",
+			"lastChar",
+			"printdir",
+			"('\\1', '\\1'),",
+			"### \\1",
+			"# \\1",
+			"## \\1",
+			"troisième",
+			"deuxième",
+			"premier",
+			"file_name",
+			"tmp_file_name",
+			"folder_to_save",
+			"folder_to_save_no_root",
+			"init_time",
+			"DELAY_BETWEEN_SHOTS",
+			"IMG_HEIGHT",
+			"IMG_WIDTH",
+			"trophée",
+			"$1;$3;;$2",
+			"$1$2",
+			"",
+			"$1;$2",
+			"",
+			"$1;$3;;$2",
+			"",
+			"$1$2",
+			"",
+			"$1;$3;;$2",
+			" $1$2 ",
+			"$1$2",
+			"",
+			" ",
+			"",
+			"$1 $2",
+			"",
+			"$1 $2",
+			"",
+			"$1;$3;;$2",
+			"",
+			"$1;$2",
+			"",
+			"$1;$3;;$2",
+			"",
+			" ",
+			"",
+			" ",
+			"$1;$2",
+			"",
+			"$1;$2",
+			"",
+			"$1;$2",
+			"",
+			" ",
+			"",
+			"$1;$2",
+			"",
+			"$1;$2",
+			"",
+			"$1;$2",
+			"",
+			",",
+			"",
+			"$1;$2",
+			"",
+			"$1;$2",
+			"$1;",
+			"",
+			"$2;;\"$1\"",
+			" ",
+			"$2;;\"$1\"",
+			"",
+			"$2;;\"$1\"",
+			"",
+			";",
+			"",
+			"$1$3;;$2",
+			" ",
+			"",
+			" ",
+			"",
+			" ",
+			"",
+			"Prof.",
+			"Mme",
+			"M.",
+			"",
+			" ",
+			"",
+			";",
+			"$2;$3;;$1",
+			"Prof.",
+			"M.",
+			"",
+			"Mme",
+			"M.",
+			"",
+			"$2 $1",
+			"",
+			"Cible : $1",
+			"",
+			"$1;$2",
+			"$2;;\"$1\"",
+			"",
+			" ",
+			"",
+			"$1;$2",
+			"$2;;\"$1\"",
+			"",
+			"$2;;\"$1\"",
+			"$1;$2",
+			"$2;;\"$1\"",
+			"\"$2\";;$1",
+			"",
+			" ",
+			"",
+			";",
+			"",
+			";",
+			"",
+			";",
+			"$3;;$1",
+			"",
+			"$1,",
+			"",
+			"\"$1\";$3;;$2"
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": false
+	},
+	"groups":
+	[
+		{
+			"selected": 0,
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"file": "src/parser.cpp",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 6924,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								6374,
+								6374
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 2652.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				}
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 36.0
+	},
+	"input":
+	{
+		"height": 0.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.exec":
+	{
+		"height": 100.0
+	},
+	"output.find_results":
+	{
+		"height": 0.0
+	},
+	"output.git":
+	{
+		"height": 100.0
+	},
+	"project": "meemaw.sublime-project",
+	"replace":
+	{
+		"height": 62.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_symbol":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"selected_group": 0,
+	"settings":
+	{
+		"last_automatic_layout":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		]
+	},
+	"show_minimap": true,
+	"show_open_files": true,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 135.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}
