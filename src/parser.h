@@ -1,10 +1,15 @@
 #ifndef PARSER_H
 #define PARSER_H
 
+#include "llvm/IR/Value.h"
+#include "llvm/IR/Function.h"
+
 #include <string>
 #include <vector>
 
+// Forward declarations
 class Lexer;
+class CodeGenerator;
 
 // Specify ExprAST type without using RTTI.
 // This is only usefull for tesing purpose and should not be used in actual
@@ -27,8 +32,15 @@ public:
     // Constructor
     explicit ExprAST();
 
+    // Virtual destructor since we have a virtual function
+    virtual ~ExprAST() {}
+
     // astType getter
     const AstType getAstType() const;
+
+    // Generate LLVM Intermediary Representation for the node.
+    // Call recursively codeGen() method on enclosing nodes if any.
+    virtual llvm::Value* codeGen(CodeGenerator* codeGenerator) = 0;
 };
 
 class FloatExpAST : public ExprAST {
@@ -40,6 +52,8 @@ public:
 
     // value getter
     const float getValue() const;
+
+    virtual llvm::Value* codeGen(CodeGenerator* codeGenerator);
 };
 
 class ProtoTypeAST : public ExprAST {
@@ -55,6 +69,8 @@ public:
 
     // args getter
     const std::vector<std::string> getArgs() const;
+
+    virtual llvm::Function* codeGen(CodeGenerator* codeGenerator);
 };
 
 class FunctionAST : public ExprAST {
@@ -70,6 +86,8 @@ public:
 
     // body getter
     ExprAST* getBody() const;
+
+    virtual llvm::Function* codeGen(CodeGenerator* codeGenerator);
 };
 
 

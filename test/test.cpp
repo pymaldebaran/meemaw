@@ -4,6 +4,7 @@
 
 #include "llvm/Support/TargetSelect.h"
 #include "llvm/ExecutionEngine/ExecutionEngine.h"
+#include "llvm/ExecutionEngine/JIT.h" // needed to prevent "Interpreter has not been linked in" when creating JIT engine
 #include "llvm/ExecutionEngine/GenericValue.h"
 #include "llvm/IR/Value.h"
 #include "llvm/IR/LLVMContext.h"
@@ -15,11 +16,7 @@
 
 #include "../src/lexer.h"
 #include "../src/parser.h"
-
-class CodeGenerator {
-public:
-    llvm::Value* codeGen(ExprAST* ast) { return nullptr; }
-};
+#include "../src/codegenerator.h"
 
 // TESTS /////////////////////////////////////
 //maximum difference between 2 floats to be considered equal
@@ -123,23 +120,27 @@ TEST_CASE("Parser generate AST for float") {
     }
 }
 
-TEST_CASE("Code generated for float expression is correct") {
-    std::stringstream test;         // stream to parse by lexer
-    Lexer lex = Lexer(test);        // the lexer
-    Parser parser = Parser(lex);    // the parser
-    CodeGenerator gen = CodeGenerator(); // the code generator
-
+TEST_CASE("Code generated for float expression is correct", "[problem]") {
     // LLVM stuff
     // TODO: put all this in a class... but witch one
     llvm::InitializeNativeTarget();
     llvm::LLVMContext& context = llvm::getGlobalContext();
+    llvm::Module* module = new llvm::Module("Test module", context); // Make the module, which holds all the code.
 
-    // Make the module, which holds all the code.
-    std::unique_ptr<llvm::Module> owner = std::unique_ptr<llvm::Module>(new llvm::Module("Test module", context));
-    llvm::Module* module = owner.get();
+    if (module == nullptr)
+        fprintf(stderr, "no module\n");
+
+    // non LLVM stuff
+    std::stringstream test;                     // stream to parse by lexer
+    Lexer lex = Lexer(test);                    // the lexer
+    Parser parser = Parser(lex);                // the parser
+    CodeGenerator gen = CodeGenerator(module);  // the code generator
 
     // create a JIT Engine (This takes ownership of the module).
-    llvm::ExecutionEngine* execEngine = llvm::EngineBuilder(module).setEngineKind(llvm::EngineKind::JIT).create();
+    std::string errStr;
+    llvm::ExecutionEngine* execEngine = llvm::EngineBuilder(module).setErrorStr(&errStr).setEngineKind(llvm::EngineKind::JIT).create();
+    if (execEngine == nullptr)
+        fprintf(stderr, "no exec engine: %s\n", errStr.c_str());
 
     test << "1.0";
 

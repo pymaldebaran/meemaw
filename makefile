@@ -1,5 +1,5 @@
 CXX=clang++
-FLAGS=-std=c++11 -Wall
+FLAGS=-std=c++11 -Wall -g
 
 all: test
 
@@ -17,17 +17,21 @@ lint:
 	@echo === checking quality of files...
 	cppcheck test/test.cpp
 
-test: parser.o lexer.o
+test: test/test.cpp parser.o lexer.o codegenerator.o
 	@echo === compiling tests...
-	$(CXX) $(FLAGS) test/test.cpp -o bin/test -Iinclude/ build/parser.o build/lexer.o `llvm-config --cppflags --ldflags --libs core engine`
+	$(CXX) $(FLAGS) test/test.cpp -o bin/test -Iinclude/ build/parser.o build/lexer.o build/codegenerator.o `llvm-config --cppflags --ldflags --libs core engine`
 
 parser.o: src/parser.cpp
 	@echo === compiling parser
-	$(CXX) $(FLAGS) -c src/parser.cpp -o build/parser.o -Iinclude/
+	$(CXX) $(FLAGS) -c src/parser.cpp -o build/parser.o -Iinclude/ `llvm-config --cppflags`
 
 lexer.o: src/lexer.cpp
 	@echo === compiling lexer
 	$(CXX) $(FLAGS) -c src/lexer.cpp -o build/lexer.o -Iinclude/
+
+codegenerator.o: src/codegenerator.cpp
+	@echo === compiling codegenerator
+	$(CXX) $(FLAGS) -c src/codegenerator.cpp -o build/codegenerator.o -Iinclude/ `llvm-config --cppflags`
 
 runtest: test
 	@echo === running tests...

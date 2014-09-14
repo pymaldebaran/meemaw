@@ -1,0 +1,23 @@
+{
+	"folders":
+	[
+		{
+			"file_exclude_patterns":
+			[
+				"src/.tags"
+			],
+			"folder_exclude_patterns":
+			[
+				"bin",
+				"build"
+			],
+			"follow_symlinks": true,
+			"path": "."
+		}
+	],
+	"settings":
+	{
+		"sublimegdb_commandline": "gdb -nx -readnow -fullname --interpreter=mi -args ./test",
+		"sublimegdb_workingdir": "${folder:${project_path:bin/test}}"
+	}
+}
