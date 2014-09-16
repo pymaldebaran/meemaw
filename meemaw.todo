@@ -1,0 +1,362 @@
+
+Refactoring
+-	normalise naming
+	Google convention cf https://google-styleguide.googlecode.com/svn/trunk/cppguide.html
+-	make all constant static
+-	rename all "float" related stuff to "float litteral"
+-	remove all assertions
+	throw std::LogicError(stderr, "blah") ---> return ParserError("blah")
+-	improve the workflow
+	-	lexer takes a stream as input and returns a queue of tokens
+	-	parser takes the queue of token as input and returns AST
+	-	code generator takes the AST as input and returns IR code
+	-	engine takes code as input and returns native code
+		-	for execution (interpreter mode)
+		-	for production of a executable (compiler mode)
+Features
+-	comments
+	# this is not interpreted
+	let x = 1 # this is not interpreted
+-	interpreter
+	-	interpreter with a prompt
+		>>> 1 + 2
+		3
+	-	test using interpreter "doctest style"
+		string test = ">>> 1 + 2"
+		              "3"
+		              ">>> cos(0.0)"
+		              "1.0"
+		ENSURE(interpreter.validate(test))
+		ENSURE(interpreter.vatidate(">>> 1 + 2", "3"))
+-	litteral declaration
+	let x = 1.0
+-	litteral integers
+	let x = 1
+-	litteral booleans
+	let x = true
+-	algebric binary operator
+	-	addition
+		1 + 2
+	-	substraction
+		2 - 1
+	-	multiplication
+		1 * 2
+	-	divition
+		1.0 / 2.0
+		// should generate a compilation error if used on integers
+	-	interger division
+		5 // 2
+	-	modulo
+		5 % 2
+	-	comparison equal
+		2 == 2
+	-	not equal
+		2 != 1
+	-	comparison greater than
+		2 > 1
+	-	comparison greater or equal than
+		2 >= 1
+	-	comparison lower than
+		1 < 2
+	-	comparison lower or equal than
+		1 <= 2
+	-	logic operators
+		and, or, not, xor
+	-	range
+		1..9
+	-	inclusion
+		3 in 1..9
+	-	other
+		*=, /=, %=, //=, +=, -=
+-	algebric unary operator
+	-	negative
+		-1
+		??? handle this in float/int tokenization ???
+	-	positive
+		\+1
+		is it usefull
+	-	increment
+		a++
+	-	decrement
+		a--
+-	variable declaration
+	let var x = 1
+	x = 2
+-	explicit cast operator
+	let var a = 0
+	a = 1.0 //error
+	a = 1.0 as int
+-	functions
+	-	function definition
+		let f = func(a float, b float) float
+			a + b
+	-	function definition with no return param
+		let f = func(a float, b float)
+			print(a + b)
+	-	function definition with named return param
+		let f = func(a float, b float) v:float
+			v = a + b
+	-	function call
+		let sum = func(a float, b float) float
+			a + b
+		x = sum(1, 3)
+		no overloading allowed
+	-	extern function from C/C++
+		???
+	-	function definition which returns multiple values
+		??? tuples ???
+	-	function call with named parameters
+		let sum = func(a float, b float) return float
+			return a + b
+		x = sum(a:1, b:3)
+	-	generators
+		????
+-	tuples
+	-	explicit tuples
+		let t = tuple{1, 2, 3}
+		a = t[0]
+	-	implicit tuples
+		let t = 1, 2, 3
+		a = t[0]
+	-	implicit tuple assignment
+		let a, b, c = 1, 2, 3
+-	control structures
+	-	if "statement"
+		if a then
+			x = 1
+		else
+			x = 2
+	-	if expression
+		x = if a then 1 else 2
+		y = if a then
+			1
+		else
+			2
+	-	switch expression
+		????
+	-	loop expression
+		????
+	-	select expression
+		????
+	-	with statement
+-	data structure
+	-	strings
+		???
+	-	struct declaration
+		let Point = struct
+			x int
+			y int
+		or maybe
+		let Point = struct
+			x = 0
+			y = 0
+		this would be more idiomatic considering the other definition syntax
+	-	struct default instanciation
+		let Point = struct
+			x int
+			y int
+		let p = Point{}
+	-	struct implicit instantiation
+		let Point = struct
+			x int
+			y int
+		let p = Point{1, 2}
+	-	struct explicit instantiation
+		let Point = struct
+			x int
+			y int
+		let p = Point {x:1, y:2}
+	-	struct explicit constructor
+		let Point = struct
+			x int
+			y int
+		let Create = func Point(dx int, dy int) Point
+			.x = 0
+			.y = 0
+	-	struct explicit constructor with named subject
+		let Point = struct
+			x int
+			y int
+		let Create = func self:Point(dx int, dy int) self:Point
+			self.x = 0
+			self.y = 0
+		!!! self is not a keyword you can cal it as you want... but maybe it's just a bad idea
+	-	struct block instanciation (a.k.a. in place constructor)
+		let Point = struct
+			x int
+			y int
+		let x = Point
+			.x = 1
+			.y = 2
+			.move(7, 9)
+		!!! after that we can't mutate x
+		let var x = Point
+			.x = 1
+			.y = 2
+			.move(7, 9)
+		!!! of course we can still mutate x
+	-	destructor
+		???
+	-	composition of strucs
+		??? like go lang ???
+	-	composition of struct and constructor
+		??? how could we call the constructor of a "parent" class ???
+		search how go lang handle this...
+	-	methods for structs
+		let Point = struct
+			x:int
+			y:int
+		let move = func Point(dx int, dy int)
+			.x += dx
+			.y += dy
+	-	struct instance block
+		let var p = Point
+-	operator definition
+	???
+-	types
+	-	custom type defintion
+		let meters = new float
+		let Hertz = new float
+	-	custom type usage in variable/litteral definition
+		let meters = new float
+		let Hertz = new float
+		let l = 17.5 meters
+		let f = 60 Hertz
+		let a = f + l //impossible !!! except if you define + operator for those 2 types
+	-	constraints
+		let var x = 1
+			> 0
+			and < 100
+
+	-	constrained type alias
+		let positive_int = int
+			> 0
+		let even_int = int
+			% 2 == 0
+		// without constraint a type alias should emit a warning
+		// only compile time bool expression are possible
+		// type alias are checked at compile time
+		// type alias are 100% compatible with there origin type: no conversion needed !
+		let var xpi = 7 positive_int
+		let var xi = 3
+		let var yi = 0
+		yi = xpi + xi  // no problem
+		xpi = -3       // compile time error
+		xpi = xi - xpi // compile time error (would be -4)
+	-	methods for type
+		let is_the_answer = func i:int() bool
+			return i == 42
+	-	type alias with method constraints
+		let weird_int = int
+			< 0
+			or .is_the_answer()
+	-	function definition with constraints on params
+		let f = func(a int >= 0, b int > 0 and < 100) float > 30.0 or == 0.0
+			//blah
+	-	function definition with constraints on params via constrained type
+		let positive_int = int
+			> 0
+		let between_0_100_int = int
+			> 0
+			and < 100
+		let constrained_float = float
+			> 30.0
+			or == 0.0
+		let f = func(a positive_int, b between_0_100_int) float > 30.0 or == 0.0
+			//blah
+		.
+-	annotations
+	-	generic annotation
+		@[inline]
+		let f = func(a int) int
+			a + 1
+		@[main]
+		let m = func()
+			print("heloo world")
+		//those annotation are used to give info to the compiler
+	-	unamed annotation is documentation
+		@this is module documentation
+		// if at he biginning of a module -> documentation for the module
+		@this is module documentation
+			multiline doc
+			multiline doc
+			multiline doc
+	-	variable documentation post form
+		let x = 1.0 @horizontal position
+		let y = 3.5 @vertical position
+	-	variable documentation pre form
+		@horizontal position
+		let x = 1.0
+		@vertical position
+		let y = 3.5
+	-	function documentation
+		@compute the sum of 2 ints
+		let sum = func(a int, b int) int
+			a + b
+	-	function param documentation
+		@compute the area of a rectangle
+		let area = func(l int @lenght in meter, w int @width in meter) int @area in meter
+			a * b
+	-	struct documentation
+		@A pixel on screen in 2D with origin in top left corner
+		let Pixel = struct
+			let x = 0 @horizontal position increase from left to right
+			let y = 0 @vertical position increase from top to bottom
+			let r = 0.0 @red composant of the color between 0.0 and 1.0
+			let g = 0.0 @green composant of the color between 0.0 and 1.0
+			let b = 0.0 @blue composant of the color between 0.0 and 1.0
+	-	type documentation
+		???
+-	modules
+	-	declaration of module
+		???
+	-	simple import of modules
+		import granpa
+		let fish = granpa.fishing()
+		// in an interpreter fashion
+		>>> import granpa
+		Module(granpa)
+	-	detailed import of module
+		from granpa import fish
+		let fish = fishing()
+	-	module auto documetation
+		>>> import granpa
+		Module(granpa)
+		>>> granpa.doc()
+		String("Module representing all granpa activities and toys")
+		>>> granpa.ls()
+		Vector<String>("fishing", "grumbling", "pipe", "skateboard", "sleeping", "smoking")
+		>>> granpa.ls(std.types.Function)
+		Vector<String>("fishing", "grumbling", "sleeping", "smoking")
+		>>> granpa.ls(std.types.Struct)
+		Vector<String>("pipe", "skateboard")
+		// Only available with documentation enabled compilation
+-	visibility/access
+	-	access in structs
+		let 2DPoint = struct
+			let _x = 0.0 // private attribute start with one "_"
+			let y = 0.0 // public attribute do not start with a "_"
+		let p = 2DPoint{}
+		let x = p._x // error no access to private member
+		let y = p.y // no problem to access public member
+		let move = func Point(dx float, dy float)
+			._x += dx // methods can access private attributes
+			.y += dy // methods can access public attributes
+	-	access and documentation
+		let 4DPoint = struct
+			let _x = 0.0 // comment for private attribute
+			let y = 0.0 @doc for public attribute
+			let z = 0.0 // this should emit a warning a public attribute should have a doc not a comment
+			let _t = 0.0 // this should emit a warning a private attribute should have a comment not a doc
+	-	getters and setters
+		let Box = struct
+			let _data = "nothing" @[getter]@[setter]
+		// these annotation ask the compiler to generate getter and setter for the attribute
+		>>> let b = Box{}
+		Box{}
+		>>> b.set_data("a carrot is in the box")
+		>>> b.get_data()
+		"a carrot is in the box"
+	-	access in modules
+		???
+
