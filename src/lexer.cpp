@@ -85,6 +85,10 @@ float Lexer::getFloatValue() const {
     return floatValue;
 }
 
+std::string Lexer::getIdentifierString() const {
+    return "";
+}
+
 int Lexer::getNextToken() {
     return currentToken = gettok();
 }

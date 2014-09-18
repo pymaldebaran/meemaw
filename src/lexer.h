@@ -31,12 +31,14 @@
 // Lexer for the MeeMaw language
 class Lexer {
 public:
+    //TODO test the usage of TOK_LEXER_ERROR and TOK_NONE
     // The lexer returns tokens [0-255] if it is an unknown character, otherwise
     // one of these for known things.
     enum {
         TOK_FLOAT = -1,
         TOK_EOF   = -2,
         TOK_KEYWORD_LET = -3,
+        TOK_IDENTIFIER = -4,
         TOK_LEXER_ERROR = -254,     // returned by lexer in case of error
         TOK_NONE  = -255            // initial value of the currentToken attribute
     };
@@ -47,6 +49,9 @@ public:
 
     // floatValue getter
     float getFloatValue() const;
+
+    // identifierString getter
+    std::string getIdentifierString() const;
 
     // Reads another token from the lexer and updates CurTok with its results
     int getNextToken();
