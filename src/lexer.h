@@ -34,17 +34,17 @@
 static const int TOK_FLOAT = -1;
 static const int TOK_EOF   = -2;
 static const int TOK_KEYWORD_LET = -3;
-static const int TOK_LEXER_ERROR = -254; // returned by lexer in case of error
-static const int TOK_NONE  = -255; // initial value of the currentToken attribute
+static const int TOK_LEXER_ERROR = -254;    // returned by lexer in case of error
+static const int TOK_NONE  = -255;          // initial value of the currentToken attribute
 
 // Lexer for the MeeMaw language
 class Lexer {
 private:
-    std::istream& stream;   // input stream to parse
-    std::string identifierString; // Filled in if currentToken == TOK_IDENTIFIER or TOK_KEYWORD_*
-    float floatValue;       // Filled in if currentToken == TOK_FLOAT
-    int currentToken;       // Current token i.e. the last returned by getNextToken()
-    int lastChar;           // Store the last char read by gettok()
+    std::istream& stream;           // input stream to parse
+    std::string identifierString;   // Filled in if currentToken == TOK_IDENTIFIER or TOK_KEYWORD_*
+    float floatValue;               // Filled in if currentToken == TOK_FLOAT
+    int currentToken;               // Current token i.e. the last returned by getNextToken()
+    int lastChar;                   // Store the last char read by gettok()
 
     // gettok - Return the next token from standard input.
     int gettok();
