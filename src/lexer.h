@@ -30,10 +30,10 @@
 
 // The lexer returns tokens [0-255] if it is an unknown character, otherwise
 // one of these for known things.
-const int TOK_FLOAT = -1;
-const int TOK_EOF   = -2;
-const int TOK_LET   = -3;
-const int TOK_NONE  = -255;
+static const int TOK_FLOAT = -1;
+static const int TOK_EOF   = -2;
+static const int TOK_LET   = -3;
+static const int TOK_NONE  = -255;
 
 // Lexer for the MeeMaw language
 class Lexer {
