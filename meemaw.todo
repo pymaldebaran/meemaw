@@ -1,5 +1,7 @@
+MeeMaw Language TODO LIST
 
 Refactoring
+===============
 -	normalise naming
 	Google convention cf https://google-styleguide.googlecode.com/svn/trunk/cppguide.html
 -	make all constant static
@@ -14,6 +16,7 @@ Refactoring
 		-	for execution (interpreter mode)
 		-	for production of a executable (compiler mode)
 Features
+===============
 -	comments
 	# this is not interpreted
 	let x = 1 # this is not interpreted
