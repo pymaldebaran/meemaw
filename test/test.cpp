@@ -193,5 +193,5 @@ TEST_CASE("Lexer categorise keyword let") {
 
     int tokId = lex.getNextToken();
 
-    REQUIRE(tokId == TOK_LET);
+    REQUIRE(tokId == TOK_KEYWORD_LET);
 }

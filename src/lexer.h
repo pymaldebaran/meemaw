@@ -28,18 +28,21 @@
 
 #include <istream>
 
+// TODO put these constants inside the Lexer class
 // The lexer returns tokens [0-255] if it is an unknown character, otherwise
 // one of these for known things.
 static const int TOK_FLOAT = -1;
 static const int TOK_EOF   = -2;
-static const int TOK_LET   = -3;
-static const int TOK_NONE  = -255;
+static const int TOK_KEYWORD_LET = -3;
+static const int TOK_LEXER_ERROR = -254; // returned by lexer in case of error
+static const int TOK_NONE  = -255; // initial value of the currentToken attribute
 
 // Lexer for the MeeMaw language
 class Lexer {
 private:
     std::istream& stream;   // input stream to parse
-    float floatValue;       // Filled in if curTok == TOK_FLOAT
+    std::string identifierString; // Filled in if currentToken == TOK_IDENTIFIER or TOK_KEYWORD_*
+    float floatValue;       // Filled in if currentToken == TOK_FLOAT
     int currentToken;       // Current token i.e. the last returned by getNextToken()
     int lastChar;           // Store the last char read by gettok()
 

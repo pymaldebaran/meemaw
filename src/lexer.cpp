@@ -31,6 +31,22 @@
 int Lexer::gettok() {
     lastChar = stream.get();
 
+    // identifier and keywords: [a-zA-Z][a-zA-Z0-9]*
+    if (isalpha(lastChar)) {
+        identifierString = lastChar;
+        while (isalnum((lastChar = stream.get()))) {
+            identifierString += lastChar;
+        }
+
+        if (identifierString == "let") {
+            return TOK_KEYWORD_LET;
+        }
+
+        fprintf(stderr, "Lexer error : identifier not yet supported\n");
+        return TOK_LEXER_ERROR;
+        //return TOK_IDENTIFIER;
+        }
+
     // Float: [0-9.]+
     if (isdigit(lastChar) || lastChar == '.') {
         std::string floatStr;
