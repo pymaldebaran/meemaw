@@ -181,3 +181,17 @@ TEST_CASE("Code generated for float expression is correct", "[problem]") {
     float result = execEngine->runFunction(funcCode, noArgs).FloatVal;
     REQUIRE(result == 1.0);
 }
+
+TEST_CASE("Lexer categorise keyword let") {
+    // stream to parse by lexer
+    std::stringstream test;
+
+    // the lexer
+    Lexer lex = Lexer(test);
+
+    test << "let";
+
+    int tokId = lex.getNextToken();
+
+    REQUIRE(tokId == TOK_LET);
+}

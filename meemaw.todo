@@ -2,10 +2,12 @@ MeeMaw Language TODO LIST
 
 Refactoring
 ===============
+-	rename the basic block of a function "entry"
+	this is used by optimizer and othe llvm stuffs
 -	normalise naming
 	Google convention cf https://google-styleguide.googlecode.com/svn/trunk/cppguide.html
 -	make all constant static
--	rename all "float" related stuff to "float litteral"
+!-	rename all "float" related stuff to "float litteral"
 -	remove all assertions
 	throw std::LogicError(stderr, "blah") ---> return ParserError("blah")
 -	improve the workflow
@@ -31,7 +33,7 @@ Features
 		              "1.0"
 		ENSURE(interpreter.validate(test))
 		ENSURE(interpreter.vatidate(">>> 1 + 2", "3"))
--	litteral declaration
+!-	litteral constant declaration
 	let x = 1.0
 -	litteral integers
 	let x = 1
