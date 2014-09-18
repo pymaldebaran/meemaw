@@ -74,7 +74,7 @@ TEST_CASE("Lexer categorise float") {
 
         int tokId = lex.getNextToken();
 
-        REQUIRE(tokId == TOK_FLOAT);
+        REQUIRE(tokId == Lexer::TOK_FLOAT);
         REQUIRE(lex.getFloatValue() == 1.0);
     }
 
@@ -193,5 +193,5 @@ TEST_CASE("Lexer categorise keyword let") {
 
     int tokId = lex.getNextToken();
 
-    REQUIRE(tokId == TOK_KEYWORD_LET);
+    REQUIRE(tokId == Lexer::TOK_KEYWORD_LET);
 }

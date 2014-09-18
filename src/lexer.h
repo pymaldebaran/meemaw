@@ -28,17 +28,29 @@
 
 #include <istream>
 
-// TODO put these constants inside the Lexer class
-// The lexer returns tokens [0-255] if it is an unknown character, otherwise
-// one of these for known things.
-static const int TOK_FLOAT = -1;
-static const int TOK_EOF   = -2;
-static const int TOK_KEYWORD_LET = -3;
-static const int TOK_LEXER_ERROR = -254;    // returned by lexer in case of error
-static const int TOK_NONE  = -255;          // initial value of the currentToken attribute
-
 // Lexer for the MeeMaw language
 class Lexer {
+public:
+    // The lexer returns tokens [0-255] if it is an unknown character, otherwise
+    // one of these for known things.
+    enum {
+        TOK_FLOAT = -1,
+        TOK_EOF   = -2,
+        TOK_KEYWORD_LET = -3,
+        TOK_LEXER_ERROR = -254,     // returned by lexer in case of error
+        TOK_NONE  = -255            // initial value of the currentToken attribute
+    };
+
+
+    // Constructor
+    explicit Lexer(std::istream& strm);
+
+    // floatValue getter
+    float getFloatValue() const;
+
+    // Reads another token from the lexer and updates CurTok with its results
+    int getNextToken();
+
 private:
     std::istream& stream;           // input stream to parse
     std::string identifierString;   // Filled in if currentToken == TOK_IDENTIFIER or TOK_KEYWORD_*
@@ -48,16 +60,6 @@ private:
 
     // gettok - Return the next token from standard input.
     int gettok();
-
-public:
-    // Constructor
-    explicit Lexer(std::istream& strm);
-
-    // floatValue getter
-    float getFloatValue() const;
-
-    // Reads another token from the lexer and updates CurTok with its results
-    int getNextToken();
 };
 
 #endif // LEXER_H
