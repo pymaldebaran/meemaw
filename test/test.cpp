@@ -213,4 +213,15 @@ TEST_CASE("Lexer categorise identifier") {
         CHECK(tokId == Lexer::TOK_IDENTIFIER);
         CHECK(lex.getIdentifierString() == identifier);
     }
+
+    SECTION("Lexer categorise identifier with underscore") {
+        std::string identifier = "a_b";
+
+        test << identifier;
+
+        int tokId = lex.getNextToken();
+
+        CHECK(tokId == Lexer::TOK_IDENTIFIER);
+        CHECK(lex.getIdentifierString() == identifier);
+    }
 }
