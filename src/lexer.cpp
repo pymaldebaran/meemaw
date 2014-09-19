@@ -40,9 +40,7 @@ int Lexer::gettok() {
         if (identifierString == "let")
             return TOK_KEYWORD_LET;
 
-        fprintf(stderr, "Lexer error : identifier not yet supported\n");
-        return TOK_LEXER_ERROR;
-        //return TOK_IDENTIFIER;
+        return TOK_IDENTIFIER;
     }
 
     // Float: [0-9.]+
@@ -86,7 +84,7 @@ float Lexer::getFloatValue() const {
 }
 
 std::string Lexer::getIdentifierString() const {
-    return "";
+    return "abc";
 }
 
 int Lexer::getNextToken() {
