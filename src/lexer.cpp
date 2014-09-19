@@ -84,7 +84,13 @@ float Lexer::getFloatValue() const {
 }
 
 std::string Lexer::getIdentifierString() const {
-    return "abc";
+    if (currentToken != TOK_IDENTIFIER) {
+        char buffer[100];
+        //TODO write a helper function to represent token const
+        snprintf(buffer, 100, "Lexer error: accessing float value but current token is %d not TOK_IDENTIFIER(%d).\n", currentToken, TOK_IDENTIFIER);
+        throw std::logic_error(buffer);
+    }
+    return identifierString;
 }
 
 int Lexer::getNextToken() {
