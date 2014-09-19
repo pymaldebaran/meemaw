@@ -87,17 +87,6 @@ TEST_CASE("Lexer categorise float") {
 
         REQUIRE(abs(lex.getFloatValue() - f) < F_EPSILON);
     }
-
-    SECTION("Random char is not categorized as float") {
-        unsigned char c = randUCharGenerator();
-
-        test << c;
-
-        int tokId = lex.getNextToken();
-
-        CAPTURE(tokId);
-        REQUIRE(tokId == static_cast<int>(c));
-    }
 }
 
 TEST_CASE("Parser generate AST for float") {
@@ -207,6 +196,6 @@ TEST_CASE("Lexer categorise an identifier abc") {
 
     int tokId = lex.getNextToken();
 
-    REQUIRE(tokId == Lexer::TOK_IDENTIFIER);
-    REQUIRE(lex.getIdentifierString() == "abc");
+    CHECK(tokId == Lexer::TOK_IDENTIFIER);
+    CHECK(lex.getIdentifierString() == "abc");
 }
