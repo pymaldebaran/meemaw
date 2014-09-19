@@ -192,7 +192,7 @@ TEST_CASE("Lexer categorise identifier") {
     // the lexer
     Lexer lex = Lexer(test);
 
-    SECTION("Lexer categorise an identifier abc") {
+    SECTION("Lexer categorise a lowercaser identifier") {
         std::string identifier = "abc";
 
         test << identifier;
@@ -203,7 +203,7 @@ TEST_CASE("Lexer categorise identifier") {
         CHECK(lex.getIdentifierString() == identifier);
     }
 
-    SECTION("Lexer categorise an identifier ABC") {
+    SECTION("Lexer categorise an uppercase identifier") {
         std::string identifier = "ABC";
 
         test << identifier;
