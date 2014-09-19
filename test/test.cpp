@@ -199,3 +199,18 @@ TEST_CASE("Lexer categorise an identifier abc") {
     CHECK(tokId == Lexer::TOK_IDENTIFIER);
     CHECK(lex.getIdentifierString() == "abc");
 }
+
+TEST_CASE("Lexer categorise an identifier ABC") {
+    // stream to parse by lexer
+    std::stringstream test;
+
+    // the lexer
+    Lexer lex = Lexer(test);
+
+    test << "ABC";
+
+    int tokId = lex.getNextToken();
+
+    CHECK(tokId == Lexer::TOK_IDENTIFIER);
+    CHECK(lex.getIdentifierString() == "ABC");
+}
