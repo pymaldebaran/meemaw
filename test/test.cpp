@@ -185,32 +185,32 @@ TEST_CASE("Lexer categorise keyword let") {
     REQUIRE(tokId == Lexer::TOK_KEYWORD_LET);
 }
 
-TEST_CASE("Lexer categorise an identifier abc") {
+TEST_CASE("Lexer categorise identifier") {
     // stream to parse by lexer
     std::stringstream test;
 
     // the lexer
     Lexer lex = Lexer(test);
 
-    test << "abc";
+    SECTION("Lexer categorise an identifier abc") {
+        std::string identifier = "abc";
 
-    int tokId = lex.getNextToken();
+        test << identifier;
 
-    CHECK(tokId == Lexer::TOK_IDENTIFIER);
-    CHECK(lex.getIdentifierString() == "abc");
-}
+        int tokId = lex.getNextToken();
 
-TEST_CASE("Lexer categorise an identifier ABC") {
-    // stream to parse by lexer
-    std::stringstream test;
+        CHECK(tokId == Lexer::TOK_IDENTIFIER);
+        CHECK(lex.getIdentifierString() == identifier);
+    }
 
-    // the lexer
-    Lexer lex = Lexer(test);
+    SECTION("Lexer categorise an identifier ABC") {
+        std::string identifier = "ABC";
 
-    test << "ABC";
+        test << identifier;
 
-    int tokId = lex.getNextToken();
+        int tokId = lex.getNextToken();
 
-    CHECK(tokId == Lexer::TOK_IDENTIFIER);
-    CHECK(lex.getIdentifierString() == "ABC");
+        CHECK(tokId == Lexer::TOK_IDENTIFIER);
+        CHECK(lex.getIdentifierString() == identifier);
+    }
 }
