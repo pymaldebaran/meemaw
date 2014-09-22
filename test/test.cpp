@@ -235,4 +235,15 @@ TEST_CASE("Lexer categorise identifier") {
         CHECK(tokId == Lexer::TOK_IDENTIFIER);
         CHECK(lex.getIdentifierString() == identifier);
     }
+
+    SECTION("Lexer categorise identifier with numbers") {
+        std::string identifier = "a2b";
+
+        test << identifier;
+
+        int tokId = lex.getNextToken();
+
+        CHECK(tokId == Lexer::TOK_IDENTIFIER);
+        CHECK(lex.getIdentifierString() == identifier);
+    }
 }
