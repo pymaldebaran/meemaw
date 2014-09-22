@@ -36,7 +36,7 @@ int Lexer::gettok() {
         identifierString = lastChar;
 
         lastChar = stream.get();
-        while (isalpha(lastChar) or lastChar == '_') {
+        while (isalnum(lastChar) or lastChar == '_') {
             identifierString += lastChar;
             lastChar = stream.get();
         }
