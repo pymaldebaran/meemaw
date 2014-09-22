@@ -212,6 +212,14 @@ llvm::Function* FunctionAST::codeGen(CodeGenerator* codeGenerator) {
     return func;
 }
 
+const std::string FloatConstantVariableDeclarationExprAST::getName() const {
+    return "";
+}
+
+const float FloatConstantVariableDeclarationExprAST::getValue() const {
+    return 0.0;
+}
+
 ExprAST* Parser::parseTopLevelExpr() {
     // For the moment the only possible top level expression is a float litteral
     if (ExprAST * expr = parseFloatLitteralExpr()) {
@@ -228,4 +236,8 @@ FloatExpAST* Parser::parseFloatLitteralExpr() {
 
     lexer.getNextToken(); // consume the float
     return result;
+}
+
+FloatConstantVariableDeclarationExprAST* Parser::parseFloatConstantVariableDeclarationExpr() {
+    return nullptr;
 }

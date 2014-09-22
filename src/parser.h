@@ -44,6 +44,7 @@ enum class AstType {
     FLOAT_LITTERAL = 1,
     PROTOTYPE = 2,
     FUNCTION = 3,
+    FLOAT_CONSTANT_VARIABLE_DECLARATION = 4,
 };
 
 // Base class for all expression nodes.
@@ -68,6 +69,7 @@ public:
     virtual llvm::Value* codeGen(CodeGenerator* codeGenerator) = 0;
 };
 
+// TODO correct the name of this class to FloatLitteralExprAST
 class FloatExpAST : public ExprAST {
 private:
     const float value; // value of the float litteral
@@ -115,6 +117,15 @@ public:
     virtual llvm::Function* codeGen(CodeGenerator* codeGenerator);
 };
 
+class FloatConstantVariableDeclarationExprAST : public ExprAST {
+public:
+    // value name
+    const std::string getName() const;
+
+    // value getter
+    const float getValue() const;
+};
+
 
 // Parser for the MeeMaw language.
 // Generate the Abstract Syntax Tree for each token parsed.
@@ -131,6 +142,10 @@ public:
     // Parse float litteral expression
     // floatlitexp ::= float
     FloatExpAST* parseFloatLitteralExpr();
+
+    // Parse floa constant declaration expression
+    // floatconstdecexp ::= let identifier = floatlitexp
+    FloatConstantVariableDeclarationExprAST* parseFloatConstantVariableDeclarationExpr();
 };
 
 #endif // PARSER_H

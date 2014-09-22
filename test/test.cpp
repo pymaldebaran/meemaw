@@ -101,6 +101,7 @@ TEST_CASE("Parser generate AST for float") {
         FloatExpAST* ast = parser.parseFloatLitteralExpr();
 
         REQUIRE(ast != nullptr);
+        // TODO replace REQUIRE by CHECK here for easy diagnostic
         REQUIRE(ast->getAstType() == AstType::FLOAT_LITTERAL);
         REQUIRE(ast->getValue() == 1.0);
     }
@@ -246,4 +247,24 @@ TEST_CASE("Lexer categorise identifier") {
         CHECK(tokId == Lexer::TOK_IDENTIFIER);
         CHECK(lex.getIdentifierString() == identifier);
     }
+}
+
+TEST_CASE("Parser generate AST for litteral constant declaration") {
+    SECTION("Parsing a litteral constant declaration generate a float expression AST node") {
+        std::stringstream test;         // stream to parse by lexer
+        Lexer lex = Lexer(test);        // the lexer
+        Parser parser = Parser(lex);    // the parser
+
+        test << "let aaa = 1.0";
+
+        lex.getNextToken();
+        FloatConstantVariableDeclarationExprAST* ast = parser.parseFloatConstantVariableDeclarationExpr();
+
+        REQUIRE(ast != nullptr);
+        CHECK(ast->getAstType() == AstType::FLOAT_CONSTANT_VARIABLE_DECLARATION);
+        CHECK(ast->getName() == "aaa");
+        CHECK(ast->getValue() == 1.0);
+    }
+
+    //TODO test constant declaration with an expr as value
 }
