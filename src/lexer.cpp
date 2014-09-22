@@ -31,11 +31,15 @@
 int Lexer::gettok() {
     lastChar = stream.get();
 
-    // identifier and keywords: [_a-zA-Z][a-zA-Z0-9]*
+    // identifier and keywords: [_a-zA-Z][_a-zA-Z0-9]*
     if (isalpha(lastChar) or lastChar == '_') {
         identifierString = lastChar;
-        while (isalnum((lastChar = stream.get())))
+
+        lastChar = stream.get();
+        while (isalpha(lastChar) or lastChar == '_') {
             identifierString += lastChar;
+            lastChar = stream.get();
+        }
 
         if (identifierString == "let")
             return TOK_KEYWORD_LET;
