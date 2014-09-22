@@ -33,3 +33,6 @@ build/*
 
 # CTAGS files
 .tags*
+
+# Sublime Text workspace file
+*.sublime-workspace
