@@ -249,6 +249,20 @@ TEST_CASE("Lexer categorise identifier") {
     }
 }
 
+TEST_CASE("Lexer categorise affectation operator") {
+    // stream to parse by lexer
+    std::stringstream test;
+
+    // the lexer
+    Lexer lex = Lexer(test);
+
+    test << "=";
+
+    int tokId = lex.getNextToken();
+
+    CHECK(tokId == Lexer::TOK_OPERATOR_AFFECTATION);
+}
+
 TEST_CASE("Parser generate AST for litteral constant declaration") {
     SECTION("Parsing a litteral constant declaration generate a float expression AST node") {
         std::stringstream test;         // stream to parse by lexer
