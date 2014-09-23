@@ -282,29 +282,6 @@ TEST_CASE("Lexer does not skip EOF after a token") {
     CHECK(tokId == Lexer::TOK_EOF);
 }
 
-TEST_CASE("Lexer only returns EOF once") {
-    // stream to parse by lexer
-    std::stringstream test;
-
-    // the lexer
-    Lexer lex = Lexer(test);
-
-    test << "1.0";
-
-    int tokId = lex.getNextToken();
-
-    CHECK(tokId == Lexer::TOK_FLOAT);
-    CHECK(lex.getFloatValue() == 1.0);
-
-    tokId = lex.getNextToken();
-
-    CHECK(tokId == Lexer::TOK_EOF);
-
-    tokId = lex.getNextToken();
-
-    CHECK(tokId == Lexer::TOK_LEXER_ERROR);
-}
-
 TEST_CASE("Lexer skip one whitespace between tokens") {
     // stream to parse by lexer
     std::stringstream test;
