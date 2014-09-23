@@ -263,6 +263,72 @@ TEST_CASE("Lexer categorise affectation operator") {
     CHECK(tokId == Lexer::TOK_OPERATOR_AFFECTATION);
 }
 
+TEST_CASE("Lexer does not skip EOF after a token") {
+    // stream to parse by lexer
+    std::stringstream test;
+
+    // the lexer
+    Lexer lex = Lexer(test);
+
+    test << "1.0";
+
+    int tokId = lex.getNextToken();
+
+    CHECK(tokId == Lexer::TOK_FLOAT);
+    CHECK(lex.getFloatValue() == 1.0);
+
+    tokId = lex.getNextToken();
+
+    CHECK(tokId == Lexer::TOK_EOF);
+}
+
+TEST_CASE("Lexer only returns EOF once") {
+    // stream to parse by lexer
+    std::stringstream test;
+
+    // the lexer
+    Lexer lex = Lexer(test);
+
+    test << "1.0";
+
+    int tokId = lex.getNextToken();
+
+    CHECK(tokId == Lexer::TOK_FLOAT);
+    CHECK(lex.getFloatValue() == 1.0);
+
+    tokId = lex.getNextToken();
+
+    CHECK(tokId == Lexer::TOK_EOF);
+
+    tokId = lex.getNextToken();
+
+    CHECK(tokId == Lexer::TOK_LEXER_ERROR);
+}
+
+TEST_CASE("Lexer skip one whitespace between tokens") {
+    // stream to parse by lexer
+    std::stringstream test;
+
+    // the lexer
+    Lexer lex = Lexer(test);
+
+    test << "1.0 2.0";
+
+    int tokId = lex.getNextToken();
+
+    CHECK(tokId == Lexer::TOK_FLOAT);
+    CHECK(lex.getFloatValue() == 1.0);
+
+    tokId = lex.getNextToken();
+
+    CHECK(tokId == Lexer::TOK_FLOAT);
+    CHECK(lex.getFloatValue() == 2.0);
+
+    tokId = lex.getNextToken();
+
+    CHECK(tokId == Lexer::TOK_EOF);
+}
+
 TEST_CASE("Parser generate AST for litteral constant declaration") {
     SECTION("Parsing a litteral constant declaration generate a float expression AST node") {
         std::stringstream test;         // stream to parse by lexer
