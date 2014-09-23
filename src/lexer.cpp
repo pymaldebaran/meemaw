@@ -29,7 +29,10 @@
 #include <stdexcept>
 
 int Lexer::gettok() {
-    lastChar = stream.get();
+    // Skip any whitespace.
+    while (isspace(lastChar)) {
+        lastChar = stream.get();
+    }
 
     // identifier and keywords: [_a-zA-Z][_a-zA-Z0-9]*
     if (isalpha(lastChar) or lastChar == '_') {
