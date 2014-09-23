@@ -27,6 +27,7 @@
 #define LEXER_H
 
 #include <istream>
+#include <map>
 
 // Lexer for the MeeMaw language
 class Lexer {
@@ -39,22 +40,32 @@ public:
         TOK_EOF   = -2,
         TOK_KEYWORD_LET = -3,
         TOK_IDENTIFIER = -4,
+        TOK_OPERATOR_AFFECTATION = -5,
         TOK_LEXER_ERROR = -254,     // returned by lexer in case of error
         TOK_NONE  = -255            // initial value of the currentToken attribute
     };
-
 
     // Constructor
     explicit Lexer(std::istream& strm);
 
     // floatValue getter
-    float getFloatValue() const;
+    // Returns true if the current token is a float litteral and put its value
+    // in the result parameter.
+    // Returns false otherwise and the result parameter stay unmodified.
+    bool getFloatValue(float& result) const;
 
     // identifierString getter
-    std::string getIdentifierString() const;
+    // Returns true if the current token is an identifier and put the identifier
+    // string in the result parameter.
+    // Returns false otherwise and the result parameter stay unmodified.
+    bool getIdentifierString(std::string& result) const;
 
+    // TODO replace this method with nextToken() because it looks like a getter
     // Reads another token from the lexer and updates CurTok with its results
     int getNextToken();
+
+    // currentToken getter
+    int getCurrentToken();
 
 private:
     std::istream& stream;           // input stream to parse
@@ -63,8 +74,17 @@ private:
     int currentToken;               // Current token i.e. the last returned by getNextToken()
     int lastChar;                   // Store the last char read by gettok()
 
-    // gettok - Return the next token from standard input.
+    // Return the next token from standard input.
     int gettok();
+
+    // Store the names of the enums for easy printing
+    static const std::map<int, const char* const> TOKEN_NAMES;
+
+    // Simple error display helper
+    static void PrintError(const char* const msg);
+
+    // Error display helper when handling with unexpected token
+    static void PrintUnexpectedTokenError(const char* const when, const int actualToken, const int expectedToken);
 };
 
 #endif // LEXER_H

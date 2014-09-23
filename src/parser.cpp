@@ -81,11 +81,15 @@ const std::vector<std::string> ProtoTypeAST::getArgs() const {
 llvm::Function* ProtoTypeAST::codeGen(CodeGenerator* codeGenerator) {
     // TODO remove this as soon as we support real function in the language
     if (name != "") {
+        // TODO replace this with a custom error function
+        // TODO return nullptr instead of throwing an exception
         char buffer[255];
         snprintf(buffer, 255, "Code Generator error: generating code of named function not yet supported : name=%s\n", name.c_str());
         throw std::logic_error(buffer);
     }
     if (not args.empty()) {
+        // TODO replace this with a custom error function
+        // TODO return nullptr instead of throwing an exception
         char buffer[255];
         snprintf(buffer, 255, "Code Generator error: generating code of function with args not yet supported : nb args=%lu\n", args.size());
         throw std::logic_error(buffer);
@@ -112,6 +116,8 @@ llvm::Function* ProtoTypeAST::codeGen(CodeGenerator* codeGenerator) {
         argsType,   // types of the arguments
         false);     // not a vararg function
     if (funcType == nullptr) {
+        // TODO replace this with a custom error function
+        // TODO return nullptr instead of throwing an exception
         char buffer[255];
         snprintf(buffer, 255, "Code Generator error: prototype AST node failed to get a function type.\n");
         throw std::logic_error(buffer);
@@ -124,6 +130,8 @@ llvm::Function* ProtoTypeAST::codeGen(CodeGenerator* codeGenerator) {
         name,                               // name of the function
         codeGenerator->getModule());        // the module to insert the function into
     if (function == nullptr) {
+        // TODO replace this with a custom error function
+        // TODO return nullptr instead of throwing an exception
         char buffer[255];
         snprintf(buffer, 255, "Code Generator error: prototype AST node failed to create the function object.\n");
         throw std::logic_error(buffer);
@@ -157,6 +165,8 @@ ExprAST* FunctionAST::getBody() const {
 llvm::Function* FunctionAST::codeGen(CodeGenerator* codeGenerator) {
     // check if the function node is valid
     if (prototype == nullptr) {
+        // TODO replace this with a custom error function
+        // TODO return nullptr instead of throwing an exception
         char buffer[255];
         snprintf(buffer, 255, "Code Generator error: function AST node without prototype.\n");
         throw std::logic_error(buffer);
@@ -169,6 +179,8 @@ llvm::Function* FunctionAST::codeGen(CodeGenerator* codeGenerator) {
     // Generate the code of the prototype
     llvm::Function* func = prototype->codeGen(codeGenerator);
     if (func == nullptr) {
+        // TODO replace this with a custom error function
+        // TODO return nullptr instead of throwing an exception
         char buffer[255];
         snprintf(buffer, 255, "Code Generator error: function AST node can not generate prototype code.\n");
         throw std::logic_error(buffer);
@@ -180,6 +192,8 @@ llvm::Function* FunctionAST::codeGen(CodeGenerator* codeGenerator) {
         "function basic block", //name
         func);                  //parent
     if (basicBlk == nullptr) {
+        // TODO replace this with a custom error function
+        // TODO return nullptr instead of throwing an exception
         char buffer[255];
         snprintf(buffer, 255, "Code Generator error: function AST node can not create basic block to put the code in.\n");
         throw std::logic_error(buffer);
@@ -193,6 +207,8 @@ llvm::Function* FunctionAST::codeGen(CodeGenerator* codeGenerator) {
         // Error reading body, remove function
         func->eraseFromParent();
 
+        // TODO replace this with a custom error function
+        // TODO return nullptr instead of throwing an exception
         char buffer[255];
         snprintf(buffer, 255, "Code Generator error: function AST node can not generate body code.\n");
         throw std::logic_error(buffer);
@@ -204,6 +220,8 @@ llvm::Function* FunctionAST::codeGen(CodeGenerator* codeGenerator) {
     // Validate the generated code, checking for consistency.
     bool verifyError = llvm::verifyFunction(*func, llvm::PrintMessageAction);
     if (verifyError) {
+        // TODO replace this with a custom error function
+        // TODO return nullptr instead of throwing an exception
         char buffer[255];
         snprintf(buffer, 255, "Code Generator error: function AST node has generated code but failed verification.\n");
         throw std::logic_error(buffer);
@@ -212,12 +230,24 @@ llvm::Function* FunctionAST::codeGen(CodeGenerator* codeGenerator) {
     return func;
 }
 
+FloatConstantVariableDeclarationExprAST::FloatConstantVariableDeclarationExprAST(std::string theName, FloatExpAST* theRhsExpr) :
+    ExprAST(AstType::FLOAT_CONSTANT_VARIABLE_DECLARATION),
+    name(theName),
+    rhsExpr(theRhsExpr)
+{}
+
 const std::string FloatConstantVariableDeclarationExprAST::getName() const {
-    return "";
+    return name;
 }
 
-const float FloatConstantVariableDeclarationExprAST::getValue() const {
-    return 0.0;
+FloatExpAST* FloatConstantVariableDeclarationExprAST::getRhsExpr() const {
+    return rhsExpr;
+}
+
+
+llvm::Value* FloatConstantVariableDeclarationExprAST::codeGen(CodeGenerator* codeGenerator) {
+    //TODO put some real code here
+    return nullptr;
 }
 
 ExprAST* Parser::parseTopLevelExpr() {
@@ -232,12 +262,62 @@ ExprAST* Parser::parseTopLevelExpr() {
 }
 
 FloatExpAST* Parser::parseFloatLitteralExpr() {
-    FloatExpAST* result = new FloatExpAST(lexer.getFloatValue());
+    float fVal;
+
+    if (not lexer.getFloatValue(fVal)) {
+        // TODO replace this with a custom error function
+        fprintf(stderr, "PARSER ERROR: Can't get a float value from the lexer.\n");
+        return nullptr;
+    }
+    FloatExpAST* result = new FloatExpAST(fVal);
 
     lexer.getNextToken(); // consume the float
     return result;
 }
 
 FloatConstantVariableDeclarationExprAST* Parser::parseFloatConstantVariableDeclarationExpr() {
-    return nullptr;
+    // let keyword
+    if (lexer.getCurrentToken() != Lexer::TOK_KEYWORD_LET) {
+        // TODO replace this with a custom error function
+        fprintf(stderr, "PARSER ERROR: 'let' keyword expected TOK_KEYWORD_LET(%d) but (%d) found.\n",
+                Lexer::TOK_KEYWORD_LET,
+                lexer.getCurrentToken());
+        return nullptr;
+    }
+
+    lexer.getNextToken(); // consume "let"
+
+    // constant name
+    std::string name; // variable to store the name to use it later during AST node construction
+    if (not lexer.getIdentifierString(name)) {
+        // TODO replace this with a custom error function
+        fprintf(stderr, "PARSER ERROR: identifier name expected TOK_IDENTIFIER(%d) but (%d) found.\n",
+                Lexer::TOK_IDENTIFIER,
+                lexer.getCurrentToken());
+        return nullptr;
+    }
+
+    lexer.getNextToken(); // consume identifier
+
+    // affectation operator "="
+    if (lexer.getCurrentToken() != Lexer::TOK_OPERATOR_AFFECTATION) {
+        // TODO replace this with a custom error function
+        fprintf(stderr, "PARSER ERROR: affectation operator '=' expected TOK_OPERATOR_AFFECTATION(%d) but (%d) found.\n",
+                Lexer::TOK_OPERATOR_AFFECTATION,
+                lexer.getCurrentToken());
+        return nullptr;
+    }
+
+    lexer.getNextToken(); // consume affectation operator "="
+
+    // TODO continue here
+    FloatExpAST* rhsExpr = parseFloatLitteralExpr();
+    if (rhsExpr == nullptr) {
+        // TODO replace this with a custom error function
+        fprintf(stderr, "PARSER ERROR: failed to parse Right Hand Side expression of the affectation.\n");
+        return nullptr;
+    }
+
+    // everything went right... we can do AST node construction
+    return new FloatConstantVariableDeclarationExprAST(name, rhsExpr);
 }

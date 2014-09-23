@@ -75,7 +75,9 @@ TEST_CASE("Lexer categorise float") {
         int tokId = lex.getNextToken();
 
         REQUIRE(tokId == Lexer::TOK_FLOAT);
-        REQUIRE(lex.getFloatValue() == 1.0);
+        float fVal;
+        REQUIRE(lex.getFloatValue(fVal));
+        REQUIRE(fVal == 1.0);
     }
 
     SECTION("Any float between 0.0 and max float is categorized as float") {
@@ -85,7 +87,9 @@ TEST_CASE("Lexer categorise float") {
 
         int tokId = lex.getNextToken();
 
-        REQUIRE(abs(lex.getFloatValue() - f) < F_EPSILON);
+        float fVal;
+        REQUIRE(lex.getFloatValue(fVal));
+        REQUIRE(abs(fVal - f) < F_EPSILON);
     }
 }
 
@@ -201,7 +205,9 @@ TEST_CASE("Lexer categorise identifier") {
         int tokId = lex.getNextToken();
 
         CHECK(tokId == Lexer::TOK_IDENTIFIER);
-        CHECK(lex.getIdentifierString() == identifier);
+        std::string idStr;
+        CHECK(lex.getIdentifierString(idStr));
+        CHECK(idStr == identifier);
     }
 
     SECTION("Lexer categorise an uppercase identifier") {
@@ -212,7 +218,9 @@ TEST_CASE("Lexer categorise identifier") {
         int tokId = lex.getNextToken();
 
         CHECK(tokId == Lexer::TOK_IDENTIFIER);
-        CHECK(lex.getIdentifierString() == identifier);
+        std::string idStr;
+        CHECK(lex.getIdentifierString(idStr));
+        CHECK(idStr == identifier);
     }
 
     SECTION("Lexer categorise identifier with leading underscore") {
@@ -223,7 +231,9 @@ TEST_CASE("Lexer categorise identifier") {
         int tokId = lex.getNextToken();
 
         CHECK(tokId == Lexer::TOK_IDENTIFIER);
-        CHECK(lex.getIdentifierString() == identifier);
+        std::string idStr;
+        CHECK(lex.getIdentifierString(idStr));
+        CHECK(idStr == identifier);
     }
 
     SECTION("Lexer categorise identifier with underscore") {
@@ -234,7 +244,9 @@ TEST_CASE("Lexer categorise identifier") {
         int tokId = lex.getNextToken();
 
         CHECK(tokId == Lexer::TOK_IDENTIFIER);
-        CHECK(lex.getIdentifierString() == identifier);
+        std::string idStr;
+        CHECK(lex.getIdentifierString(idStr));
+        CHECK(idStr == identifier);
     }
 
     SECTION("Lexer categorise identifier with numbers") {
@@ -245,7 +257,9 @@ TEST_CASE("Lexer categorise identifier") {
         int tokId = lex.getNextToken();
 
         CHECK(tokId == Lexer::TOK_IDENTIFIER);
-        CHECK(lex.getIdentifierString() == identifier);
+        std::string idStr;
+        CHECK(lex.getIdentifierString(idStr));
+        CHECK(idStr == identifier);
     }
 }
 
@@ -275,7 +289,9 @@ TEST_CASE("Lexer does not skip EOF after a token") {
     int tokId = lex.getNextToken();
 
     CHECK(tokId == Lexer::TOK_FLOAT);
-    CHECK(lex.getFloatValue() == 1.0);
+    float fVal;
+    REQUIRE(lex.getFloatValue(fVal));
+    CHECK(fVal == 1.0);
 
     tokId = lex.getNextToken();
 
@@ -292,19 +308,24 @@ TEST_CASE("Lexer skip one whitespace between tokens") {
     test << "1.0 2.0";
 
     int tokId = lex.getNextToken();
+    float fVal;
 
     CHECK(tokId == Lexer::TOK_FLOAT);
-    CHECK(lex.getFloatValue() == 1.0);
+    REQUIRE(lex.getFloatValue(fVal));
+    CHECK(fVal == 1.0);
 
     tokId = lex.getNextToken();
 
     CHECK(tokId == Lexer::TOK_FLOAT);
-    CHECK(lex.getFloatValue() == 2.0);
+    REQUIRE(lex.getFloatValue(fVal));
+    CHECK(fVal == 2.0);
 
     tokId = lex.getNextToken();
 
     CHECK(tokId == Lexer::TOK_EOF);
 }
+
+// TODO test multiple whitespace between tokens
 
 TEST_CASE("Parser generate AST for litteral constant declaration") {
     SECTION("Parsing a litteral constant declaration generate a float expression AST node") {
@@ -315,12 +336,15 @@ TEST_CASE("Parser generate AST for litteral constant declaration") {
         test << "let aaa = 1.0";
 
         lex.getNextToken();
-        FloatConstantVariableDeclarationExprAST* ast = parser.parseFloatConstantVariableDeclarationExpr();
+        FloatConstantVariableDeclarationExprAST* declarationAst = parser.parseFloatConstantVariableDeclarationExpr();
 
-        REQUIRE(ast != nullptr);
-        CHECK(ast->getAstType() == AstType::FLOAT_CONSTANT_VARIABLE_DECLARATION);
-        CHECK(ast->getName() == "aaa");
-        CHECK(ast->getValue() == 1.0);
+        REQUIRE(declarationAst != nullptr);
+        CHECK(declarationAst->getAstType() == AstType::FLOAT_CONSTANT_VARIABLE_DECLARATION);
+        CHECK(declarationAst->getName() == "aaa");
+        REQUIRE(declarationAst->getRhsExpr() != nullptr);
+        REQUIRE(declarationAst->getRhsExpr()->getAstType() == AstType::FLOAT_LITTERAL);
+        FloatExpAST* rhsAst = static_cast<FloatExpAST*>(declarationAst->getRhsExpr());
+        CHECK(rhsAst->getValue() == 1.0);
     }
 
     //TODO test constant declaration with an expr as value

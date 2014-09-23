@@ -119,11 +119,20 @@ public:
 
 class FloatConstantVariableDeclarationExprAST : public ExprAST {
 public:
+    // Constructor
+    explicit FloatConstantVariableDeclarationExprAST(std::string theName, FloatExpAST* theRhsExpr);
+
     // value name
     const std::string getName() const;
 
     // value getter
-    const float getValue() const;
+    FloatExpAST* getRhsExpr() const;
+
+    virtual llvm::Value* codeGen(CodeGenerator* codeGenerator);
+
+private:
+    const std::string name; // Name of the constant
+    FloatExpAST* rhsExpr;   // float litteral expression to be named
 };
 
 
