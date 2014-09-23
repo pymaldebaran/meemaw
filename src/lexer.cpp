@@ -60,6 +60,12 @@ int Lexer::gettok() {
         return TOK_FLOAT;
     }
 
+    // Affectation operator: =
+    if (lastChar == '=')
+    {
+        return TOK_OPERATOR_AFFECTATION;
+    }
+
     // Check for end of file.  Don't eat the EOF.
     if (lastChar == EOF)
         return TOK_EOF;
