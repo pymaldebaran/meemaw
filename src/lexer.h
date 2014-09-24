@@ -45,6 +45,9 @@ public:
         TOK_NONE  = -255            // initial value of the currentToken attribute
     };
 
+    // Store the names of the enums for easy printing
+    static const std::map<int, const char* const> TOKEN_NAMES;
+
     // Constructor
     explicit Lexer(std::istream& strm);
 
@@ -76,9 +79,6 @@ private:
 
     // Return the next token from standard input.
     int gettok();
-
-    // Store the names of the enums for easy printing
-    static const std::map<int, const char* const> TOKEN_NAMES;
 
     // Simple error display helper
     static void PrintError(const char* const msg);

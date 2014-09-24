@@ -51,9 +51,24 @@ enum class AstType {
 class ExprAST {
 private:
     const AstType astType; // used to determine type at runtime (tests only)
+
 protected:
     // Constructor for member initialisation in derived classes
     explicit ExprAST(AstType ast);
+
+    // Simple error display helper for use in codeGen() method with one param.s
+    // Always returns nullptr in order to be used like this :
+    //     return CodeGenError("blahblah");
+    // No newline needed at the end of the message
+    template<typename T>
+    static std::nullptr_t CodeGenError(const char* const msg, T t);
+
+    // Simple error display helper for use in codeGen() method
+    // Always returns nullptr in order to be used like this :
+    //     return CodeGenError("blahblah");
+    // No newline needed at the end of the message
+    static std::nullptr_t CodeGenError(const char* const msg);
+
 public:
     // Constructor
     explicit ExprAST();
@@ -141,6 +156,18 @@ private:
 class Parser {
 private:
     Lexer& lexer;
+
+    // Simple error display helper for use in parse* methods
+    // Always returns nullptr in order to be used like this :
+    //     return ParseError("blahblah");
+    // No newline needed at the end of the message
+    static std::nullptr_t ParserError(const char* const msg);
+
+    // Error display helper when handling with unexpected token
+    // Always returns nullptr in order to be used like this :
+    //     return ParseError("blahblah", t1, t2);
+    // No newline needed at the end of the message
+    static std::nullptr_t ParserErrorUnexpectedToken(const char* const when, const int actualToken, const int expectedToken);
 public:
     explicit Parser(Lexer& lexer);
 
