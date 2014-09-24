@@ -104,7 +104,7 @@ private:
     const std::vector<std::string> args;    // arguments name of the function
 public:
     // Constructor
-    explicit ProtoTypeAST(const std::string theName, const std::vector<std::string> theArgs);
+    explicit ProtoTypeAST(const std::string& theName, const std::vector<std::string>& theArgs);
 
     // name getter
     const std::string getName() const;

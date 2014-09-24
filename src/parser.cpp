@@ -78,7 +78,7 @@ llvm::Value* FloatExpAST::codeGen(CodeGenerator* codeGenerator) {
     return llvm::ConstantFP::get(llvm::getGlobalContext(), llvm::APFloat(value));;
 }
 
-ProtoTypeAST::ProtoTypeAST(const std::string theName, const std::vector<std::string> theArgs) :
+ProtoTypeAST::ProtoTypeAST(const std::string& theName, const std::vector<std::string>& theArgs) :
     ExprAST(AstType::PROTOTYPE),
     name(theName),
     args(theArgs)
