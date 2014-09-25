@@ -165,7 +165,7 @@ private:
     // No newline needed at the end of the message
     static std::nullptr_t ParserError(const char* const msg);
 
-    // Error display helper when handling with unexpected token but can't 
+    // Error display helper when handling with unexpected token but can't
     // specify which token was expected
     //
     // Always returns nullptr in order to be used like this :

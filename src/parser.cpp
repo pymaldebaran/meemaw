@@ -258,15 +258,15 @@ FunctionAST* Parser::parseTopLevelExpr() {
 ExprAST* Parser::parsePrimaryExpr() {
     ExprAST* expr;
 
-    switch(lexer.getCurrentToken()) {
-        default:
-            return ParserErrorUnexpectedToken("Can't parse primary expression, unexpected token ", lexer.getCurrentToken());
-        case Lexer::TOK_FLOAT:
-            expr = parseFloatLitteralExpr();
-            break;
-        case Lexer::TOK_KEYWORD_LET:
-            expr =  parseFloatConstantVariableDeclarationExpr();
-            break;
+    switch (lexer.getCurrentToken()) {
+    default:
+        return ParserErrorUnexpectedToken("Can't parse primary expression, unexpected token ", lexer.getCurrentToken());
+    case Lexer::TOK_FLOAT:
+        expr = parseFloatLitteralExpr();
+        break;
+    case Lexer::TOK_KEYWORD_LET:
+        expr =  parseFloatConstantVariableDeclarationExpr();
+        break;
     }
 
     if (expr == nullptr)
