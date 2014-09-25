@@ -326,13 +326,13 @@ TEST_CASE("Lexer handles whitespaces") {
 }
 
 TEST_CASE("Parser generate AST for litteral constant declaration") {
+    std::stringstream test;         // stream to parse by lexer
+    Lexer lex = Lexer(test);        // the lexer
+    Parser parser = Parser(lex);    // the parser
+
+    test << "let aaa = 1.0";
+
     SECTION("Parsing a litteral constant declaration generate a float expression AST node") {
-        std::stringstream test;         // stream to parse by lexer
-        Lexer lex = Lexer(test);        // the lexer
-        Parser parser = Parser(lex);    // the parser
-
-        test << "let aaa = 1.0";
-
         lex.getNextToken();
         FloatConstantVariableDeclarationExprAST* declarationAst = parser.parseFloatConstantVariableDeclarationExpr();
 
@@ -346,12 +346,6 @@ TEST_CASE("Parser generate AST for litteral constant declaration") {
     }
 
     SECTION("Parser recognise litteral constant declaration as a top level expression") {
-        std::stringstream test;         // stream to parse by lexer
-        Lexer lex = Lexer(test);        // the lexer
-        Parser parser = Parser(lex);    // the parser
-
-        test << "let aaa = 1.0";
-
         lex.getNextToken();
         ExprAST* ast = parser.parseTopLevelExpr();
 
