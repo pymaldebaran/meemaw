@@ -366,9 +366,15 @@ TEST_CASE("Parser generate AST for litteral constant declaration") {
         CHECK(protoAst->getArgs().empty());
 
         REQUIRE(funcAst->getBody() != nullptr);
-        REQUIRE(funcAst->getBody()->getAstType() == AstType::FLOAT_LITTERAL);
-        FloatExpAST* bodyAst = static_cast<FloatExpAST*>(funcAst->getBody());
-        CHECK(bodyAst->getValue() == 1.0);
+        REQUIRE(funcAst->getBody()->getAstType() == AstType::FLOAT_CONSTANT_VARIABLE_DECLARATION);
+
+        // now check the content of the body
+        FloatConstantVariableDeclarationExprAST* bodyAst = static_cast<FloatConstantVariableDeclarationExprAST*>(funcAst->getBody());
+        CHECK(bodyAst->getName() == "aaa");
+        REQUIRE(bodyAst->getRhsExpr() != nullptr);
+        REQUIRE(bodyAst->getRhsExpr()->getAstType() == AstType::FLOAT_LITTERAL);
+        FloatExpAST* rhsAst = static_cast<FloatExpAST*>(bodyAst->getRhsExpr());
+        CHECK(rhsAst->getValue() == 1.0);
     }
 
     //TODO test constant declaration with an expr as value
