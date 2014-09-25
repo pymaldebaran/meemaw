@@ -138,7 +138,7 @@ TEST_CASE("Parser generate AST for float") {
     }
 }
 
-TEST_CASE("Code generated for float expression is correct", "[problem]") {
+TEST_CASE("Code generated for float expression is correct") {
     // LLVM stuff
     // TODO: put all this in a class... but witch one
     llvm::InitializeNativeTarget();
@@ -165,7 +165,7 @@ TEST_CASE("Code generated for float expression is correct", "[problem]") {
     test << "1.0";
 
     lex.getNextToken();
-    ExprAST* ast = parser.parseTopLevelExpr();
+    FunctionAST* ast = parser.parseTopLevelExpr();
     llvm::Value* code = gen.codeGen(ast);
 
     REQUIRE(code != nullptr);
@@ -376,3 +376,46 @@ TEST_CASE("Parser generate AST for litteral constant declaration") {
 
     //TODO test constant declaration with an expr as value
 }
+
+TEST_CASE("Code generated for float litteral constant declaration expression is correct") {
+    // LLVM stuff
+    // TODO: put all this in a class... but witch one
+    llvm::InitializeNativeTarget();
+    llvm::LLVMContext& context = llvm::getGlobalContext();
+    llvm::Module* module = new llvm::Module("Test module", context); // Make the module, which holds all the code.
+
+    if (module == nullptr) {
+        fprintf(stderr, "no module\n");
+    }
+
+    // non LLVM stuff
+    std::stringstream test;                     // stream to parse by lexer
+    Lexer lex = Lexer(test);                    // the lexer
+    Parser parser = Parser(lex);                // the parser
+    CodeGenerator gen = CodeGenerator(module);  // the code generator
+
+    // create a JIT Engine (This takes ownership of the module).
+    std::string errStr;
+    llvm::ExecutionEngine* execEngine = llvm::EngineBuilder(module).setErrorStr(&errStr).setEngineKind(llvm::EngineKind::JIT).create();
+    if (execEngine == nullptr) {
+        fprintf(stderr, "no exec engine: %s\n", errStr.c_str());
+    }
+
+    test << "let aaa = 1.0";
+
+    lex.getNextToken();
+    FunctionAST* ast = parser.parseTopLevelExpr();
+    llvm::Value* code = gen.codeGen(ast);
+
+    REQUIRE(code != nullptr);
+    //TODO add some test about the module content
+    //     symbol table content ?
+
+    llvm::Function* funcCode = static_cast<llvm::Function*>(code);
+    const std::vector<llvm::GenericValue> noArgs = std::vector<llvm::GenericValue>();
+
+    float result = execEngine->runFunction(funcCode, noArgs).FloatVal;
+    REQUIRE(result == 1.0);
+}
+
+// TODO add a test with usage of the created constant
