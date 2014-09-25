@@ -118,22 +118,21 @@ TEST_CASE("Parser generate AST for float") {
         test << "1.0";
 
         lex.getNextToken();
-        ExprAST* ast = parser.parseTopLevelExpr();
+        FunctionAST* ast = parser.parseTopLevelExpr();
 
+        // Do we have an float expression ?
+        // i.e. an anonymous function returning a float
         REQUIRE(ast != nullptr);
-        REQUIRE(ast->getAstType() == AstType::FUNCTION);
 
-        FunctionAST* funcAst = static_cast<FunctionAST*>(ast);
-
-        REQUIRE(funcAst->getPrototype() != nullptr);
-        REQUIRE(funcAst->getPrototype()->getAstType() == AstType::PROTOTYPE);
-        ProtoTypeAST* protoAst = static_cast<ProtoTypeAST*>(funcAst->getPrototype());
+        REQUIRE(ast->getPrototype() != nullptr);
+        REQUIRE(ast->getPrototype()->getAstType() == AstType::PROTOTYPE);
+        ProtoTypeAST* protoAst = static_cast<ProtoTypeAST*>(ast->getPrototype());
         REQUIRE(protoAst->getName() == "");
         REQUIRE(protoAst->getArgs().empty());
 
-        REQUIRE(funcAst->getBody() != nullptr);
-        REQUIRE(funcAst->getBody()->getAstType() == AstType::FLOAT_LITTERAL);
-        FloatExpAST* bodyAst = static_cast<FloatExpAST*>(funcAst->getBody());
+        REQUIRE(ast->getBody() != nullptr);
+        REQUIRE(ast->getBody()->getAstType() == AstType::FLOAT_LITTERAL);
+        FloatExpAST* bodyAst = static_cast<FloatExpAST*>(ast->getBody());
         REQUIRE(bodyAst->getValue() == 1.0);
     }
 }

@@ -234,7 +234,7 @@ std::nullptr_t Parser::ParserErrorUnexpectedToken(const char* const when, const 
     return nullptr;
 }
 
-ExprAST* Parser::parseTopLevelExpr() {
+FunctionAST* Parser::parseTopLevelExpr() {
     // For the moment the only possible top level expression is a float litteral
     ExprAST * expr = parseFloatLitteralExpr();
 

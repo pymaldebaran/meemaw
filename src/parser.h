@@ -171,9 +171,18 @@ private:
 public:
     explicit Parser(Lexer& lexer);
 
-    // Parse top level expression
+    // Parse top level expression.
+    //
+    // A top level expression is an expression that can be used outside of any
+    // other program structure. Only expression that could be used
+    // at module level (or directly in the interpreter) is a top level 
+    // expression.
+    //
+    // A top level expression behave like an anonymous function that returns the
+    // value of the expression.
+    //
     // top ::= floatlitexp
-    ExprAST* parseTopLevelExpr();
+    FunctionAST* parseTopLevelExpr();
 
     // Parse float litteral expression
     // floatlitexp ::= float
