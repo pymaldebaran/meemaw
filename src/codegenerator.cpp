@@ -25,6 +25,7 @@
  */
 #include "codegenerator.h"
 
+#include "ast.h"
 #include "parser.h"
 
 CodeGenerator::CodeGenerator(llvm::Module* mod) :

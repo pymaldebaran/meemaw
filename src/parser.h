@@ -26,129 +26,17 @@
 #ifndef PARSER_H
 #define PARSER_H
 
-#include "llvm/IR/Value.h"
-#include "llvm/IR/Function.h"
-
 #include <string>
 #include <vector>
 
 // Forward declarations
 class Lexer;
 class CodeGenerator;
-
-// Specify ExprAST type without using RTTI.
-// This is only usefull for tesing purpose and should not be used in actual
-// code.
-enum class AstType {
-    NONE = 0, //should never happen, only the base class use it
-    FLOAT_LITTERAL = 1,
-    PROTOTYPE = 2,
-    FUNCTION = 3,
-    FLOAT_CONSTANT_VARIABLE_DECLARATION = 4,
-};
-
-// Base class for all expression nodes.
-class ExprAST {
-private:
-    const AstType astType; // used to determine type at runtime (tests only)
-
-protected:
-    // Constructor for member initialisation in derived classes
-    explicit ExprAST(AstType ast);
-
-    // Simple error display helper for use in codeGen() method with one param.s
-    // Always returns nullptr in order to be used like this :
-    //     return CodeGenError("blahblah");
-    // No newline needed at the end of the message
-    template<typename T>
-    static std::nullptr_t CodeGenError(const char* const msg, T t);
-
-    // Simple error display helper for use in codeGen() method
-    // Always returns nullptr in order to be used like this :
-    //     return CodeGenError("blahblah");
-    // No newline needed at the end of the message
-    static std::nullptr_t CodeGenError(const char* const msg);
-
-public:
-    // Constructor
-    explicit ExprAST();
-
-    // Virtual destructor since we have a virtual function
-    virtual ~ExprAST() {}
-
-    // astType getter
-    const AstType getAstType() const;
-
-    // Generate LLVM Intermediary Representation for the node.
-    // Call recursively codeGen() method on enclosing nodes if any.
-    virtual llvm::Value* codeGen(CodeGenerator* codeGenerator) = 0;
-};
-
-// TODO correct the name of this class to FloatLitteralExprAST
-class FloatExpAST : public ExprAST {
-private:
-    const float value; // value of the float litteral
-public:
-    // Constructor
-    explicit FloatExpAST(const float val);
-
-    // value getter
-    const float getValue() const;
-
-    virtual llvm::Value* codeGen(CodeGenerator* codeGenerator);
-};
-
-class ProtoTypeAST : public ExprAST {
-private:
-    const std::string name;                 // name of the function
-    const std::vector<std::string> args;    // arguments name of the function
-public:
-    // Constructor
-    explicit ProtoTypeAST(const std::string& theName, const std::vector<std::string>& theArgs);
-
-    // name getter
-    const std::string getName() const;
-
-    // args getter
-    const std::vector<std::string> getArgs() const;
-
-    virtual llvm::Function* codeGen(CodeGenerator* codeGenerator);
-};
-
-class FunctionAST : public ExprAST {
-private:
-    ProtoTypeAST* prototype;    // prototype of the function
-    ExprAST* body;              // body of the function
-public:
-    // constructor
-    explicit FunctionAST(ProtoTypeAST* proto, ExprAST* theBody);
-
-    // prototype getter
-    ProtoTypeAST* getPrototype() const;
-
-    // body getter
-    ExprAST* getBody() const;
-
-    virtual llvm::Function* codeGen(CodeGenerator* codeGenerator);
-};
-
-class FloatConstantVariableDeclarationExprAST : public ExprAST {
-public:
-    // Constructor
-    explicit FloatConstantVariableDeclarationExprAST(std::string theName, FloatExpAST* theRhsExpr);
-
-    // value name
-    const std::string getName() const;
-
-    // value getter
-    FloatExpAST* getRhsExpr() const;
-
-    virtual llvm::Value* codeGen(CodeGenerator* codeGenerator);
-
-private:
-    const std::string name; // Name of the constant
-    FloatExpAST* rhsExpr;   // float litteral expression to be named
-};
+class ProtoTypeAST;
+class FunctionAST;
+class ExprAST;
+class FloatExpAST;
+class FloatConstantVariableDeclarationExprAST;
 
 
 // Parser for the MeeMaw language.

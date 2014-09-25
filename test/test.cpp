@@ -41,6 +41,7 @@
 #include "../src/lexer.h"
 #include "../src/parser.h"
 #include "../src/codegenerator.h"
+#include "../src/ast.h"
 
 // TESTS /////////////////////////////////////
 //maximum difference between 2 floats to be considered equal
