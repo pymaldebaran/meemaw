@@ -225,6 +225,13 @@ std::nullptr_t Parser::ParserError(const char* const msg) {
     return nullptr;
 }
 
+std::nullptr_t Parser::ParserErrorUnexpectedToken(const char* const msg, const int actualToken) {
+    std::cerr   << "[PARSE ERROR] " << msg << Lexer::TOKEN_NAMES.at(actualToken) << "(" << actualToken << ")"
+                << "\n";
+
+    return nullptr;
+}
+
 std::nullptr_t Parser::ParserErrorUnexpectedToken(const char* const when, const int actualToken, const int expectedToken) {
     std::cerr   << "[PARSE ERROR] " << when
                 << "but current token is " << Lexer::TOKEN_NAMES.at(actualToken) << "(" << actualToken << ")"
@@ -249,8 +256,18 @@ FunctionAST* Parser::parseTopLevelExpr() {
 }
 
 ExprAST* Parser::parsePrimaryExpr() {
-    // For the moment the only possible primary expression is a float litteral
-    ExprAST * expr = parseFloatLitteralExpr();
+    ExprAST* expr;
+
+    switch(lexer.getCurrentToken()) {
+        default:
+            return ParserErrorUnexpectedToken("Can't parse primary expression, unexpected token ", lexer.getCurrentToken());
+        case Lexer::TOK_FLOAT:
+            expr = parseFloatLitteralExpr();
+            break;
+        case Lexer::TOK_KEYWORD_LET:
+            expr =  parseFloatConstantVariableDeclarationExpr();
+            break;
+    }
 
     if (expr == nullptr)
         return ParserError("Can't parse primary expression.");

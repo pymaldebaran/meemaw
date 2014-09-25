@@ -158,14 +158,27 @@ private:
     Lexer& lexer;
 
     // Simple error display helper for use in parse* methods
+    //
     // Always returns nullptr in order to be used like this :
     //     return ParseError("blahblah");
+    //
     // No newline needed at the end of the message
     static std::nullptr_t ParserError(const char* const msg);
 
+    // Error display helper when handling with unexpected token but can't 
+    // specify which token was expected
+    //
+    // Always returns nullptr in order to be used like this :
+    //     return ParseError("blahblah", t1);
+    //
+    // No newline needed at the end of the message
+    static std::nullptr_t ParserErrorUnexpectedToken(const char* const when, const int actualToken);
+
     // Error display helper when handling with unexpected token
+    //
     // Always returns nullptr in order to be used like this :
     //     return ParseError("blahblah", t1, t2);
+    //
     // No newline needed at the end of the message
     static std::nullptr_t ParserErrorUnexpectedToken(const char* const when, const int actualToken, const int expectedToken);
 public:
@@ -192,7 +205,9 @@ public:
     // program structure. Since MeeMaw is an expression based language any
     // expression is a primary expression.
     //
-    // primaryexpr ::= floatlitexp
+    // primaryexpr
+    //      ::= floatlitexp
+    //      ::= floatconstdeclexp
     ExprAST* parsePrimaryExpr();
 
     // Parse float litteral expression
@@ -202,7 +217,7 @@ public:
 
     // Parse floa constant declaration expression
     //
-    // floatconstdecexp ::= let identifier = floatlitexp
+    // floatconstdeclexp ::= let identifier = floatlitexp
     FloatConstantVariableDeclarationExprAST* parseFloatConstantVariableDeclarationExpr();
 };
 
