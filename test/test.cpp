@@ -343,5 +343,34 @@ TEST_CASE("Parser generate AST for litteral constant declaration") {
         CHECK(rhsAst->getValue() == 1.0);
     }
 
+    SECTION("Parser recognise litteral constant declaration as a top level expression") {
+        std::stringstream test;         // stream to parse by lexer
+        Lexer lex = Lexer(test);        // the lexer
+        Parser parser = Parser(lex);    // the parser
+
+        test << "let aaa = 1.0";
+
+        lex.getNextToken();
+        ExprAST* ast = parser.parseTopLevelExpr();
+
+        // Do we have an float expression ?
+        // i.e. an anonymous function returning a float
+        REQUIRE(ast != nullptr);
+        REQUIRE(ast->getAstType() == AstType::FUNCTION);
+
+        FunctionAST* funcAst = static_cast<FunctionAST*>(ast);
+
+        REQUIRE(funcAst->getPrototype() != nullptr);
+        REQUIRE(funcAst->getPrototype()->getAstType() == AstType::PROTOTYPE);
+        ProtoTypeAST* protoAst = static_cast<ProtoTypeAST*>(funcAst->getPrototype());
+        CHECK(protoAst->getName() == "");
+        CHECK(protoAst->getArgs().empty());
+
+        REQUIRE(funcAst->getBody() != nullptr);
+        REQUIRE(funcAst->getBody()->getAstType() == AstType::FLOAT_LITTERAL);
+        FloatExpAST* bodyAst = static_cast<FloatExpAST*>(funcAst->getBody());
+        CHECK(bodyAst->getValue() == 1.0);
+    }
+
     //TODO test constant declaration with an expr as value
 }
