@@ -144,8 +144,9 @@ TEST_CASE("Code generated for float expression is correct", "[problem]") {
     llvm::LLVMContext& context = llvm::getGlobalContext();
     llvm::Module* module = new llvm::Module("Test module", context); // Make the module, which holds all the code.
 
-    if (module == nullptr)
+    if (module == nullptr) {
         fprintf(stderr, "no module\n");
+    }
 
     // non LLVM stuff
     std::stringstream test;                     // stream to parse by lexer
@@ -156,8 +157,9 @@ TEST_CASE("Code generated for float expression is correct", "[problem]") {
     // create a JIT Engine (This takes ownership of the module).
     std::string errStr;
     llvm::ExecutionEngine* execEngine = llvm::EngineBuilder(module).setErrorStr(&errStr).setEngineKind(llvm::EngineKind::JIT).create();
-    if (execEngine == nullptr)
+    if (execEngine == nullptr) {
         fprintf(stderr, "no exec engine: %s\n", errStr.c_str());
+    }
 
     test << "1.0";
 

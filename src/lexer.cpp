@@ -30,19 +30,20 @@
 #include <map>
 
 const std::map<int, const char* const> Lexer::TOKEN_NAMES = {
-    { Lexer::TOK_FLOAT,                "TOK_FLOAT"                                                  },
-    { Lexer::TOK_EOF,                  "TOK_EOF"                                                    },
-    { Lexer::TOK_KEYWORD_LET,          "TOK_KEYWORD_LET"                                            },
-    { Lexer::TOK_IDENTIFIER,           "TOK_IDENTIFIER"                                             },
-    { Lexer::TOK_OPERATOR_AFFECTATION, "TOK_OPERATOR_AFFECTATION"                                   },
-    { Lexer::TOK_LEXER_ERROR,          "TOK_LEXER_ERROR"                                            },
-    { Lexer::TOK_NONE,                 "TOK_NONE"                                                   },
+    { Lexer::TOK_FLOAT,                "TOK_FLOAT"                                                                                    },
+    { Lexer::TOK_EOF,                  "TOK_EOF"                                                                                      },
+    { Lexer::TOK_KEYWORD_LET,          "TOK_KEYWORD_LET"                                                                              },
+    { Lexer::TOK_IDENTIFIER,           "TOK_IDENTIFIER"                                                                               },
+    { Lexer::TOK_OPERATOR_AFFECTATION, "TOK_OPERATOR_AFFECTATION"                                                                     },
+    { Lexer::TOK_LEXER_ERROR,          "TOK_LEXER_ERROR"                                                                              },
+    { Lexer::TOK_NONE,                 "TOK_NONE"                                                                                     },
 };
 
 int Lexer::gettok() {
     // Skip any whitespace.
-    while (isspace(lastChar))
+    while (isspace(lastChar)) {
         lastChar = stream.get();
+    }
 
     // identifier and keywords: [_a-zA-Z][_a-zA-Z0-9]*
     if (isalpha(lastChar) or lastChar == '_') {
@@ -54,8 +55,9 @@ int Lexer::gettok() {
             lastChar = stream.get();
         }
 
-        if (identifierString == "let")
+        if (identifierString == "let") {
             return TOK_KEYWORD_LET;
+        }
 
         return TOK_IDENTIFIER;
     }
@@ -80,8 +82,9 @@ int Lexer::gettok() {
     }
 
     // Check for end of file.  Don't eat the EOF.
-    if (lastChar == EOF)
+    if (lastChar == EOF) {
         return TOK_EOF;
+    }
 
     // Otherwise, just return the character as its ascii value.
     int thisChar = lastChar;    // save the char to return it later
