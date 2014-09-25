@@ -277,55 +277,51 @@ TEST_CASE("Lexer categorise affectation operator") {
     CHECK(tokId == Lexer::TOK_OPERATOR_AFFECTATION);
 }
 
-TEST_CASE("Lexer does not skip EOF after a token") {
+TEST_CASE("Lexer handles whitespaces") {
     // stream to parse by lexer
     std::stringstream test;
 
     // the lexer
     Lexer lex = Lexer(test);
 
-    test << "1.0";
+    SECTION("Lexer does not skip EOF after a token") {
+        test << "1.0";
 
-    int tokId = lex.getNextToken();
+        int tokId = lex.getNextToken();
 
-    CHECK(tokId == Lexer::TOK_FLOAT);
-    float fVal;
-    REQUIRE(lex.getFloatValue(fVal));
-    CHECK(fVal == 1.0);
+        CHECK(tokId == Lexer::TOK_FLOAT);
+        float fVal;
+        REQUIRE(lex.getFloatValue(fVal));
+        CHECK(fVal == 1.0);
 
-    tokId = lex.getNextToken();
+        tokId = lex.getNextToken();
 
-    CHECK(tokId == Lexer::TOK_EOF);
+        CHECK(tokId == Lexer::TOK_EOF);
+    }
+
+    SECTION("Lexer skip one whitespace between tokens") {
+        test << "1.0 2.0";
+
+        int tokId = lex.getNextToken();
+        float fVal;
+
+        CHECK(tokId == Lexer::TOK_FLOAT);
+        REQUIRE(lex.getFloatValue(fVal));
+        CHECK(fVal == 1.0);
+
+        tokId = lex.getNextToken();
+
+        CHECK(tokId == Lexer::TOK_FLOAT);
+        REQUIRE(lex.getFloatValue(fVal));
+        CHECK(fVal == 2.0);
+
+        tokId = lex.getNextToken();
+
+        CHECK(tokId == Lexer::TOK_EOF);
+    }
+
+    // TODO test multiple whitespace between tokens
 }
-
-TEST_CASE("Lexer skip one whitespace between tokens") {
-    // stream to parse by lexer
-    std::stringstream test;
-
-    // the lexer
-    Lexer lex = Lexer(test);
-
-    test << "1.0 2.0";
-
-    int tokId = lex.getNextToken();
-    float fVal;
-
-    CHECK(tokId == Lexer::TOK_FLOAT);
-    REQUIRE(lex.getFloatValue(fVal));
-    CHECK(fVal == 1.0);
-
-    tokId = lex.getNextToken();
-
-    CHECK(tokId == Lexer::TOK_FLOAT);
-    REQUIRE(lex.getFloatValue(fVal));
-    CHECK(fVal == 2.0);
-
-    tokId = lex.getNextToken();
-
-    CHECK(tokId == Lexer::TOK_EOF);
-}
-
-// TODO test multiple whitespace between tokens
 
 TEST_CASE("Parser generate AST for litteral constant declaration") {
     SECTION("Parsing a litteral constant declaration generate a float expression AST node") {
