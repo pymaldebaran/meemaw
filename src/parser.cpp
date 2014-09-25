@@ -235,16 +235,27 @@ std::nullptr_t Parser::ParserErrorUnexpectedToken(const char* const when, const 
 }
 
 FunctionAST* Parser::parseTopLevelExpr() {
-    // For the moment the only possible top level expression is a float litteral
-    ExprAST * expr = parseFloatLitteralExpr();
+    // For the moment any primary expression is a top level expression
+    ExprAST * primExpr = parsePrimaryExpr();
 
-    if (expr == nullptr)
-        return ParserError("Can not parse float litteral expression.");
+    if (primExpr == nullptr)
+        return ParserError("Can't parse top level expression.");
 
     // Make an anonymous proto.
     ProtoTypeAST* proto = new ProtoTypeAST("", std::vector<std::string>());
 
-    return new FunctionAST(proto, expr);
+    // return the anonymous function
+    return new FunctionAST(proto, primExpr);
+}
+
+ExprAST* Parser::parsePrimaryExpr() {
+    // For the moment the only possible primary expression is a float litteral
+    ExprAST * expr = parseFloatLitteralExpr();
+
+    if (expr == nullptr)
+        return ParserError("Can't parse primary expression.");
+
+    return expr;
 }
 
 FloatExpAST* Parser::parseFloatLitteralExpr() {

@@ -171,24 +171,37 @@ private:
 public:
     explicit Parser(Lexer& lexer);
 
-    // Parse top level expression.
+    // Parse top level expression wrapping them in an anonymous function
+    // returning the appropriate type.
     //
     // A top level expression is an expression that can be used outside of any
     // other program structure. Only expression that could be used
-    // at module level (or directly in the interpreter) is a top level 
+    // at module level (or directly in the interpreter) is a top level
     // expression.
     //
     // A top level expression behave like an anonymous function that returns the
     // value of the expression.
     //
-    // top ::= floatlitexp
+    // top ::= primaryexpr
     FunctionAST* parseTopLevelExpr();
 
+    // Parse primary expression by selecting the correct parse* method according
+    // according to the current token.
+    //
+    // A primary expression is an expression that can be used inside any other
+    // program structure. Since MeeMaw is an expression based language any
+    // expression is a primary expression.
+    //
+    // primaryexpr ::= floatlitexp
+    ExprAST* parsePrimaryExpr();
+
     // Parse float litteral expression
+    //
     // floatlitexp ::= float
     FloatExpAST* parseFloatLitteralExpr();
 
     // Parse floa constant declaration expression
+    //
     // floatconstdecexp ::= let identifier = floatlitexp
     FloatConstantVariableDeclarationExprAST* parseFloatConstantVariableDeclarationExpr();
 };
