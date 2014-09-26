@@ -30,13 +30,13 @@
 #include <map>
 
 const std::map<int, const char* const> Lexer::TOKEN_NAMES = {
-    { Lexer::TOK_FLOAT,                "TOK_FLOAT"                                                                                                                                                                                                                            },
-    { Lexer::TOK_EOF,                  "TOK_EOF"                                                                                                                                                                                                                              },
-    { Lexer::TOK_KEYWORD_LET,          "TOK_KEYWORD_LET"                                                                                                                                                                                                                      },
-    { Lexer::TOK_IDENTIFIER,           "TOK_IDENTIFIER"                                                                                                                                                                                                                       },
-    { Lexer::TOK_OPERATOR_AFFECTATION, "TOK_OPERATOR_AFFECTATION"                                                                                                                                                                                                             },
-    { Lexer::TOK_LEXER_ERROR,          "TOK_LEXER_ERROR"                                                                                                                                                                                                                      },
-    { Lexer::TOK_NONE,                 "TOK_NONE"                                                                                                                                                                                                                             },
+    { Lexer::TOK_FLOAT,                "TOK_FLOAT"                                                                                                                                                                                                                                                              },
+    { Lexer::TOK_EOF,                  "TOK_EOF"                                                                                                                                                                                                                                                                },
+    { Lexer::TOK_KEYWORD_LET,          "TOK_KEYWORD_LET"                                                                                                                                                                                                                                                        },
+    { Lexer::TOK_IDENTIFIER,           "TOK_IDENTIFIER"                                                                                                                                                                                                                                                         },
+    { Lexer::TOK_OPERATOR_AFFECTATION, "TOK_OPERATOR_AFFECTATION"                                                                                                                                                                                                                                               },
+    { Lexer::TOK_LEXER_ERROR,          "TOK_LEXER_ERROR"                                                                                                                                                                                                                                                        },
+    { Lexer::TOK_NONE,                 "TOK_NONE"                                                                                                                                                                                                                                                               },
 };
 
 int Lexer::gettok() {
@@ -143,19 +143,27 @@ void Lexer::PrintUnexpectedTokenError(const char* const when, const int actualTo
     PrintError(buffer);
 }
 
+Token::Token() :
+    tokenType(TokenType::TOK_NONE),
+    identifierString(""),
+    floatValue(0.0)
+{}
+
 TokenType Token::getTokenType() {
-    return TokenType::TOK_NONE;
+    return tokenType;
 }
 
 std::string Token::getIdentifierString() {
-    return "";
+    return identifierString;
 }
 
 float Token::getFloatValue() {
-    return 0.0;
+    return floatValue;
 }
 
-NewLexer::NewLexer(std::istream& strm) {}
+NewLexer::NewLexer(std::istream& stream) :
+    input(stream)
+{}
 
 std::deque<Token>& NewLexer::getTokens() {
     return tokens;
@@ -163,4 +171,8 @@ std::deque<Token>& NewLexer::getTokens() {
 
 unsigned int NewLexer::tokenize() {
     return 0;
+}
+
+bool NewLexer::tokenizeOne() {
+    return false;
 }

@@ -106,8 +106,10 @@ enum class TokenType {
 
 class Token {
 public:
+    // Constructor
+    explicit Token();
 
-    // Get the type of token as defined in the TOK_* enum
+    // Get the type of token
     TokenType getTokenType();
 
     // Get the identifier string (available only if getTokenType() is
@@ -117,12 +119,17 @@ public:
     // Get the value of a float litteral token (available only if getTokenType()
     // is TOK_LITTERAL_FLOAT
     float getFloatValue();
+
+private:
+    TokenType tokenType;            // Type of the token
+    std::string identifierString;   // Filled in if currentToken == TOK_IDENTIFIER
+    float floatValue;               // Filled in if currentToken == TOK_LITTERAL_FLOAT
 };
 
 class NewLexer {
 public:
     // Constructor
-    explicit NewLexer(std::istream& strm);
+    explicit NewLexer(std::istream& stream);
 
     // Accessor to the token container.
     // The container is updated everytime a nextToken() call is made.
@@ -131,13 +138,28 @@ public:
     // Tokenize all the stream and put all the produced tokens in the token
     // container.
     //
-    // The container is filled FILO :
+    // Returns the number of produced tokens.
+    //
+    // The input stream is consumed till the end.
+    //
+    // The token container is filled FILO :
     // - The last processed token will always be in back position
     // - The first processed token will always be in front position
     unsigned int tokenize();
 
 private:
-    std::deque<Token> tokens; // where to put all the tokens generated when colling nextToken()
+    std::istream& input;        // input stream to parse
+    std::deque<Token> tokens;   // where to put all the tokens generated when colling nextToken()
+
+    // Tokenize just one token.
+    //
+    // Returns true if one token has been produced
+    //         false if no token has been produced
+    //
+    // The input stream is consumed according to the legth of the token.
+    //
+    // The produced token (if any) is appended in front position.
+    bool tokenizeOne();
 };
 
 #endif // LEXER_H

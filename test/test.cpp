@@ -426,6 +426,14 @@ TEST_CASE("New lexer initially has no token") {
     REQUIRE(lex.getTokens().empty());
 }
 
+TEST_CASE("New lexer do not fill tokens when tokenise is called on empty input") {
+    std::stringstream in;           // stream to parse by lexer
+    NewLexer lex = NewLexer(in);    // the lexer
+
+    CHECK(lex.tokenize() == 0);
+    CHECK(lex.getTokens().size() == 0);
+}
+
 TEST_CASE("New lexer fills tokens when tokenise is called") {
     std::stringstream in;           // stream to parse by lexer
     NewLexer lex = NewLexer(in);    // the lexer
