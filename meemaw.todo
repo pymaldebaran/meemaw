@@ -7,10 +7,10 @@ Refactoring
 -	normalise naming
 	Google convention cf https://google-styleguide.googlecode.com/svn/trunk/cppguide.html
 -	make all constant static
-!-	rename all "float" related stuff to "float litteral"
--	remove all assertions
++-	rename all "float" related stuff to "float litteral"
++-	remove all assertions
 	throw std::LogicError(stderr, "blah") ---> return ParserError("blah")
--	improve the workflow
+!-	improve the workflow
 	-	lexer takes a stream as input and returns a queue of tokens
 	-	parser takes the queue of token as input and returns AST
 	-	code generator takes the AST as input and returns IR code
