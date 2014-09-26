@@ -33,7 +33,7 @@ Features
 		              "1.0"
 		ENSURE(interpreter.validate(test))
 		ENSURE(interpreter.vatidate(">>> 1 + 2", "3"))
-!-	litteral constant declaration
++-	litteral constant declaration
 	let x = 1.0
 -	litteral integers
 	let x = 1
