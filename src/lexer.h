@@ -105,10 +105,13 @@ enum TokenType {
 
 class Token {
 public:
-    // TODO Improve this with static specialized builder that let the user ony
-    //      create valid tokens
-    // Constructor
-    explicit Token(TokenType typ, std::string identifierstr = "", float floatVal = 0.0);
+    // A bunch of helpers to create valid tokens
+    static Token CreateLitteralFloat(float f);
+    static Token CreateKeywordLet();
+    static Token CreateIdentifier(const std::string& idStr);
+    static Token CreateOperatorAffectation();
+    static Token CreateLexerError(int ch);
+    static Token CreateNone();
 
     // Get the type of token
     TokenType getTokenType();
@@ -125,6 +128,10 @@ private:
     TokenType tokenType;            // Type of the token
     std::string identifierString;   // Filled in if currentToken == TOK_IDENTIFIER
     float floatValue;               // Filled in if currentToken == TOK_LITTERAL_FLOAT
+
+    // Private Constructor
+    // You should use public static function to create valid tokens
+    explicit Token(TokenType typ, std::string identifierstr = "", float floatVal = 0.0);
 };
 
 class NewLexer {
