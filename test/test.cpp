@@ -51,7 +51,7 @@ TEST_CASE("Environment works") {
     INFO( "This means we have a working developping environment." );
 }
 
-TEST_CASE("Lexer categorise float") {
+TEST_CASE("Lexer categorise float litteral") {
     // stream to parse by lexer
     std::stringstream test;
 
@@ -70,7 +70,7 @@ TEST_CASE("Lexer categorise float") {
     std::uniform_int_distribution<unsigned char> ucharDistribution(0, std::numeric_limits<unsigned char>::max());
     auto randUCharGenerator = std::bind(ucharDistribution, engine);
 
-    SECTION("1.0 is categorized as float") {
+    SECTION("1.0 is categorized as float litteral") {
         test << "1.0";
 
         int tokId = lex.getNextToken();
@@ -81,7 +81,7 @@ TEST_CASE("Lexer categorise float") {
         REQUIRE(fVal == 1.0);
     }
 
-    SECTION("Any float between 0.0 and max float is categorized as float") {
+    SECTION("Any float between 0.0 and max float is categorized as float litteral") {
         float f = randFloatGenerator();
 
         test << std::to_string(f);
@@ -94,8 +94,8 @@ TEST_CASE("Lexer categorise float") {
     }
 }
 
-TEST_CASE("Parser generate AST for float") {
-    SECTION("Parsing a float expression generate a float expression AST node") {
+TEST_CASE("Parser generate AST for float litteral") {
+    SECTION("Parsing a float litteral expression generate a float litteral expression AST node") {
         std::stringstream test;         // stream to parse by lexer
         Lexer lex = Lexer(test);        // the lexer
         Parser parser = Parser(lex);    // the parser
@@ -103,14 +103,14 @@ TEST_CASE("Parser generate AST for float") {
         test << "1.0";
 
         lex.getNextToken();
-        FloatExpAST* ast = parser.parseFloatLitteralExpr();
+        FloatLitteralExprAST* ast = parser.parseFloatLitteralExpr();
 
         REQUIRE(ast != nullptr);
         REQUIRE(ast->getAstType() == AstType::FLOAT_LITTERAL);
         REQUIRE(ast->getValue() == 1.0);
     }
 
-    SECTION("Parser recognise float expression as a top level expression") {
+    SECTION("Parser recognise float litteral expression as a top level expression") {
         std::stringstream test;         // stream to parse by lexer
         Lexer lex = Lexer(test);        // the lexer
         Parser parser = Parser(lex);    // the parser
@@ -132,12 +132,12 @@ TEST_CASE("Parser generate AST for float") {
 
         REQUIRE(ast->getBody() != nullptr);
         REQUIRE(ast->getBody()->getAstType() == AstType::FLOAT_LITTERAL);
-        FloatExpAST* bodyAst = static_cast<FloatExpAST*>(ast->getBody());
+        FloatLitteralExprAST* bodyAst = static_cast<FloatLitteralExprAST*>(ast->getBody());
         REQUIRE(bodyAst->getValue() == 1.0);
     }
 }
 
-TEST_CASE("Code generated for float expression is correct") {
+TEST_CASE("Code generated for float litteral expression is correct") {
     // LLVM stuff
     // TODO: put all this in a class... but witch one
     llvm::InitializeNativeTarget();
@@ -340,7 +340,7 @@ TEST_CASE("Parser generate AST for litteral constant declaration") {
         CHECK(declarationAst->getName() == "aaa");
         REQUIRE(declarationAst->getRhsExpr() != nullptr);
         REQUIRE(declarationAst->getRhsExpr()->getAstType() == AstType::FLOAT_LITTERAL);
-        FloatExpAST* rhsAst = static_cast<FloatExpAST*>(declarationAst->getRhsExpr());
+        FloatLitteralExprAST* rhsAst = static_cast<FloatLitteralExprAST*>(declarationAst->getRhsExpr());
         CHECK(rhsAst->getValue() == 1.0);
     }
 
@@ -369,7 +369,7 @@ TEST_CASE("Parser generate AST for litteral constant declaration") {
         CHECK(bodyAst->getName() == "aaa");
         REQUIRE(bodyAst->getRhsExpr() != nullptr);
         REQUIRE(bodyAst->getRhsExpr()->getAstType() == AstType::FLOAT_LITTERAL);
-        FloatExpAST* rhsAst = static_cast<FloatExpAST*>(bodyAst->getRhsExpr());
+        FloatLitteralExprAST* rhsAst = static_cast<FloatLitteralExprAST*>(bodyAst->getRhsExpr());
         CHECK(rhsAst->getValue() == 1.0);
     }
 

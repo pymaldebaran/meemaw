@@ -88,14 +88,14 @@ ExprAST* Parser::parsePrimaryExpr() {
     return expr;
 }
 
-FloatExpAST* Parser::parseFloatLitteralExpr() {
+FloatLitteralExprAST* Parser::parseFloatLitteralExpr() {
     float fVal;
 
     if (not lexer.getFloatValue(fVal)) {
         return ParserError("Can't get a float value from the lexer.");
     }
 
-    FloatExpAST* result = new FloatExpAST(fVal);
+    FloatLitteralExprAST* result = new FloatLitteralExprAST(fVal);
 
     lexer.getNextToken(); // consume the float
     return result;
@@ -124,7 +124,7 @@ FloatConstantVariableDeclarationExprAST* Parser::parseFloatConstantVariableDecla
 
     lexer.getNextToken(); // consume affectation operator "="
 
-    FloatExpAST* rhsExpr = parseFloatLitteralExpr();
+    FloatLitteralExprAST* rhsExpr = parseFloatLitteralExpr();
     if (rhsExpr == nullptr) {
         return ParserError("Failed to parse Right Hand Side expression of the affectation.");
     }

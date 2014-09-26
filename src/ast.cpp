@@ -61,16 +61,16 @@ const AstType ExprAST::getAstType() const {
     return astType;
 }
 
-FloatExpAST::FloatExpAST(float val) :
+FloatLitteralExprAST::FloatLitteralExprAST(float val) :
     ExprAST(AstType::FLOAT_LITTERAL),
     value(val)
 {}
 
-const float FloatExpAST::getValue() const {
+const float FloatLitteralExprAST::getValue() const {
     return value;
 }
 
-llvm::Value* FloatExpAST::codeGen(CodeGenerator* codeGenerator) {
+llvm::Value* FloatLitteralExprAST::codeGen(CodeGenerator* codeGenerator) {
     return llvm::ConstantFP::get(llvm::getGlobalContext(), llvm::APFloat(value));;
 }
 
@@ -204,7 +204,7 @@ llvm::Function* FunctionAST::codeGen(CodeGenerator* codeGenerator) {
     return func;
 }
 
-FloatConstantVariableDeclarationExprAST::FloatConstantVariableDeclarationExprAST(std::string theName, FloatExpAST* theRhsExpr) :
+FloatConstantVariableDeclarationExprAST::FloatConstantVariableDeclarationExprAST(std::string theName, FloatLitteralExprAST* theRhsExpr) :
     ExprAST(AstType::FLOAT_CONSTANT_VARIABLE_DECLARATION),
     name(theName),
     rhsExpr(theRhsExpr)
@@ -214,7 +214,7 @@ const std::string FloatConstantVariableDeclarationExprAST::getName() const {
     return name;
 }
 
-FloatExpAST* FloatConstantVariableDeclarationExprAST::getRhsExpr() const {
+FloatLitteralExprAST* FloatConstantVariableDeclarationExprAST::getRhsExpr() const {
     return rhsExpr;
 }
 

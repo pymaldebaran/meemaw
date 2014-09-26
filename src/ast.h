@@ -84,13 +84,12 @@ public:
     virtual llvm::Value* codeGen(CodeGenerator* codeGenerator) = 0;
 };
 
-// TODO correct the name of this class to FloatLitteralExprAST
-class FloatExpAST : public ExprAST {
+class FloatLitteralExprAST : public ExprAST {
 private:
     const float value; // value of the float litteral
 public:
     // Constructor
-    explicit FloatExpAST(const float val);
+    explicit FloatLitteralExprAST(const float val);
 
     // value getter
     const float getValue() const;
@@ -135,19 +134,19 @@ public:
 class FloatConstantVariableDeclarationExprAST : public ExprAST {
 public:
     // Constructor
-    explicit FloatConstantVariableDeclarationExprAST(std::string theName, FloatExpAST* theRhsExpr);
+    explicit FloatConstantVariableDeclarationExprAST(std::string theName, FloatLitteralExprAST* theRhsExpr);
 
     // value name
     const std::string getName() const;
 
     // value getter
-    FloatExpAST* getRhsExpr() const;
+    FloatLitteralExprAST* getRhsExpr() const;
 
     virtual llvm::Value* codeGen(CodeGenerator* codeGenerator);
 
 private:
-    const std::string name; // Name of the constant
-    FloatExpAST* rhsExpr;   // float litteral expression to be named
+    const std::string name;         // Name of the constant
+    FloatLitteralExprAST* rhsExpr;  // float litteral expression to be named
 };
 
 #endif // AST_H

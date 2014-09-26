@@ -35,7 +35,7 @@ class CodeGenerator;
 class ProtoTypeAST;
 class FunctionAST;
 class ExprAST;
-class FloatExpAST;
+class FloatLitteralExprAST;
 class FloatConstantVariableDeclarationExprAST;
 
 
@@ -101,7 +101,7 @@ public:
     // Parse float litteral expression
     //
     // floatlitexp ::= float
-    FloatExpAST* parseFloatLitteralExpr();
+    FloatLitteralExprAST* parseFloatLitteralExpr();
 
     // Parse floa constant declaration expression
     //
