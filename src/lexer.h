@@ -28,6 +28,7 @@
 
 #include <istream>
 #include <map>
+#include <deque>
 
 // Lexer for the MeeMaw language
 class Lexer {
@@ -88,6 +89,20 @@ private:
 
     // Error display helper when handling with unexpected token
     static void PrintUnexpectedTokenError(const char* const when, const int actualToken, const int expectedToken);
+};
+
+class Token {};
+
+class NewLexer {
+private:
+    std::deque<Token> tokens; // where to put all the tokens generated when colling nextToken()
+public:
+    // Constructor
+    explicit NewLexer(std::istream& strm);
+
+    // Accessor to the token container.
+    // The container is updated everytime a nextToken() call is made.
+    std::deque<Token>& getTokens();
 };
 
 #endif // LEXER_H

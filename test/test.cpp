@@ -418,3 +418,10 @@ TEST_CASE("Code generated for float litteral constant declaration expression is 
 }
 
 // TODO add a test with usage of the created constant
+
+TEST_CASE("New lexer initially has no token") {
+    std::stringstream in;           // stream to parse by lexer
+    NewLexer lex = NewLexer(in);    // the lexer
+
+    REQUIRE(lex.getTokens().empty());
+}
