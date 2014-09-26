@@ -220,5 +220,27 @@ FloatExpAST* FloatConstantVariableDeclarationExprAST::getRhsExpr() const {
 
 
 llvm::Value* FloatConstantVariableDeclarationExprAST::codeGen(CodeGenerator* codeGenerator) {
-    return CodeGenError("CodeGen() method not yet implemented for FloatConstantVariableDeclarationExprAST.");
+    // Check the validity of the name
+    if (name == "") {
+        return CodeGenError("Float Constant has no name.");
+    }
+
+    // Generate the right hand side expression code
+    if (rhsExpr == nullptr) {
+        return CodeGenError("Float constant has no right hand side expression.");
+    }
+    llvm::Value* rhsValue = rhsExpr->codeGen(codeGenerator);
+    if (rhsValue == nullptr) {
+        return CodeGenError("Can't generate code for right hand side expression of the float constant.");
+    }
+
+    // Insert the value in the symbol table
+    auto symbolTable = codeGenerator->getNamedValues();
+    if (symbolTable.count(name) > 0) {
+        return CodeGenError("Float constant name already in use, MeeMaw refuse symbol shadowing. Name=", name);
+    }
+    symbolTable[name] = rhsValue;
+
+    // Finally we return the value
+    return rhsValue;
 }

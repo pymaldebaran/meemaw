@@ -36,7 +36,9 @@ class CodeGenerator {
 private:
     llvm::Module* module;       // module used for code generation
     llvm::IRBuilder<> builder;  // helper taht makes it easy to generate LLVM instructions
-    std::map<std::string, llvm::Value*> namedValues;
+
+    // TODO rename this has getSymbolTable
+    std::map<std::string, llvm::Value*> namedValues; // symbol table
 public:
     // Constuctor
     CodeGenerator(llvm::Module* mod);
@@ -47,6 +49,7 @@ public:
     // builder getter
     llvm::IRBuilder<>& getBuilder();
 
+    // TODO rename this has getSymbolTable
     // namedValue getter
     std::map<std::string, llvm::Value*>& getNamedValues();
 
