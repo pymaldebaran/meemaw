@@ -37,7 +37,7 @@ public:
     // The lexer returns tokens [0-255] if it is an unknown character, otherwise
     // one of these for known things.
     enum {
-        TOK_FLOAT = -1,
+        TOK_FLOAT = -1, // TODO change nae to TOK_LITTERAL_FLOAT
         TOK_EOF   = -2,
         TOK_KEYWORD_LET = -3,
         TOK_IDENTIFIER = -4,
@@ -91,11 +91,21 @@ private:
     static void PrintUnexpectedTokenError(const char* const when, const int actualToken, const int expectedToken);
 };
 
-class Token {};
+class Token {
+public:
+    // Get the type of token as defined in the TOK_* enum
+    int getTokenType();
+
+    // Get the identifier string (available only if getTokenType() is
+    // TOK_IDENTIFIER)
+    std::string getIdentifierString();
+
+    // Get the value of a float litteral token (available only if getTokenType()
+    // is TOK_FLOAT
+    float getFloatValue();
+};
 
 class NewLexer {
-private:
-    std::deque<Token> tokens; // where to put all the tokens generated when colling nextToken()
 public:
     // Constructor
     explicit NewLexer(std::istream& strm);
@@ -103,6 +113,17 @@ public:
     // Accessor to the token container.
     // The container is updated everytime a nextToken() call is made.
     std::deque<Token>& getTokens();
+
+    // Tokenize all the stream and put all the produced tokens in the token
+    // container.
+    //
+    // The container is filled FILO :
+    // - The last processed token will always be in back position
+    // - The first processed token will always be in front position
+    unsigned int tokenize();
+
+private:
+    std::deque<Token> tokens; // where to put all the tokens generated when colling nextToken()
 };
 
 #endif // LEXER_H

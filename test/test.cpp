@@ -425,3 +425,23 @@ TEST_CASE("New lexer initially has no token") {
 
     REQUIRE(lex.getTokens().empty());
 }
+
+TEST_CASE("New lexer fills tokens when tokenise is called") {
+    std::stringstream in;           // stream to parse by lexer
+    NewLexer lex = NewLexer(in);    // the lexer
+
+    in << "let aaa = 1.0";
+
+    CHECK(lex.tokenize() == 4);
+    CHECK(lex.getTokens().size() == 4);
+
+    CHECK(lex.getTokens().at(0).getTokenType() == Lexer::TOK_KEYWORD_LET);
+
+    CHECK(lex.getTokens().at(1).getTokenType() == Lexer::TOK_IDENTIFIER);
+    CHECK(lex.getTokens().at(1).getIdentifierString() == "aaa");
+
+    CHECK(lex.getTokens().at(2).getTokenType() == Lexer::TOK_OPERATOR_AFFECTATION);
+
+    CHECK(lex.getTokens().at(3).getTokenType() == Lexer::TOK_FLOAT);
+    CHECK(lex.getTokens().at(3).getFloatValue() == 1.0);
+}
