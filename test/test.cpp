@@ -435,13 +435,13 @@ TEST_CASE("New lexer fills tokens when tokenise is called") {
     CHECK(lex.tokenize() == 4);
     CHECK(lex.getTokens().size() == 4);
 
-    CHECK(lex.getTokens().at(0).getTokenType() == Lexer::TOK_KEYWORD_LET);
+    CHECK(lex.getTokens().at(0).getTokenType() == TokenType::TOK_KEYWORD_LET);
 
-    CHECK(lex.getTokens().at(1).getTokenType() == Lexer::TOK_IDENTIFIER);
+    CHECK(lex.getTokens().at(1).getTokenType() == TokenType::TOK_IDENTIFIER);
     CHECK(lex.getTokens().at(1).getIdentifierString() == "aaa");
 
-    CHECK(lex.getTokens().at(2).getTokenType() == Lexer::TOK_OPERATOR_AFFECTATION);
+    CHECK(lex.getTokens().at(2).getTokenType() == TokenType::TOK_OPERATOR_AFFECTATION);
 
-    CHECK(lex.getTokens().at(3).getTokenType() == Lexer::TOK_FLOAT);
+    CHECK(lex.getTokens().at(3).getTokenType() == TokenType::TOK_LITTERAL_FLOAT);
     CHECK(lex.getTokens().at(3).getFloatValue() == 1.0);
 }

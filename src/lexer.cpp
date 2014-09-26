@@ -143,8 +143,8 @@ void Lexer::PrintUnexpectedTokenError(const char* const when, const int actualTo
     PrintError(buffer);
 }
 
-int Token::getTokenType() {
-    return Lexer::TOK_NONE;
+TokenType Token::getTokenType() {
+    return TokenType::TOK_NONE;
 }
 
 std::string Token::getIdentifierString() {

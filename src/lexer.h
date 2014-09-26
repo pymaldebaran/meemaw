@@ -91,17 +91,31 @@ private:
     static void PrintUnexpectedTokenError(const char* const when, const int actualToken, const int expectedToken);
 };
 
+//TODO test the usage of TOK_LEXER_ERROR and TOK_NONE
+// The lexer returns tokens [0-255] if it is an unknown character, otherwise
+// one of these for known things.
+enum class TokenType {
+    TOK_LITTERAL_FLOAT = -1,
+    TOK_EOF   = -2,
+    TOK_KEYWORD_LET = -3,
+    TOK_IDENTIFIER = -4,
+    TOK_OPERATOR_AFFECTATION = -5,
+    TOK_LEXER_ERROR = -254,     // returned by lexer in case of error
+    TOK_NONE  = -255            // initial value of the currentToken attribute
+};
+
 class Token {
 public:
+
     // Get the type of token as defined in the TOK_* enum
-    int getTokenType();
+    TokenType getTokenType();
 
     // Get the identifier string (available only if getTokenType() is
     // TOK_IDENTIFIER)
     std::string getIdentifierString();
 
     // Get the value of a float litteral token (available only if getTokenType()
-    // is TOK_FLOAT
+    // is TOK_LITTERAL_FLOAT
     float getFloatValue();
 };
 
