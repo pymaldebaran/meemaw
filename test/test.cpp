@@ -41,6 +41,7 @@
 #include "../src/lexer.h"
 #include "../src/parser.h"
 #include "../src/codegenerator.h"
+#include "../src/ast.h"
 
 // TESTS /////////////////////////////////////
 //maximum difference between 2 floats to be considered equal
@@ -74,8 +75,10 @@ TEST_CASE("Lexer categorise float") {
 
         int tokId = lex.getNextToken();
 
-        REQUIRE(tokId == TOK_FLOAT);
-        REQUIRE(lex.getFloatValue() == 1.0);
+        REQUIRE(tokId == Lexer::TOK_FLOAT);
+        float fVal;
+        REQUIRE(lex.getFloatValue(fVal));
+        REQUIRE(fVal == 1.0);
     }
 
     SECTION("Any float between 0.0 and max float is categorized as float") {
@@ -85,18 +88,9 @@ TEST_CASE("Lexer categorise float") {
 
         int tokId = lex.getNextToken();
 
-        REQUIRE(abs(lex.getFloatValue() - f) < F_EPSILON);
-    }
-
-    SECTION("Random char is not categorized as float") {
-        unsigned char c = randUCharGenerator();
-
-        test << c;
-
-        int tokId = lex.getNextToken();
-
-        CAPTURE(tokId);
-        REQUIRE(tokId == static_cast<int>(c));
+        float fVal;
+        REQUIRE(lex.getFloatValue(fVal));
+        REQUIRE(abs(fVal - f) < F_EPSILON);
     }
 }
 
@@ -124,35 +118,35 @@ TEST_CASE("Parser generate AST for float") {
         test << "1.0";
 
         lex.getNextToken();
-        ExprAST* ast = parser.parseTopLevelExpr();
+        FunctionAST* ast = parser.parseTopLevelExpr();
 
+        // Do we have an float expression ?
+        // i.e. an anonymous function returning a float
         REQUIRE(ast != nullptr);
-        REQUIRE(ast->getAstType() == AstType::FUNCTION);
 
-        FunctionAST* funcAst = static_cast<FunctionAST*>(ast);
-
-        REQUIRE(funcAst->getPrototype() != nullptr);
-        REQUIRE(funcAst->getPrototype()->getAstType() == AstType::PROTOTYPE);
-        ProtoTypeAST* protoAst = static_cast<ProtoTypeAST*>(funcAst->getPrototype());
+        REQUIRE(ast->getPrototype() != nullptr);
+        REQUIRE(ast->getPrototype()->getAstType() == AstType::PROTOTYPE);
+        ProtoTypeAST* protoAst = static_cast<ProtoTypeAST*>(ast->getPrototype());
         REQUIRE(protoAst->getName() == "");
         REQUIRE(protoAst->getArgs().empty());
 
-        REQUIRE(funcAst->getBody() != nullptr);
-        REQUIRE(funcAst->getBody()->getAstType() == AstType::FLOAT_LITTERAL);
-        FloatExpAST* bodyAst = static_cast<FloatExpAST*>(funcAst->getBody());
+        REQUIRE(ast->getBody() != nullptr);
+        REQUIRE(ast->getBody()->getAstType() == AstType::FLOAT_LITTERAL);
+        FloatExpAST* bodyAst = static_cast<FloatExpAST*>(ast->getBody());
         REQUIRE(bodyAst->getValue() == 1.0);
     }
 }
 
-TEST_CASE("Code generated for float expression is correct", "[problem]") {
+TEST_CASE("Code generated for float expression is correct") {
     // LLVM stuff
     // TODO: put all this in a class... but witch one
     llvm::InitializeNativeTarget();
     llvm::LLVMContext& context = llvm::getGlobalContext();
     llvm::Module* module = new llvm::Module("Test module", context); // Make the module, which holds all the code.
 
-    if (module == nullptr)
+    if (module == nullptr) {
         fprintf(stderr, "no module\n");
+    }
 
     // non LLVM stuff
     std::stringstream test;                     // stream to parse by lexer
@@ -163,13 +157,14 @@ TEST_CASE("Code generated for float expression is correct", "[problem]") {
     // create a JIT Engine (This takes ownership of the module).
     std::string errStr;
     llvm::ExecutionEngine* execEngine = llvm::EngineBuilder(module).setErrorStr(&errStr).setEngineKind(llvm::EngineKind::JIT).create();
-    if (execEngine == nullptr)
+    if (execEngine == nullptr) {
         fprintf(stderr, "no exec engine: %s\n", errStr.c_str());
+    }
 
     test << "1.0";
 
     lex.getNextToken();
-    ExprAST* ast = parser.parseTopLevelExpr();
+    FunctionAST* ast = parser.parseTopLevelExpr();
     llvm::Value* code = gen.codeGen(ast);
 
     REQUIRE(code != nullptr);
@@ -181,3 +176,245 @@ TEST_CASE("Code generated for float expression is correct", "[problem]") {
     float result = execEngine->runFunction(funcCode, noArgs).FloatVal;
     REQUIRE(result == 1.0);
 }
+
+TEST_CASE("Lexer categorise keyword let") {
+    // stream to parse by lexer
+    std::stringstream test;
+
+    // the lexer
+    Lexer lex = Lexer(test);
+
+    test << "let";
+
+    int tokId = lex.getNextToken();
+
+    REQUIRE(tokId == Lexer::TOK_KEYWORD_LET);
+}
+
+TEST_CASE("Lexer categorise identifier") {
+    // stream to parse by lexer
+    std::stringstream test;
+
+    // the lexer
+    Lexer lex = Lexer(test);
+
+    SECTION("Lexer categorise a lowercaser identifier") {
+        std::string identifier = "abc";
+
+        test << identifier;
+
+        int tokId = lex.getNextToken();
+
+        CHECK(tokId == Lexer::TOK_IDENTIFIER);
+        std::string idStr;
+        CHECK(lex.getIdentifierString(idStr));
+        CHECK(idStr == identifier);
+    }
+
+    SECTION("Lexer categorise an uppercase identifier") {
+        std::string identifier = "ABC";
+
+        test << identifier;
+
+        int tokId = lex.getNextToken();
+
+        CHECK(tokId == Lexer::TOK_IDENTIFIER);
+        std::string idStr;
+        CHECK(lex.getIdentifierString(idStr));
+        CHECK(idStr == identifier);
+    }
+
+    SECTION("Lexer categorise identifier with leading underscore") {
+        std::string identifier = "_ab";
+
+        test << identifier;
+
+        int tokId = lex.getNextToken();
+
+        CHECK(tokId == Lexer::TOK_IDENTIFIER);
+        std::string idStr;
+        CHECK(lex.getIdentifierString(idStr));
+        CHECK(idStr == identifier);
+    }
+
+    SECTION("Lexer categorise identifier with underscore") {
+        std::string identifier = "a_b";
+
+        test << identifier;
+
+        int tokId = lex.getNextToken();
+
+        CHECK(tokId == Lexer::TOK_IDENTIFIER);
+        std::string idStr;
+        CHECK(lex.getIdentifierString(idStr));
+        CHECK(idStr == identifier);
+    }
+
+    SECTION("Lexer categorise identifier with numbers") {
+        std::string identifier = "a2b";
+
+        test << identifier;
+
+        int tokId = lex.getNextToken();
+
+        CHECK(tokId == Lexer::TOK_IDENTIFIER);
+        std::string idStr;
+        CHECK(lex.getIdentifierString(idStr));
+        CHECK(idStr == identifier);
+    }
+}
+
+TEST_CASE("Lexer categorise affectation operator") {
+    // stream to parse by lexer
+    std::stringstream test;
+
+    // the lexer
+    Lexer lex = Lexer(test);
+
+    test << "=";
+
+    int tokId = lex.getNextToken();
+
+    CHECK(tokId == Lexer::TOK_OPERATOR_AFFECTATION);
+}
+
+TEST_CASE("Lexer handles whitespaces") {
+    // stream to parse by lexer
+    std::stringstream test;
+
+    // the lexer
+    Lexer lex = Lexer(test);
+
+    SECTION("Lexer does not skip EOF after a token") {
+        test << "1.0";
+
+        int tokId = lex.getNextToken();
+
+        CHECK(tokId == Lexer::TOK_FLOAT);
+        float fVal;
+        REQUIRE(lex.getFloatValue(fVal));
+        CHECK(fVal == 1.0);
+
+        tokId = lex.getNextToken();
+
+        CHECK(tokId == Lexer::TOK_EOF);
+    }
+
+    SECTION("Lexer skip one whitespace between tokens") {
+        test << "1.0 2.0";
+
+        int tokId = lex.getNextToken();
+        float fVal;
+
+        CHECK(tokId == Lexer::TOK_FLOAT);
+        REQUIRE(lex.getFloatValue(fVal));
+        CHECK(fVal == 1.0);
+
+        tokId = lex.getNextToken();
+
+        CHECK(tokId == Lexer::TOK_FLOAT);
+        REQUIRE(lex.getFloatValue(fVal));
+        CHECK(fVal == 2.0);
+
+        tokId = lex.getNextToken();
+
+        CHECK(tokId == Lexer::TOK_EOF);
+    }
+
+    // TODO test multiple whitespace between tokens
+}
+
+TEST_CASE("Parser generate AST for litteral constant declaration") {
+    std::stringstream test;         // stream to parse by lexer
+    Lexer lex = Lexer(test);        // the lexer
+    Parser parser = Parser(lex);    // the parser
+
+    test << "let aaa = 1.0";
+
+    SECTION("Parsing a litteral constant declaration generate a float expression AST node") {
+        lex.getNextToken();
+        FloatConstantVariableDeclarationExprAST* declarationAst = parser.parseFloatConstantVariableDeclarationExpr();
+
+        REQUIRE(declarationAst != nullptr);
+        CHECK(declarationAst->getAstType() == AstType::FLOAT_CONSTANT_VARIABLE_DECLARATION);
+        CHECK(declarationAst->getName() == "aaa");
+        REQUIRE(declarationAst->getRhsExpr() != nullptr);
+        REQUIRE(declarationAst->getRhsExpr()->getAstType() == AstType::FLOAT_LITTERAL);
+        FloatExpAST* rhsAst = static_cast<FloatExpAST*>(declarationAst->getRhsExpr());
+        CHECK(rhsAst->getValue() == 1.0);
+    }
+
+    SECTION("Parser recognise litteral constant declaration as a top level expression") {
+        lex.getNextToken();
+        ExprAST* ast = parser.parseTopLevelExpr();
+
+        // Do we have an float expression ?
+        // i.e. an anonymous function returning a float
+        REQUIRE(ast != nullptr);
+        REQUIRE(ast->getAstType() == AstType::FUNCTION);
+
+        FunctionAST* funcAst = static_cast<FunctionAST*>(ast);
+
+        REQUIRE(funcAst->getPrototype() != nullptr);
+        REQUIRE(funcAst->getPrototype()->getAstType() == AstType::PROTOTYPE);
+        ProtoTypeAST* protoAst = static_cast<ProtoTypeAST*>(funcAst->getPrototype());
+        CHECK(protoAst->getName() == "");
+        CHECK(protoAst->getArgs().empty());
+
+        REQUIRE(funcAst->getBody() != nullptr);
+        REQUIRE(funcAst->getBody()->getAstType() == AstType::FLOAT_CONSTANT_VARIABLE_DECLARATION);
+
+        // now check the content of the body
+        FloatConstantVariableDeclarationExprAST* bodyAst = static_cast<FloatConstantVariableDeclarationExprAST*>(funcAst->getBody());
+        CHECK(bodyAst->getName() == "aaa");
+        REQUIRE(bodyAst->getRhsExpr() != nullptr);
+        REQUIRE(bodyAst->getRhsExpr()->getAstType() == AstType::FLOAT_LITTERAL);
+        FloatExpAST* rhsAst = static_cast<FloatExpAST*>(bodyAst->getRhsExpr());
+        CHECK(rhsAst->getValue() == 1.0);
+    }
+
+    //TODO test constant declaration with an expr as value
+}
+
+TEST_CASE("Code generated for float litteral constant declaration expression is correct") {
+    // LLVM stuff
+    // TODO: put all this in a class... but witch one
+    llvm::InitializeNativeTarget();
+    llvm::LLVMContext& context = llvm::getGlobalContext();
+    llvm::Module* module = new llvm::Module("Test module", context); // Make the module, which holds all the code.
+
+    if (module == nullptr) {
+        fprintf(stderr, "no module\n");
+    }
+
+    // non LLVM stuff
+    std::stringstream test;                     // stream to parse by lexer
+    Lexer lex = Lexer(test);                    // the lexer
+    Parser parser = Parser(lex);                // the parser
+    CodeGenerator gen = CodeGenerator(module);  // the code generator
+
+    // create a JIT Engine (This takes ownership of the module).
+    std::string errStr;
+    llvm::ExecutionEngine* execEngine = llvm::EngineBuilder(module).setErrorStr(&errStr).setEngineKind(llvm::EngineKind::JIT).create();
+    if (execEngine == nullptr) {
+        fprintf(stderr, "no exec engine: %s\n", errStr.c_str());
+    }
+
+    test << "let aaa = 1.0";
+
+    lex.getNextToken();
+    FunctionAST* ast = parser.parseTopLevelExpr();
+    llvm::Value* code = gen.codeGen(ast);
+
+    REQUIRE(code != nullptr);
+    //TODO add some test about the module content
+    //     symbol table content ?
+
+    llvm::Function* funcCode = static_cast<llvm::Function*>(code);
+    const std::vector<llvm::GenericValue> noArgs = std::vector<llvm::GenericValue>();
+
+    float result = execEngine->runFunction(funcCode, noArgs).FloatVal;
+    REQUIRE(result == 1.0);
+}
+
+// TODO add a test with usage of the created constant

@@ -27,33 +27,67 @@
 #define LEXER_H
 
 #include <istream>
-
-// The lexer returns tokens [0-255] if it is an unknown character, otherwise
-// one of these for known things.
-const int TOK_FLOAT = -1;
-const int TOK_EOF   = -2;
-const int TOK_NONE  = -255;
+#include <map>
 
 // Lexer for the MeeMaw language
 class Lexer {
-private:
-    std::istream& stream;   // input stream to parse
-    float floatValue;       // Filled in if curTok == TOK_FLOAT
-    int currentToken;       // Current token i.e. the last returned by getNextToken()
-    int lastChar;           // Store the last char read by gettok()
-
-    // gettok - Return the next token from standard input.
-    int gettok();
-
 public:
+    //TODO test the usage of TOK_LEXER_ERROR and TOK_NONE
+    // The lexer returns tokens [0-255] if it is an unknown character, otherwise
+    // one of these for known things.
+    enum {
+        TOK_FLOAT = -1,
+        TOK_EOF   = -2,
+        TOK_KEYWORD_LET = -3,
+        TOK_IDENTIFIER = -4,
+        TOK_OPERATOR_AFFECTATION = -5,
+        TOK_LEXER_ERROR = -254,     // returned by lexer in case of error
+        TOK_NONE  = -255            // initial value of the currentToken attribute
+    };
+
+    // Store the names of the enums for easy printing
+    static const std::map<int, const char* const> TOKEN_NAMES;
+
     // Constructor
     explicit Lexer(std::istream& strm);
 
     // floatValue getter
-    float getFloatValue() const;
+    // Returns true if the current token is a float litteral and put its value
+    // in the result parameter.
+    // Returns false otherwise and the result parameter stay unmodified.
+    bool getFloatValue(float& result) const;
 
+    // identifierString getter
+    // Returns true if the current token is an identifier and put the identifier
+    // string in the result parameter.
+    // Returns false otherwise and the result parameter stay unmodified.
+    bool getIdentifierString(std::string& result) const;
+
+    // TODO replace this method with nextToken() because it looks like a getter
+    // TODO add a "token safe" method that takes a token parameter and "eat" it
+    //      only if the next token is of the correct type
+    // TODO add a eat() method just to be more clear when using it ;)
     // Reads another token from the lexer and updates CurTok with its results
     int getNextToken();
+
+    // currentToken getter
+    int getCurrentToken();
+
+private:
+    std::istream& stream;           // input stream to parse
+    std::string identifierString;   // Filled in if currentToken == TOK_IDENTIFIER or TOK_KEYWORD_*
+    float floatValue;               // Filled in if currentToken == TOK_FLOAT
+    int currentToken;               // Current token i.e. the last returned by getNextToken()
+    int lastChar;                   // Store the last char read by gettok()
+
+    // Return the next token from standard input.
+    int gettok();
+
+    // Simple error display helper
+    static void PrintError(const char* const msg);
+
+    // Error display helper when handling with unexpected token
+    static void PrintUnexpectedTokenError(const char* const when, const int actualToken, const int expectedToken);
 };
 
 #endif // LEXER_H

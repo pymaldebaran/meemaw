@@ -26,94 +26,17 @@
 #ifndef PARSER_H
 #define PARSER_H
 
-#include "llvm/IR/Value.h"
-#include "llvm/IR/Function.h"
-
 #include <string>
 #include <vector>
 
 // Forward declarations
 class Lexer;
 class CodeGenerator;
-
-// Specify ExprAST type without using RTTI.
-// This is only usefull for tesing purpose and should not be used in actual
-// code.
-enum class AstType {
-    NONE = 0, //should never happen, only the base class use it
-    FLOAT_LITTERAL = 1,
-    PROTOTYPE = 2,
-    FUNCTION = 3,
-};
-
-// Base class for all expression nodes.
-class ExprAST {
-private:
-    const AstType astType; // used to determine type at runtime (tests only)
-protected:
-    // Constructor for member initialisation in derived classes
-    explicit ExprAST(AstType ast);
-public:
-    // Constructor
-    explicit ExprAST();
-
-    // Virtual destructor since we have a virtual function
-    virtual ~ExprAST() {}
-
-    // astType getter
-    const AstType getAstType() const;
-
-    // Generate LLVM Intermediary Representation for the node.
-    // Call recursively codeGen() method on enclosing nodes if any.
-    virtual llvm::Value* codeGen(CodeGenerator* codeGenerator) = 0;
-};
-
-class FloatExpAST : public ExprAST {
-private:
-    const float value; // value of the float litteral
-public:
-    // Constructor
-    explicit FloatExpAST(const float val);
-
-    // value getter
-    const float getValue() const;
-
-    virtual llvm::Value* codeGen(CodeGenerator* codeGenerator);
-};
-
-class ProtoTypeAST : public ExprAST {
-private:
-    const std::string name;                 // name of the function
-    const std::vector<std::string> args;    // arguments name of the function
-public:
-    // Constructor
-    explicit ProtoTypeAST(const std::string theName, const std::vector<std::string> theArgs);
-
-    // name getter
-    const std::string getName() const;
-
-    // args getter
-    const std::vector<std::string> getArgs() const;
-
-    virtual llvm::Function* codeGen(CodeGenerator* codeGenerator);
-};
-
-class FunctionAST : public ExprAST {
-private:
-    ProtoTypeAST* prototype;    // prototype of the function
-    ExprAST* body;              // body of the function
-public:
-    // constructor
-    explicit FunctionAST(ProtoTypeAST* proto, ExprAST* theBody);
-
-    // prototype getter
-    ProtoTypeAST* getPrototype() const;
-
-    // body getter
-    ExprAST* getBody() const;
-
-    virtual llvm::Function* codeGen(CodeGenerator* codeGenerator);
-};
+class ProtoTypeAST;
+class FunctionAST;
+class ExprAST;
+class FloatExpAST;
+class FloatConstantVariableDeclarationExprAST;
 
 
 // Parser for the MeeMaw language.
@@ -121,16 +44,69 @@ public:
 class Parser {
 private:
     Lexer& lexer;
+
+    // Simple error display helper for use in parse* methods
+    //
+    // Always returns nullptr in order to be used like this :
+    //     return ParseError("blahblah");
+    //
+    // No newline needed at the end of the message
+    static std::nullptr_t ParserError(const char* const msg);
+
+    // Error display helper when handling with unexpected token but can't
+    // specify which token was expected
+    //
+    // Always returns nullptr in order to be used like this :
+    //     return ParseError("blahblah", t1);
+    //
+    // No newline needed at the end of the message
+    static std::nullptr_t ParserErrorUnexpectedToken(const char* const when, const int actualToken);
+
+    // Error display helper when handling with unexpected token
+    //
+    // Always returns nullptr in order to be used like this :
+    //     return ParseError("blahblah", t1, t2);
+    //
+    // No newline needed at the end of the message
+    static std::nullptr_t ParserErrorUnexpectedToken(const char* const when, const int actualToken, const int expectedToken);
 public:
     explicit Parser(Lexer& lexer);
 
-    // Parse top level expression
-    // top ::= floatlitexp
-    ExprAST* parseTopLevelExpr();
+    // Parse top level expression wrapping them in an anonymous function
+    // returning the appropriate type.
+    //
+    // A top level expression is an expression that can be used outside of any
+    // other program structure. Only expression that could be used
+    // at module level (or directly in the interpreter) is a top level
+    // expression.
+    //
+    // A top level expression behave like an anonymous function that returns the
+    // value of the expression.
+    //
+    // top ::= primaryexpr
+    FunctionAST* parseTopLevelExpr();
+
+    // Parse primary expression by selecting the correct parse* method according
+    // according to the current token.
+    //
+    // A primary expression is an expression that can be used inside any other
+    // program structure. Since MeeMaw is an expression based language any
+    // expression is a primary expression.
+    //
+    // primaryexpr
+    //      ::= floatlitexp
+    //      ::= floatconstdeclexp
+    ExprAST* parsePrimaryExpr();
 
     // Parse float litteral expression
+    //
     // floatlitexp ::= float
     FloatExpAST* parseFloatLitteralExpr();
+
+    // Parse floa constant declaration expression
+    //
+    // floatconstdeclexp ::= let identifier = floatlitexp
+    FloatConstantVariableDeclarationExprAST* parseFloatConstantVariableDeclarationExpr();
 };
 
 #endif // PARSER_H

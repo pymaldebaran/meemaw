@@ -27,9 +27,40 @@
 
 #include <cstdlib>
 #include <stdexcept>
+#include <map>
+
+const std::map<int, const char* const> Lexer::TOKEN_NAMES = {
+    { Lexer::TOK_FLOAT,                "TOK_FLOAT"                                                                                                                                                        },
+    { Lexer::TOK_EOF,                  "TOK_EOF"                                                                                                                                                          },
+    { Lexer::TOK_KEYWORD_LET,          "TOK_KEYWORD_LET"                                                                                                                                                  },
+    { Lexer::TOK_IDENTIFIER,           "TOK_IDENTIFIER"                                                                                                                                                   },
+    { Lexer::TOK_OPERATOR_AFFECTATION, "TOK_OPERATOR_AFFECTATION"                                                                                                                                         },
+    { Lexer::TOK_LEXER_ERROR,          "TOK_LEXER_ERROR"                                                                                                                                                  },
+    { Lexer::TOK_NONE,                 "TOK_NONE"                                                                                                                                                         },
+};
 
 int Lexer::gettok() {
-    lastChar = stream.get();
+    // Skip any whitespace.
+    while (isspace(lastChar)) {
+        lastChar = stream.get();
+    }
+
+    // identifier and keywords: [_a-zA-Z][_a-zA-Z0-9]*
+    if (isalpha(lastChar) or lastChar == '_') {
+        identifierString = lastChar;
+
+        lastChar = stream.get();
+        while (isalnum(lastChar) or lastChar == '_') {
+            identifierString += lastChar;
+            lastChar = stream.get();
+        }
+
+        if (identifierString == "let") {
+            return TOK_KEYWORD_LET;
+        }
+
+        return TOK_IDENTIFIER;
+    }
 
     // Float: [0-9.]+
     if (isdigit(lastChar) || lastChar == '.') {
@@ -44,13 +75,20 @@ int Lexer::gettok() {
         return TOK_FLOAT;
     }
 
+    // Affectation operator: =
+    if (lastChar == '=') {
+        lastChar = stream.get(); // eat the affectation operator
+        return TOK_OPERATOR_AFFECTATION;
+    }
+
     // Check for end of file.  Don't eat the EOF.
-    if (lastChar == EOF)
+    if (lastChar == EOF) {
         return TOK_EOF;
+    }
 
     // Otherwise, just return the character as its ascii value.
-    int thisChar = lastChar;
-    lastChar = stream.get();
+    int thisChar = lastChar;    // save the char to return it later
+    lastChar = stream.get();    // eat the char
     return thisChar;
 }
 
@@ -61,16 +99,46 @@ Lexer::Lexer(std::istream& strm) :
     lastChar(' ')
 {}
 
-float Lexer::getFloatValue() const {
+bool Lexer::getFloatValue(float& result) const {
     if (currentToken != TOK_FLOAT) {
-        char buffer[100];
-        //TODO write a helper function to represent token const
-        snprintf(buffer, 100, "Lexer error: accessing float value but current token is %d not TOK_FLOAT(%d).\n", currentToken, TOK_FLOAT);
-        throw std::logic_error(buffer);
+        PrintUnexpectedTokenError("Accessing float value", currentToken, TOK_FLOAT);
+        return false;
     }
-    return floatValue;
+
+    result = floatValue;
+    return true;
+}
+
+bool Lexer::getIdentifierString(std::string& result) const {
+    if (currentToken != TOK_IDENTIFIER) {
+        PrintUnexpectedTokenError("Accessing identifier string", currentToken, TOK_IDENTIFIER);
+        return false;
+    }
+    result = identifierString;
+    return true;
 }
 
 int Lexer::getNextToken() {
     return currentToken = gettok();
+}
+
+int Lexer::getCurrentToken() {
+    return currentToken;
+}
+
+void Lexer::PrintError(const char* const msg) {
+    fprintf(stderr, "[LEXER ERROR] %s\n", msg);
+}
+
+void Lexer::PrintUnexpectedTokenError(const char* const when, const int actualToken, const int expectedToken) {
+    const unsigned int BUF_SIZE = 255;
+    char buffer[BUF_SIZE];
+
+    snprintf(buffer, BUF_SIZE, "%s but current token is %s(%d) instead of %s(%d).",
+             when,
+             TOKEN_NAMES.at(actualToken),
+             actualToken,
+             TOKEN_NAMES.at(expectedToken),
+             expectedToken);
+    PrintError(buffer);
 }

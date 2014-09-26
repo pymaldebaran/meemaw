@@ -25,207 +25,110 @@
  */
 #include "parser.h"
 
-#include "llvm/IR/Constants.h"
-#include "llvm/IR/LLVMContext.h"
-#include "llvm/IR/Function.h"
-#include "llvm/Analysis/Verifier.h"
+#include <iostream>
 
-#include <stdexcept>
-
+#include "ast.h"
 #include "lexer.h"
-#include "codegenerator.h"
 
-Parser::Parser(Lexer& lex) :
-    lexer(lex)
-{}
-
-ExprAST::ExprAST(AstType ast) :
-    astType(ast)
-{}
-
-ExprAST::ExprAST() :
-    astType(AstType::NONE)
-{}
-
-const AstType ExprAST::getAstType() const {
-    return astType;
-}
-
-FloatExpAST::FloatExpAST(float val) :
-    ExprAST(AstType::FLOAT_LITTERAL),
-    value(val)
-{}
-
-const float FloatExpAST::getValue() const {
-    return value;
-}
-
-llvm::Value* FloatExpAST::codeGen(CodeGenerator* codeGenerator) {
-    return llvm::ConstantFP::get(llvm::getGlobalContext(), llvm::APFloat(value));;
-}
-
-ProtoTypeAST::ProtoTypeAST(const std::string theName, const std::vector<std::string> theArgs) :
-    ExprAST(AstType::PROTOTYPE),
-    name(theName),
-    args(theArgs)
-{}
-
-const std::string ProtoTypeAST::getName() const {
-    return name;
-}
-
-const std::vector<std::string> ProtoTypeAST::getArgs() const {
-    return args;
-}
-
-llvm::Function* ProtoTypeAST::codeGen(CodeGenerator* codeGenerator) {
-    // TODO remove this as soon as we support real function in the language
-    if (name != "") {
-        char buffer[255];
-        snprintf(buffer, 255, "Code Generator error: generating code of named function not yet supported : name=%s\n", name.c_str());
-        throw std::logic_error(buffer);
-    }
-    if (not args.empty()) {
-        char buffer[255];
-        snprintf(buffer, 255, "Code Generator error: generating code of function with args not yet supported : nb args=%lu\n", args.size());
-        throw std::logic_error(buffer);
-    }
-
-    // We need this to create types
-    llvm::LLVMContext& globalContext = llvm::getGlobalContext();
-
-    // The signature of the arguments
-    // WARNING For the moment MeeMaw does not support function declaration that
-    //         why we can only create empty args vector
-    std::vector<llvm::Type*> argsType = std::vector<llvm::Type*>(
-        args.size(), // == 0
-        llvm::Type::getFloatTy(globalContext));
-
-    // The return type of the function
-    // WARNING For the moment MeeMaw only support floats that's why we can only
-    //         return float
-    llvm::Type* returnType = llvm::Type::getFloatTy(globalContext);
-
-    // The complete function type of the function
-    llvm::FunctionType* funcType = llvm::FunctionType::get(
-        returnType, // return type of the function
-        argsType,   // types of the arguments
-        false);     // not a vararg function
-    if (funcType == nullptr) {
-        char buffer[255];
-        snprintf(buffer, 255, "Code Generator error: prototype AST node failed to get a function type.\n");
-        throw std::logic_error(buffer);
-    }
-
-    // Creates the function that the prototype will correspond to
-    llvm::Function* function = llvm::Function::Create(
-        funcType,                           // type of the function
-        llvm::Function::ExternalLinkage,    // the function may be defined outside the current module and/or that it is callable by functions outside the module
-        name,                               // name of the function
-        codeGenerator->getModule());        // the module to insert the function into
-    if (function == nullptr) {
-        char buffer[255];
-        snprintf(buffer, 255, "Code Generator error: prototype AST node failed to create the function object.\n");
-        throw std::logic_error(buffer);
-    }
-
-    // WARNING as MeeMaw language currently only support anonymous function we
-    //         do not handle name conflict.
-    //         If we had to it would be here (cf tutorial).
-
-    // WARNING as MeeMaw language currently only support arg less function we
-    //         do not arg names.
-    //         If we had to it would be here (cf tutorial).
-
-    return function;
-}
-
-FunctionAST::FunctionAST(ProtoTypeAST* proto, ExprAST* theBody) :
-    ExprAST(AstType::FUNCTION),
-    prototype(proto),
-    body(theBody)
-{}
-
-ProtoTypeAST* FunctionAST::getPrototype() const {
-    return prototype;
-}
-
-ExprAST* FunctionAST::getBody() const {
-    return body;
-}
-
-llvm::Function* FunctionAST::codeGen(CodeGenerator* codeGenerator) {
-    // check if the function node is valid
-    if (prototype == nullptr) {
-        char buffer[255];
-        snprintf(buffer, 255, "Code Generator error: function AST node without prototype.\n");
-        throw std::logic_error(buffer);
-    }
-
-    // Clear the symbol table to make sure that there isn’t anything in it from
-    // the last function we compiled
-    codeGenerator->getNamedValues().clear();
-
-    // Generate the code of the prototype
-    llvm::Function* func = prototype->codeGen(codeGenerator);
-    if (func == nullptr) {
-        char buffer[255];
-        snprintf(buffer, 255, "Code Generator error: function AST node can not generate prototype code.\n");
-        throw std::logic_error(buffer);
-    }
-
-    // Create a new basic block to insert the body into.
-    llvm::BasicBlock* basicBlk = llvm::BasicBlock::Create(
-        llvm::getGlobalContext(),
-        "function basic block", //name
-        func);                  //parent
-    if (basicBlk == nullptr) {
-        char buffer[255];
-        snprintf(buffer, 255, "Code Generator error: function AST node can not create basic block to put the code in.\n");
-        throw std::logic_error(buffer);
-    }
-    // From now on we insert into the new block
-    codeGenerator->getBuilder().SetInsertPoint(basicBlk);
-
-    // Generate the code of the body
-    llvm::Value* returnValue = body->codeGen(codeGenerator);
-    if (returnValue == nullptr) {
-        // Error reading body, remove function
-        func->eraseFromParent();
-
-        char buffer[255];
-        snprintf(buffer, 255, "Code Generator error: function AST node can not generate body code.\n");
-        throw std::logic_error(buffer);
-    }
-
-    // Finish off the function.
-    codeGenerator->getBuilder().CreateRet(returnValue);
-
-    // Validate the generated code, checking for consistency.
-    bool verifyError = llvm::verifyFunction(*func, llvm::PrintMessageAction);
-    if (verifyError) {
-        char buffer[255];
-        snprintf(buffer, 255, "Code Generator error: function AST node has generated code but failed verification.\n");
-        throw std::logic_error(buffer);
-    }
-
-    return func;
-}
-
-ExprAST* Parser::parseTopLevelExpr() {
-    // For the moment the only possible top level expression is a float litteral
-    if (ExprAST * expr = parseFloatLitteralExpr()) {
-        // Make an anonymous proto.
-        ProtoTypeAST* proto = new ProtoTypeAST("", std::vector<std::string>());
-        return new FunctionAST(proto, expr);
-    }
+std::nullptr_t Parser::ParserError(const char* const msg) {
+    std::cerr << "[PARSE ERROR] " << msg << "\n";
 
     return nullptr;
 }
 
+std::nullptr_t Parser::ParserErrorUnexpectedToken(const char* const msg, const int actualToken) {
+    std::cerr   << "[PARSE ERROR] " << msg << Lexer::TOKEN_NAMES.at(actualToken) << "(" << actualToken << ")"
+                << "\n";
+
+    return nullptr;
+}
+
+std::nullptr_t Parser::ParserErrorUnexpectedToken(const char* const when, const int actualToken, const int expectedToken) {
+    std::cerr   << "[PARSE ERROR] " << when
+                << "but current token is " << Lexer::TOKEN_NAMES.at(actualToken) << "(" << actualToken << ")"
+                << " instead of" << Lexer::TOKEN_NAMES.at(expectedToken) << "(" << expectedToken << ")"
+                << "\n";
+
+    return nullptr;
+}
+
+FunctionAST* Parser::parseTopLevelExpr() {
+    // For the moment any primary expression is a top level expression
+    ExprAST * primExpr = parsePrimaryExpr();
+
+    if (primExpr == nullptr) {
+        return ParserError("Can't parse top level expression.");
+    }
+
+    // Make an anonymous proto.
+    ProtoTypeAST* proto = new ProtoTypeAST("", std::vector<std::string>());
+
+    // return the anonymous function
+    return new FunctionAST(proto, primExpr);
+}
+
+ExprAST* Parser::parsePrimaryExpr() {
+    ExprAST* expr;
+
+    switch (lexer.getCurrentToken()) {
+    default:
+        return ParserErrorUnexpectedToken("Can't parse primary expression, unexpected token ", lexer.getCurrentToken());
+    case Lexer::TOK_FLOAT:
+        expr = parseFloatLitteralExpr();
+        break;
+    case Lexer::TOK_KEYWORD_LET:
+        expr =  parseFloatConstantVariableDeclarationExpr();
+        break;
+    }
+
+    if (expr == nullptr) {
+        return ParserError("Can't parse primary expression.");
+    }
+
+    return expr;
+}
+
 FloatExpAST* Parser::parseFloatLitteralExpr() {
-    FloatExpAST* result = new FloatExpAST(lexer.getFloatValue());
+    float fVal;
+
+    if (not lexer.getFloatValue(fVal)) {
+        return ParserError("Can't get a float value from the lexer.");
+    }
+
+    FloatExpAST* result = new FloatExpAST(fVal);
 
     lexer.getNextToken(); // consume the float
     return result;
+}
+
+FloatConstantVariableDeclarationExprAST* Parser::parseFloatConstantVariableDeclarationExpr() {
+    // let keyword
+    if (lexer.getCurrentToken() != Lexer::TOK_KEYWORD_LET) {
+        return ParserErrorUnexpectedToken("Parsing float constant variable declaration", lexer.getCurrentToken(), Lexer::TOK_KEYWORD_LET);
+    }
+
+    lexer.getNextToken(); // consume "let"
+
+    // constant name
+    std::string name; // variable to store the name to use it later during AST node construction
+    if (not lexer.getIdentifierString(name)) {
+        return ParserErrorUnexpectedToken("Parsing float constant variable declaration", lexer.getCurrentToken(), Lexer::TOK_IDENTIFIER);
+    }
+
+    lexer.getNextToken(); // consume identifier
+
+    // affectation operator "="
+    if (lexer.getCurrentToken() != Lexer::TOK_OPERATOR_AFFECTATION) {
+        return ParserErrorUnexpectedToken("Parsing float constant variable declaration", lexer.getCurrentToken(), Lexer::TOK_OPERATOR_AFFECTATION);
+    }
+
+    lexer.getNextToken(); // consume affectation operator "="
+
+    FloatExpAST* rhsExpr = parseFloatLitteralExpr();
+    if (rhsExpr == nullptr) {
+        return ParserError("Failed to parse Right Hand Side expression of the affectation.");
+    }
+
+    // everything went right... we can do AST node construction
+    return new FloatConstantVariableDeclarationExprAST(name, rhsExpr);
 }
