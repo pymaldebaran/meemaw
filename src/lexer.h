@@ -94,20 +94,21 @@ private:
 //TODO test the usage of TOK_LEXER_ERROR and TOK_NONE
 // The lexer returns tokens [0-255] if it is an unknown character, otherwise
 // one of these for known things.
-enum class TokenType {
-    TOK_LITTERAL_FLOAT = -1,
-    TOK_EOF   = -2,
-    TOK_KEYWORD_LET = -3,
-    TOK_IDENTIFIER = -4,
-    TOK_OPERATOR_AFFECTATION = -5,
-    TOK_LEXER_ERROR = -254,     // returned by lexer in case of error
-    TOK_NONE  = -255            // initial value of the currentToken attribute
+enum TokenType {
+    TOK_LITTERAL_FLOAT = 1,
+    TOK_KEYWORD_LET,
+    TOK_IDENTIFIER,
+    TOK_OPERATOR_AFFECTATION,
+    TOK_LEXER_ERROR,        // returned by lexer in case of error
+    TOK_NONE,               // initial value of the currentToken attribute
 };
 
 class Token {
 public:
+    // TODO Improve this with static specialized builder that let the user ony
+    //      create valid tokens
     // Constructor
-    explicit Token();
+    explicit Token(TokenType typ, std::string identifierstr = "", float floatVal = 0.0);
 
     // Get the type of token
     TokenType getTokenType();

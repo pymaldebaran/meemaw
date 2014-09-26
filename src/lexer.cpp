@@ -28,15 +28,16 @@
 #include <cstdlib>
 #include <stdexcept>
 #include <map>
+#include <iostream>
 
 const std::map<int, const char* const> Lexer::TOKEN_NAMES = {
-    { Lexer::TOK_FLOAT,                "TOK_FLOAT"                                                                                                                                                                                                                                                              },
-    { Lexer::TOK_EOF,                  "TOK_EOF"                                                                                                                                                                                                                                                                },
-    { Lexer::TOK_KEYWORD_LET,          "TOK_KEYWORD_LET"                                                                                                                                                                                                                                                        },
-    { Lexer::TOK_IDENTIFIER,           "TOK_IDENTIFIER"                                                                                                                                                                                                                                                         },
-    { Lexer::TOK_OPERATOR_AFFECTATION, "TOK_OPERATOR_AFFECTATION"                                                                                                                                                                                                                                               },
-    { Lexer::TOK_LEXER_ERROR,          "TOK_LEXER_ERROR"                                                                                                                                                                                                                                                        },
-    { Lexer::TOK_NONE,                 "TOK_NONE"                                                                                                                                                                                                                                                               },
+    { Lexer::TOK_FLOAT,                "TOK_FLOAT"                                                                                                                                                                                                                                                                               },
+    { Lexer::TOK_EOF,                  "TOK_EOF"                                                                                                                                                                                                                                                                                 },
+    { Lexer::TOK_KEYWORD_LET,          "TOK_KEYWORD_LET"                                                                                                                                                                                                                                                                         },
+    { Lexer::TOK_IDENTIFIER,           "TOK_IDENTIFIER"                                                                                                                                                                                                                                                                          },
+    { Lexer::TOK_OPERATOR_AFFECTATION, "TOK_OPERATOR_AFFECTATION"                                                                                                                                                                                                                                                                },
+    { Lexer::TOK_LEXER_ERROR,          "TOK_LEXER_ERROR"                                                                                                                                                                                                                                                                         },
+    { Lexer::TOK_NONE,                 "TOK_NONE"                                                                                                                                                                                                                                                                                },
 };
 
 int Lexer::gettok() {
@@ -143,10 +144,10 @@ void Lexer::PrintUnexpectedTokenError(const char* const when, const int actualTo
     PrintError(buffer);
 }
 
-Token::Token() :
-    tokenType(TokenType::TOK_NONE),
-    identifierString(""),
-    floatValue(0.0)
+Token::Token(TokenType typ, std::string identifierstr, float floatVal) :
+    tokenType(typ),
+    identifierString(identifierstr),
+    floatValue(floatVal)
 {}
 
 TokenType Token::getTokenType() {
@@ -170,9 +171,82 @@ std::deque<Token>& NewLexer::getTokens() {
 }
 
 unsigned int NewLexer::tokenize() {
-    return 0;
+    unsigned int productedTokens = 0;
+
+    while (tokenizeOne()) {
+        ++productedTokens;
+    }
+
+    return productedTokens;
 }
 
 bool NewLexer::tokenizeOne() {
-    return false;
+    int lastChar = input.get();
+
+    // Skip any whitespace.
+    while (isspace(lastChar)) {
+        lastChar = input.get();
+    }
+
+    // identifier and keywords: [_a-zA-Z][_a-zA-Z0-9]*
+    if (isalpha(lastChar) or lastChar == '_') {
+        std::string identifierBuffer;
+        identifierBuffer = lastChar;
+
+        lastChar = input.get();
+        while (isalnum(lastChar) or lastChar == '_') {
+            identifierBuffer += lastChar;
+            lastChar = input.get();
+        }
+
+        if (identifierBuffer == "let") {
+            // TODO replace this with a specialized builder
+            tokens.push_back(Token(TokenType::TOK_KEYWORD_LET));
+            return true;
+        }
+
+        // TODO replace this with a specialized builder
+        tokens.push_back(Token(TokenType::TOK_IDENTIFIER, identifierBuffer));
+        return true;
+    }
+
+    // Float: [0-9.]+
+    if (isdigit(lastChar) || lastChar == '.') {
+        std::string floatStr;
+
+        do {
+            floatStr += lastChar;
+            lastChar = input.get();
+        } while (isdigit(lastChar) || lastChar == '.');
+
+        float floatValue = strtof(floatStr.c_str(), nullptr);
+
+        // TODO replace this with a specialized builder
+        tokens.push_back(Token(TokenType::TOK_LITTERAL_FLOAT, "", floatValue));
+        return true;
+    }
+
+    // Affectation operator: =
+    if (lastChar == '=') {
+        lastChar = input.get(); // eat the affectation operator
+
+        // TODO replace this with a specialized builder
+        tokens.push_back(Token(TokenType::TOK_OPERATOR_AFFECTATION));
+        return true;
+    }
+
+    // Check for end of file.  Don't eat the EOF.
+    if (lastChar == EOF) {
+        // we add no token
+        return false;
+    }
+
+    // Otherwise it's an unrecognized sequence.
+    int thisChar = lastChar;    // save the char to return it later
+    lastChar = input.get();     // eat the char
+    // TODO replace this with a proper error function
+    std::cerr << "[NEW LEXER ERROR] Unrecognized character.\n";
+    // TODO replace this with a specialized builder
+    tokens.push_back(Token(TokenType::TOK_LEXER_ERROR, std::string(lastChar, 1)));
+    return true;
 }
