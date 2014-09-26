@@ -64,6 +64,9 @@ public:
     bool getIdentifierString(std::string& result) const;
 
     // TODO replace this method with nextToken() because it looks like a getter
+    // TODO add a "token safe" method that takes a token parameter and "eat" it
+    //      only if the next token is of the correct type
+    // TODO add a eat() method just to be more clear when using it ;)
     // Reads another token from the lexer and updates CurTok with its results
     int getNextToken();
 

@@ -34,11 +34,10 @@ class ExprAST;
 
 class CodeGenerator {
 private:
-    llvm::Module* module;       // module used for code generation
-    llvm::IRBuilder<> builder;  // helper taht makes it easy to generate LLVM instructions
+    llvm::Module* module;                               // module used for code generation
+    llvm::IRBuilder<> builder;                          // helper taht makes it easy to generate LLVM instructions
 
-    // TODO rename this has getSymbolTable
-    std::map<std::string, llvm::Value*> namedValues; // symbol table
+    std::map<std::string, llvm::Value*> symbolTable;    // symbol table
 public:
     // Constuctor
     CodeGenerator(llvm::Module* mod);
@@ -49,9 +48,8 @@ public:
     // builder getter
     llvm::IRBuilder<>& getBuilder();
 
-    // TODO rename this has getSymbolTable
     // namedValue getter
-    std::map<std::string, llvm::Value*>& getNamedValues();
+    std::map<std::string, llvm::Value*>& getSymbolTable();
 
     // Generate LLVM Intermediary Representation for the given AST.
     // Use a recursive call to AST node codeGen() method.

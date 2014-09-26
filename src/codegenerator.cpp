@@ -31,7 +31,7 @@
 CodeGenerator::CodeGenerator(llvm::Module* mod) :
     module(mod),
     builder(llvm::getGlobalContext()),
-    namedValues()
+    symbolTable()
 {}
 
 llvm::Module* CodeGenerator::getModule() const {
@@ -42,8 +42,8 @@ llvm::IRBuilder<>& CodeGenerator::getBuilder() {
     return builder;
 }
 
-std::map<std::string, llvm::Value*>& CodeGenerator::getNamedValues() {
-    return namedValues;
+std::map<std::string, llvm::Value*>& CodeGenerator::getSymbolTable() {
+    return symbolTable;
 }
 
 llvm::Value* CodeGenerator::codeGen(ExprAST* ast) {

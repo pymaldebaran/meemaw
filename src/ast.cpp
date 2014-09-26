@@ -164,7 +164,7 @@ llvm::Function* FunctionAST::codeGen(CodeGenerator* codeGenerator) {
 
     // Clear the symbol table to make sure that there isn’t anything in it from
     // the last function we compiled
-    codeGenerator->getNamedValues().clear();
+    codeGenerator->getSymbolTable().clear();
 
     // Generate the code of the prototype
     llvm::Function* func = prototype->codeGen(codeGenerator);
@@ -235,7 +235,7 @@ llvm::Value* FloatConstantVariableDeclarationExprAST::codeGen(CodeGenerator* cod
     }
 
     // Insert the value in the symbol table
-    auto symbolTable = codeGenerator->getNamedValues();
+    auto symbolTable = codeGenerator->getSymbolTable();
     if (symbolTable.count(name) > 0) {
         return CodeGenError("Float constant name already in use, MeeMaw refuse symbol shadowing. Name=", name);
     }
