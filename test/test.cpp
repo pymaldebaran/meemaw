@@ -462,19 +462,27 @@ TEST_CASE("New lexer eats token FIFO until there are no more token") {
 
     CHECK(lex.tokenize() == 4);
     CHECK(lex.getTokens().size() == 4);
+    CHECK(lex.getTokens().front().getTokenType() == TokenType::TOK_KEYWORD_LET);
 
     CHECK(lex.eatToken() == true);
     CHECK(lex.getTokens().size() == 3);
+    CHECK(lex.getTokens().front().getTokenType() == TokenType::TOK_IDENTIFIER);
+    CHECK(lex.getTokens().front().getIdentifierString() == "aaa");
 
     CHECK(lex.eatToken() == true);
     CHECK(lex.getTokens().size() == 2);
+    CHECK(lex.getTokens().front().getTokenType() == TokenType::TOK_OPERATOR_AFFECTATION);
 
     CHECK(lex.eatToken() == true);
     CHECK(lex.getTokens().size() == 1);
+    CHECK(lex.getTokens().front().getTokenType() == TokenType::TOK_LITTERAL_FLOAT);
+    CHECK(lex.getTokens().front().getFloatValue() == 1.0);
 
     CHECK(lex.eatToken() == true);
     CHECK(lex.getTokens().size() == 0);
+    CHECK(lex.getTokens().empty() == true);
 
     CHECK(lex.eatToken() == false);
     CHECK(lex.getTokens().size() == 0);
+    CHECK(lex.getTokens().empty() == true);
 }
