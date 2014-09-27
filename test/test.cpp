@@ -420,92 +420,140 @@ TEST_CASE("Code generated for float litteral constant declaration expression is 
 // TODO add a test with usage of the created constant
 
 TEST_CASE("New lexer initially has no token") {
-    std::stringstream in;           // stream to parse by lexer
-    NewLexer lex = NewLexer(in);    // the lexer
+    std::stringstream in;               // stream to parse by lexer
+    TokenQueue out;                     // token conatainer
+    NewLexer lex = NewLexer(in, out);   // the lexer
 
-    REQUIRE(lex.getTokens().empty());
+    REQUIRE(out.empty());
 }
 
 TEST_CASE("New lexer do not fill tokens when tokenise is called on empty input") {
-    std::stringstream in;           // stream to parse by lexer
-    NewLexer lex = NewLexer(in);    // the lexer
+    std::stringstream in;               // stream to parse by lexer
+    TokenQueue out;                     // token conatainer
+    NewLexer lex = NewLexer(in, out);   // the lexer
 
     CHECK(lex.tokenize() == 0);
-    CHECK(lex.getTokens().size() == 0);
+    CHECK(out.size() == 0);
 }
 
 TEST_CASE("New lexer fills tokens when tokenise is called") {
-    std::stringstream in;           // stream to parse by lexer
-    NewLexer lex = NewLexer(in);    // the lexer
+    std::stringstream in;               // stream to parse by lexer
+    TokenQueue out;                     // token conatainer
+    NewLexer lex = NewLexer(in, out);   // the lexer
 
     in << "let aaa = 1.0";
 
     CHECK(lex.tokenize() == 4);
-    CHECK(lex.getTokens().size() == 4);
+    CHECK(out.size() == 4);
 
-    CHECK(lex.getTokens().at(0).getTokenType() == TokenType::TOK_KEYWORD_LET);
+    CHECK(out.at(0).getTokenType() == TokenType::TOK_KEYWORD_LET);
 
-    CHECK(lex.getTokens().at(1).getTokenType() == TokenType::TOK_IDENTIFIER);
-    CHECK(lex.getTokens().at(1).getIdentifierString() == "aaa");
+    CHECK(out.at(1).getTokenType() == TokenType::TOK_IDENTIFIER);
+    CHECK(out.at(1).getIdentifierString() == "aaa");
 
-    CHECK(lex.getTokens().at(2).getTokenType() == TokenType::TOK_OPERATOR_AFFECTATION);
+    CHECK(out.at(2).getTokenType() == TokenType::TOK_OPERATOR_AFFECTATION);
 
-    CHECK(lex.getTokens().at(3).getTokenType() == TokenType::TOK_LITTERAL_FLOAT);
-    CHECK(lex.getTokens().at(3).getFloatValue() == 1.0);
+    CHECK(out.at(3).getTokenType() == TokenType::TOK_LITTERAL_FLOAT);
+    CHECK(out.at(3).getFloatValue() == 1.0);
 }
 
 TEST_CASE("New lexer eats token FIFO until there are no more token") {
-    std::stringstream in;           // stream to parse by lexer
-    NewLexer lex = NewLexer(in);    // the lexer
+    std::stringstream in;               // stream to parse by lexer
+    TokenQueue out;                     // token conatainer
+    NewLexer lex = NewLexer(in, out);   // the lexer
 
     in << "let aaa = 1.0";
 
     CHECK(lex.tokenize() == 4);
-    CHECK(lex.getTokens().size() == 4);
-    CHECK(lex.getTokens().front().getTokenType() == TokenType::TOK_KEYWORD_LET);
+    CHECK(out.size() == 4);
+    CHECK(out.front().getTokenType() == TokenType::TOK_KEYWORD_LET);
 
-    CHECK(lex.eatToken() == true);
-    CHECK(lex.getTokens().size() == 3);
-    CHECK(lex.getTokens().front().getTokenType() == TokenType::TOK_IDENTIFIER);
-    CHECK(lex.getTokens().front().getIdentifierString() == "aaa");
+    CHECK(out.pop() == true);
+    CHECK(out.size() == 3);
+    CHECK(out.front().getTokenType() == TokenType::TOK_IDENTIFIER);
+    CHECK(out.front().getIdentifierString() == "aaa");
 
-    CHECK(lex.eatToken() == true);
-    CHECK(lex.getTokens().size() == 2);
-    CHECK(lex.getTokens().front().getTokenType() == TokenType::TOK_OPERATOR_AFFECTATION);
+    CHECK(out.pop() == true);
+    CHECK(out.size() == 2);
+    CHECK(out.front().getTokenType() == TokenType::TOK_OPERATOR_AFFECTATION);
 
-    CHECK(lex.eatToken() == true);
-    CHECK(lex.getTokens().size() == 1);
-    CHECK(lex.getTokens().front().getTokenType() == TokenType::TOK_LITTERAL_FLOAT);
-    CHECK(lex.getTokens().front().getFloatValue() == 1.0);
+    CHECK(out.pop() == true);
+    CHECK(out.size() == 1);
+    CHECK(out.front().getTokenType() == TokenType::TOK_LITTERAL_FLOAT);
+    CHECK(out.front().getFloatValue() == 1.0);
 
-    CHECK(lex.eatToken() == true);
-    CHECK(lex.getTokens().size() == 0);
-    CHECK(lex.getTokens().empty() == true);
+    CHECK(out.pop() == true);
+    CHECK(out.size() == 0);
+    CHECK(out.empty() == true);
 
-    CHECK(lex.eatToken() == false);
-    CHECK(lex.getTokens().size() == 0);
-    CHECK(lex.getTokens().empty() == true);
+    CHECK(out.pop() == false);
+    CHECK(out.size() == 0);
+    CHECK(out.empty() == true);
 }
 
 TEST_CASE("New lexer can eats token with type verification") {
-    std::stringstream in;           // stream to parse by lexer
-    NewLexer lex = NewLexer(in);    // the lexer
+    std::stringstream in;               // stream to parse by lexer
+    TokenQueue out;                     // token conatainer
+    NewLexer lex = NewLexer(in, out);   // the lexer
 
     in << "let aaa = 1.0";
 
     // Before eating
     CHECK(lex.tokenize() == 4);
-    CHECK(lex.getTokens().size() == 4);
-    CHECK(lex.getTokens().front().getTokenType() == TokenType::TOK_KEYWORD_LET);
+    CHECK(out.size() == 4);
+    CHECK(out.front().getTokenType() == TokenType::TOK_KEYWORD_LET);
 
     // Trying to eat the wrong type of token
-    CHECK(lex.eatToken(TokenType::TOK_LITTERAL_FLOAT) == false);
-    CHECK(lex.getTokens().size() == 4);
-    CHECK(lex.getTokens().front().getTokenType() == TokenType::TOK_KEYWORD_LET);
+    CHECK(out.pop(TokenType::TOK_LITTERAL_FLOAT) == false);
+    CHECK(out.size() == 4);
+    CHECK(out.front().getTokenType() == TokenType::TOK_KEYWORD_LET);
 
     // Trying to eat the correct type of token
-    CHECK(lex.eatToken(TokenType::TOK_KEYWORD_LET) == true);
-    CHECK(lex.getTokens().size() == 3);
-    CHECK(lex.getTokens().front().getTokenType() == TokenType::TOK_IDENTIFIER);
-    CHECK(lex.getTokens().front().getIdentifierString() == "aaa");
+    CHECK(out.pop(TokenType::TOK_KEYWORD_LET) == true);
+    CHECK(out.size() == 3);
+    CHECK(out.front().getTokenType() == TokenType::TOK_IDENTIFIER);
+    CHECK(out.front().getIdentifierString() == "aaa");
+}
+
+TEST_CASE("TokenQueue can be pushed and poped") {
+    TokenQueue tokenQ;
+
+    CHECK(tokenQ.empty());
+    CHECK(tokenQ.size() == 0);
+    CHECK(tokenQ.pop() == false);
+
+    tokenQ.push(Token::CreateLitteralFloat(1.0));
+
+    CHECK(not tokenQ.empty());
+    CHECK(tokenQ.size() == 1);
+    CHECK(tokenQ.front().getTokenType() == TokenType::TOK_LITTERAL_FLOAT);
+    CHECK(tokenQ.front().getFloatValue() == 1.0);
+    CHECK(tokenQ.pop() == true);
+    CHECK(tokenQ.empty());
+    CHECK(tokenQ.size() == 0);
+
+    tokenQ.push(Token::CreateLitteralFloat(2.0));
+    tokenQ.push(Token::CreateLitteralFloat(3.0));
+    tokenQ.push(Token::CreateLitteralFloat(4.0));
+
+    CHECK(tokenQ.size() == 3);
+    CHECK(tokenQ.front().getTokenType() == TokenType::TOK_LITTERAL_FLOAT);
+    CHECK(tokenQ.front().getFloatValue() == 2.0);
+
+    CHECK(tokenQ.pop() == true);
+
+    CHECK(tokenQ.size() == 2);
+    CHECK(tokenQ.front().getTokenType() == TokenType::TOK_LITTERAL_FLOAT);
+    CHECK(tokenQ.front().getFloatValue() == 3.0);
+
+    CHECK(tokenQ.pop() == true);
+
+    CHECK(tokenQ.size() == 1);
+    CHECK(tokenQ.front().getTokenType() == TokenType::TOK_LITTERAL_FLOAT);
+    CHECK(tokenQ.front().getFloatValue() == 4.0);
+
+    CHECK(tokenQ.pop() == true);
+
+    CHECK(tokenQ.size() == 0);
+    CHECK(tokenQ.empty());
 }

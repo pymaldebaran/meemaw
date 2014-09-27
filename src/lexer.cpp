@@ -31,13 +31,13 @@
 #include <iostream>
 
 const std::map<int, const char* const> Lexer::TOKEN_NAMES = {
-    { Lexer::TOK_FLOAT,                "TOK_FLOAT"                                 },
-    { Lexer::TOK_EOF,                  "TOK_EOF"                                   },
-    { Lexer::TOK_KEYWORD_LET,          "TOK_KEYWORD_LET"                           },
-    { Lexer::TOK_IDENTIFIER,           "TOK_IDENTIFIER"                            },
-    { Lexer::TOK_OPERATOR_AFFECTATION, "TOK_OPERATOR_AFFECTATION"                  },
-    { Lexer::TOK_LEXER_ERROR,          "TOK_LEXER_ERROR"                           },
-    { Lexer::TOK_NONE,                 "TOK_NONE"                                  },
+    { Lexer::TOK_FLOAT,                "TOK_FLOAT"                                                  },
+    { Lexer::TOK_EOF,                  "TOK_EOF"                                                    },
+    { Lexer::TOK_KEYWORD_LET,          "TOK_KEYWORD_LET"                                            },
+    { Lexer::TOK_IDENTIFIER,           "TOK_IDENTIFIER"                                             },
+    { Lexer::TOK_OPERATOR_AFFECTATION, "TOK_OPERATOR_AFFECTATION"                                   },
+    { Lexer::TOK_LEXER_ERROR,          "TOK_LEXER_ERROR"                                            },
+    { Lexer::TOK_NONE,                 "TOK_NONE"                                                   },
 };
 
 int Lexer::gettok() {
@@ -144,7 +144,7 @@ void Lexer::PrintUnexpectedTokenError(const char* const when, const int actualTo
     PrintError(buffer);
 }
 
-Token Token::CreateLitteralFloat(float f) {
+Token Token::CreateLitteralFloat(const float f) {
     return Token(TokenType::TOK_LITTERAL_FLOAT, "", f);
 }
 
@@ -160,32 +160,88 @@ Token Token::CreateOperatorAffectation() {
     return Token(TokenType::TOK_OPERATOR_AFFECTATION);
 }
 
-Token Token::CreateLexerError(int ch) {
+Token Token::CreateLexerError(const int ch) {
     return Token(TokenType::TOK_LEXER_ERROR, std::string(ch, 1));
 }
 Token Token::CreateNone() {
     return Token(TokenType::TOK_NONE);
 }
 
-Token::Token(TokenType typ, std::string identifierstr, float floatVal) :
+Token::Token(const TokenType typ, const std::string identifierstr, const float floatVal) :
     tokenType(typ),
     identifierString(identifierstr),
     floatValue(floatVal)
 {}
 
-TokenType Token::getTokenType() {
+const TokenType Token::getTokenType() const {
     return tokenType;
 }
 
-std::string Token::getIdentifierString() {
+const std::string Token::getIdentifierString() const {
     return identifierString;
 }
 
-float Token::getFloatValue() {
+float Token::getFloatValue() const {
     return floatValue;
 }
 
-NewLexer::NewLexer(std::istream& stream) :
+TokenQueue::TokenQueue() :
+    dummyToken(Token::CreateNone())
+{}
+
+bool TokenQueue::empty() const {
+    std::cerr << "TokenQueue::empty() Not implemented.\n";
+
+    return false;
+}
+
+unsigned int TokenQueue::size() const {
+    std::cerr << "TokenQueue::size() Not implemented.\n";
+
+    return 255;
+}
+
+const Token& TokenQueue::at(const unsigned int pos) {
+    std::cerr << "TokenQueue::at() Not implemented.\n";
+
+    return dummyToken;
+}
+
+const Token& TokenQueue::at(const unsigned int pos) const {
+    std::cerr << "TokenQueue::at() const Not implemented.\n";
+
+    return dummyToken;
+}
+
+const Token& TokenQueue::front() {
+    std::cerr << "TokenQueue::front() Not implemented.\n";
+
+    return dummyToken;
+}
+
+const Token& TokenQueue::front() const {
+    std::cerr << "TokenQueue::front() const Not implemented.\n";
+
+    return dummyToken;
+}
+
+bool TokenQueue::pop() {
+    std::cerr << "TokenQueue::pop() Not implemented.\n";
+
+    return false;
+}
+
+bool TokenQueue::pop(const TokenType typ) {
+    std::cerr << "TokenQueue::pop() const Not implemented.\n";
+
+    return false;
+}
+
+void TokenQueue::push(const Token tok) {
+    std::cerr << "TokenQueue::push() Not implemented.\n";
+}
+
+NewLexer::NewLexer(std::istream& stream, TokenQueue& tokenQ) :
     input(stream)
 {}
 

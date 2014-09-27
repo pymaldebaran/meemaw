@@ -106,38 +106,55 @@ enum TokenType {
 class Token {
 public:
     // A bunch of helpers to create valid tokens
-    static Token CreateLitteralFloat(float f);
+    static Token CreateLitteralFloat(const float f);
     static Token CreateKeywordLet();
     static Token CreateIdentifier(const std::string& idStr);
     static Token CreateOperatorAffectation();
-    static Token CreateLexerError(int ch);
+    static Token CreateLexerError(const int ch);
     static Token CreateNone();
 
     // Get the type of token
-    TokenType getTokenType();
+    const TokenType getTokenType() const;
 
     // Get the identifier string (available only if getTokenType() is
     // TOK_IDENTIFIER)
-    std::string getIdentifierString();
+    const std::string getIdentifierString() const;
 
     // Get the value of a float litteral token (available only if getTokenType()
     // is TOK_LITTERAL_FLOAT
-    float getFloatValue();
+    float getFloatValue() const;
 
 private:
-    TokenType tokenType;            // Type of the token
-    std::string identifierString;   // Filled in if currentToken == TOK_IDENTIFIER
-    float floatValue;               // Filled in if currentToken == TOK_LITTERAL_FLOAT
+    const TokenType tokenType;              // Type of the token
+    const std::string identifierString;     // Filled in if currentToken == TOK_IDENTIFIER
+    const float floatValue;                 // Filled in if currentToken == TOK_LITTERAL_FLOAT
 
     // Private Constructor
     // You should use public static function to create valid tokens
-    explicit Token(TokenType typ, std::string identifierstr = "", float floatVal = 0.0);
+    explicit Token(const TokenType typ, const std::string identifierstr = "", const float floatVal = 0.0);
+};
+
+class TokenQueue {
+public:
+    TokenQueue();
+    bool empty() const;
+    unsigned int size() const;
+    const Token& at(const unsigned int pos);
+    const Token& at(const unsigned int pos) const;
+    const Token& front();
+    const Token& front() const;
+    bool pop();
+    bool pop(const TokenType typ);
+    void push(const Token tok);
+
+private:
+    const Token dummyToken; // just here for test reason
 };
 
 class NewLexer {
 public:
     // Constructor
-    explicit NewLexer(std::istream& stream);
+    explicit NewLexer(std::istream& stream, TokenQueue& tokenQ);
 
     // Accessor to the token container.
     // The container is updated everytime a nextToken() call is made.
