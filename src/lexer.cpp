@@ -204,7 +204,13 @@ unsigned int NewLexer::tokenize() {
 }
 
 bool NewLexer::eatToken() {
-    return false;
+    if (tokens.empty())
+    {
+        return false;
+    }
+
+    tokens.pop_front();
+    return true;
 }
 
 bool NewLexer::tokenizeOne() {
