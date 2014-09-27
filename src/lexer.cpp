@@ -31,13 +31,13 @@
 #include <iostream>
 
 const std::map<int, const char* const> Lexer::TOKEN_NAMES = {
-    { Lexer::TOK_FLOAT,                "TOK_FLOAT"                },
-    { Lexer::TOK_EOF,                  "TOK_EOF"                  },
-    { Lexer::TOK_KEYWORD_LET,          "TOK_KEYWORD_LET"          },
-    { Lexer::TOK_IDENTIFIER,           "TOK_IDENTIFIER"           },
-    { Lexer::TOK_OPERATOR_AFFECTATION, "TOK_OPERATOR_AFFECTATION" },
-    { Lexer::TOK_LEXER_ERROR,          "TOK_LEXER_ERROR"          },
-    { Lexer::TOK_NONE,                 "TOK_NONE"                 },
+    { Lexer::TOK_FLOAT,                "TOK_FLOAT"                                 },
+    { Lexer::TOK_EOF,                  "TOK_EOF"                                   },
+    { Lexer::TOK_KEYWORD_LET,          "TOK_KEYWORD_LET"                           },
+    { Lexer::TOK_IDENTIFIER,           "TOK_IDENTIFIER"                            },
+    { Lexer::TOK_OPERATOR_AFFECTATION, "TOK_OPERATOR_AFFECTATION"                  },
+    { Lexer::TOK_LEXER_ERROR,          "TOK_LEXER_ERROR"                           },
+    { Lexer::TOK_NONE,                 "TOK_NONE"                                  },
 };
 
 int Lexer::gettok() {
@@ -204,8 +204,7 @@ unsigned int NewLexer::tokenize() {
 }
 
 bool NewLexer::eatToken() {
-    if (tokens.empty())
-    {
+    if (tokens.empty()) {
         return false;
     }
 
@@ -214,7 +213,16 @@ bool NewLexer::eatToken() {
 }
 
 bool NewLexer::eatToken(TokenType typ) {
-    return false;
+    if (tokens.empty()) {
+        return false;
+    }
+
+    if (tokens.front().getTokenType() != typ) {
+        return false;
+    }
+
+    tokens.pop_front();
+    return true;
 }
 
 bool NewLexer::tokenizeOne() {
