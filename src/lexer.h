@@ -155,6 +155,25 @@ public:
     // - The first processed token will always be in front position
     unsigned int tokenize();
 
+    // Remove the older token from the token container.
+    //
+    // Returns true only if a token has been effectively removed
+    //         false otherwise (especialy if the token container was empty)
+    //
+    // The token is always removed from the front position in order to ensure
+    // FILO comportement.
+    //bool eatToken();
+
+    // Remove the older token from the token container only if it is from the
+    // specified type.
+    //
+    // Returns true only if a token has been effectively removed
+    //         false otherwise (especialy if the token container was empty)
+    //
+    // The token is always removed from the front position in order to ensure
+    // FILO comportement.
+    //bool eatToken(TokenType typ);
+
 private:
     std::istream& input;        // input stream to parse
     std::deque<Token> tokens;   // where to put all the tokens generated when colling nextToken()
@@ -168,6 +187,14 @@ private:
     //
     // The produced token (if any) is appended in front position.
     bool tokenizeOne();
+
+    // Add a new token to the token container.
+    //
+    // The token is always added in back position in order to ensure FILO
+    // comportement.
+    //
+    // This should be used instead of direct access to the tokens attribute.
+    void pushToken(Token tok);
 };
 
 #endif // LEXER_H
