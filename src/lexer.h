@@ -150,7 +150,7 @@ public:
     //
     // The input stream is consumed till the end.
     //
-    // The token container is filled FILO :
+    // The token container is filled FIFO :
     // - The last processed token will always be in back position
     // - The first processed token will always be in front position
     unsigned int tokenize();
@@ -161,8 +161,8 @@ public:
     //         false otherwise (especialy if the token container was empty)
     //
     // The token is always removed from the front position in order to ensure
-    // FILO comportement.
-    //bool eatToken();
+    // FIFO comportement.
+    bool eatToken();
 
     // Remove the older token from the token container only if it is from the
     // specified type.
@@ -171,7 +171,7 @@ public:
     //         false otherwise (especialy if the token container was empty)
     //
     // The token is always removed from the front position in order to ensure
-    // FILO comportement.
+    // FIFO comportement.
     //bool eatToken(TokenType typ);
 
 private:
@@ -190,7 +190,7 @@ private:
 
     // Add a new token to the token container.
     //
-    // The token is always added in back position in order to ensure FILO
+    // The token is always added in back position in order to ensure FIFO
     // comportement.
     //
     // This should be used instead of direct access to the tokens attribute.

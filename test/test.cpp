@@ -453,3 +453,28 @@ TEST_CASE("New lexer fills tokens when tokenise is called") {
     CHECK(lex.getTokens().at(3).getTokenType() == TokenType::TOK_LITTERAL_FLOAT);
     CHECK(lex.getTokens().at(3).getFloatValue() == 1.0);
 }
+
+TEST_CASE("New lexer eats token FIFO until there are no more token") {
+    std::stringstream in;           // stream to parse by lexer
+    NewLexer lex = NewLexer(in);    // the lexer
+
+    in << "let aaa = 1.0";
+
+    CHECK(lex.tokenize() == 4);
+    CHECK(lex.getTokens().size() == 4);
+
+    CHECK(lex.eatToken() == true);
+    CHECK(lex.getTokens().size() == 3);
+
+    CHECK(lex.eatToken() == true);
+    CHECK(lex.getTokens().size() == 2);
+
+    CHECK(lex.eatToken() == true);
+    CHECK(lex.getTokens().size() == 1);
+
+    CHECK(lex.eatToken() == true);
+    CHECK(lex.getTokens().size() == 0);
+
+    CHECK(lex.eatToken() == false);
+    CHECK(lex.getTokens().size() == 0);
+}
