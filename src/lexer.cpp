@@ -213,6 +213,10 @@ bool NewLexer::eatToken() {
     return true;
 }
 
+bool NewLexer::eatToken(TokenType typ) {
+    return false;
+}
+
 bool NewLexer::tokenizeOne() {
     int lastChar = input.get();
 

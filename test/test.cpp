@@ -486,3 +486,26 @@ TEST_CASE("New lexer eats token FIFO until there are no more token") {
     CHECK(lex.getTokens().size() == 0);
     CHECK(lex.getTokens().empty() == true);
 }
+
+TEST_CASE("New lexer can eats token with type verification") {
+    std::stringstream in;           // stream to parse by lexer
+    NewLexer lex = NewLexer(in);    // the lexer
+
+    in << "let aaa = 1.0";
+
+    // Before eating
+    CHECK(lex.tokenize() == 4);
+    CHECK(lex.getTokens().size() == 4);
+    CHECK(lex.getTokens().front().getTokenType() == TokenType::TOK_KEYWORD_LET);
+
+    // Trying to eat the wrong type of token
+    CHECK(lex.eatToken(TokenType::TOK_LITTERAL_FLOAT) == false);
+    CHECK(lex.getTokens().size() == 4);
+    CHECK(lex.getTokens().front().getTokenType() == TokenType::TOK_KEYWORD_LET);
+
+    // Trying to eat the correct type of token
+    CHECK(lex.eatToken(TokenType::TOK_KEYWORD_LET) == true);
+    CHECK(lex.getTokens().size() == 3);
+    CHECK(lex.getTokens().front().getTokenType() == TokenType::TOK_IDENTIFIER);
+    CHECK(lex.getTokens().front().getIdentifierString() == "aaa");
+}

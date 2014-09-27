@@ -172,7 +172,7 @@ public:
     //
     // The token is always removed from the front position in order to ensure
     // FIFO comportement.
-    //bool eatToken(TokenType typ);
+    bool eatToken(TokenType typ);
 
 private:
     std::istream& input;        // input stream to parse
