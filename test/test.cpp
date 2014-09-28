@@ -522,38 +522,86 @@ TEST_CASE("TokenQueue can be pushed and poped", "[tokenQ]") {
     CHECK(tokenQ.size() == 0);
     CHECK(tokenQ.pop() == false);
 
-    tokenQ.push(Token::CreateLitteralFloat(1.0));
+    SECTION("Pushing a token actualy add a token to the queue") {
+        tokenQ.push(Token::CreateLitteralFloat(1.0));
 
-    CHECK(not tokenQ.empty());
-    CHECK(tokenQ.size() == 1);
-    CHECK(tokenQ.front().getTokenType() == TokenType::TOK_LITTERAL_FLOAT);
-    CHECK(tokenQ.front().getFloatValue() == 1.0);
-    CHECK(tokenQ.pop() == true);
-    CHECK(tokenQ.empty());
-    CHECK(tokenQ.size() == 0);
+        CHECK(not tokenQ.empty());
+        CHECK(tokenQ.size() == 1);
+        CHECK(tokenQ.front().getTokenType() == TokenType::TOK_LITTERAL_FLOAT);
+        CHECK(tokenQ.front().getFloatValue() == 1.0);
+    }
 
-    tokenQ.push(Token::CreateLitteralFloat(2.0));
-    tokenQ.push(Token::CreateLitteralFloat(3.0));
-    tokenQ.push(Token::CreateLitteralFloat(4.0));
+    SECTION("Poping a token actualy remove a token from the queue") {
+        tokenQ.push(Token::CreateLitteralFloat(1.0));
 
-    CHECK(tokenQ.size() == 3);
-    CHECK(tokenQ.front().getTokenType() == TokenType::TOK_LITTERAL_FLOAT);
-    CHECK(tokenQ.front().getFloatValue() == 2.0);
+        CHECK(tokenQ.pop() == true);
 
-    CHECK(tokenQ.pop() == true);
+        CHECK(tokenQ.empty());
+        CHECK(tokenQ.size() == 0);
+    }
 
-    CHECK(tokenQ.size() == 2);
-    CHECK(tokenQ.front().getTokenType() == TokenType::TOK_LITTERAL_FLOAT);
-    CHECK(tokenQ.front().getFloatValue() == 3.0);
+    SECTION("Tokens are push to the back of the queue") {
+        tokenQ.push(Token::CreateLitteralFloat(2.0));
 
-    CHECK(tokenQ.pop() == true);
+        CHECK(tokenQ.back().getTokenType() == TokenType::TOK_LITTERAL_FLOAT);
+        CHECK(tokenQ.back().getFloatValue() == 2.0);
 
-    CHECK(tokenQ.size() == 1);
-    CHECK(tokenQ.front().getTokenType() == TokenType::TOK_LITTERAL_FLOAT);
-    CHECK(tokenQ.front().getFloatValue() == 4.0);
+        tokenQ.push(Token::CreateLitteralFloat(3.0));
 
-    CHECK(tokenQ.pop() == true);
+        CHECK(tokenQ.back().getTokenType() == TokenType::TOK_LITTERAL_FLOAT);
+        CHECK(tokenQ.back().getFloatValue() == 3.0);
 
-    CHECK(tokenQ.size() == 0);
-    CHECK(tokenQ.empty());
+        tokenQ.push(Token::CreateLitteralFloat(4.0));
+
+        CHECK(tokenQ.back().getTokenType() == TokenType::TOK_LITTERAL_FLOAT);
+        CHECK(tokenQ.back().getFloatValue() == 4.0);
+
+        // check the final result
+        REQUIRE(tokenQ.size() == 3);
+        CHECK(tokenQ.at(0).getTokenType() == TokenType::TOK_LITTERAL_FLOAT);
+        CHECK(tokenQ.at(0).getFloatValue() == 2.0);
+        CHECK(tokenQ.at(1).getTokenType() == TokenType::TOK_LITTERAL_FLOAT);
+        CHECK(tokenQ.at(1).getFloatValue() == 3.0);
+        CHECK(tokenQ.at(2).getTokenType() == TokenType::TOK_LITTERAL_FLOAT);
+        CHECK(tokenQ.at(2).getFloatValue() == 4.0);
+    }
+
+    SECTION("Tokens are poped from the front of the queue") {
+        // put some few things in the queue
+        tokenQ.push(Token::CreateLitteralFloat(2.0));
+        tokenQ.push(Token::CreateLitteralFloat(3.0));
+        tokenQ.push(Token::CreateLitteralFloat(4.0));
+
+        // now let's pop them one by one
+        REQUIRE(tokenQ.size() == 3);
+        CHECK(tokenQ.front().getTokenType() == TokenType::TOK_LITTERAL_FLOAT);
+        CHECK(tokenQ.front().getFloatValue() == 2.0);
+
+        CHECK(tokenQ.pop() == true);
+
+        CHECK(tokenQ.size() == 2);
+        CHECK(tokenQ.front().getTokenType() == TokenType::TOK_LITTERAL_FLOAT);
+        CHECK(tokenQ.front().getFloatValue() == 3.0);
+
+        CHECK(tokenQ.pop() == true);
+
+        CHECK(tokenQ.size() == 1);
+        CHECK(tokenQ.front().getTokenType() == TokenType::TOK_LITTERAL_FLOAT);
+        CHECK(tokenQ.front().getFloatValue() == 4.0);
+
+        CHECK(tokenQ.pop() == true);
+
+        CHECK(tokenQ.size() == 0);
+        CHECK(tokenQ.empty());
+    }
+
+    SECTION("Poping from an empty queue fails and has no effect on it") {
+        REQUIRE(tokenQ.size() == 0);
+        REQUIRE(tokenQ.empty());
+
+        CHECK(tokenQ.pop() == false);
+
+        CHECK(tokenQ.size() == 0);
+        CHECK(tokenQ.empty());
+    }
 }

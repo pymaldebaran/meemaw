@@ -141,6 +141,7 @@ public:
     unsigned int size() const;
     const Token& at(const unsigned int pos) const;
     const Token& front() const;
+    const Token& back() const;
 
     // Remove the older token from the token container.
     //
