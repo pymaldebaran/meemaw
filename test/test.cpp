@@ -604,4 +604,65 @@ TEST_CASE("TokenQueue can be pushed and poped", "[tokenQ]") {
         CHECK(tokenQ.size() == 0);
         CHECK(tokenQ.empty());
     }
+
+    SECTION("Tokens are poped (with token type check) from the front of the queue") {
+        // put some few things in the queue
+        tokenQ.push(Token::CreateLitteralFloat(2.0));
+        tokenQ.push(Token::CreateLitteralFloat(3.0));
+        tokenQ.push(Token::CreateLitteralFloat(4.0));
+
+        // now let's pop them one by one
+        REQUIRE(tokenQ.size() == 3);
+        CHECK(tokenQ.front().getTokenType() == TokenType::TOK_LITTERAL_FLOAT);
+        CHECK(tokenQ.front().getFloatValue() == 2.0);
+
+        CHECK(tokenQ.pop(TokenType::TOK_LITTERAL_FLOAT) == true);
+
+        CHECK(tokenQ.size() == 2);
+        CHECK(tokenQ.front().getTokenType() == TokenType::TOK_LITTERAL_FLOAT);
+        CHECK(tokenQ.front().getFloatValue() == 3.0);
+
+        CHECK(tokenQ.pop(TokenType::TOK_LITTERAL_FLOAT) == true);
+
+        CHECK(tokenQ.size() == 1);
+        CHECK(tokenQ.front().getTokenType() == TokenType::TOK_LITTERAL_FLOAT);
+        CHECK(tokenQ.front().getFloatValue() == 4.0);
+
+        CHECK(tokenQ.pop(TokenType::TOK_LITTERAL_FLOAT) == true);
+
+        CHECK(tokenQ.size() == 0);
+        CHECK(tokenQ.empty());
+    }
+
+    SECTION("Poping (with token type check) from an empty queue fails and has no effect on it") {
+        REQUIRE(tokenQ.size() == 0);
+        REQUIRE(tokenQ.empty());
+
+        CHECK(tokenQ.pop(TokenType::TOK_LITTERAL_FLOAT) == false);
+
+        CHECK(tokenQ.size() == 0);
+        CHECK(tokenQ.empty());
+    }
+
+    SECTION("Poping with token type verification works only if the correct type is specified") {
+        // put some few things in the queue
+        tokenQ.push(Token::CreateLitteralFloat(5.0));
+
+        // Before eating
+        REQUIRE(tokenQ.size() == 1);
+        REQUIRE(tokenQ.front().getTokenType() == TokenType::TOK_LITTERAL_FLOAT);
+        REQUIRE(tokenQ.front().getFloatValue() == 5.0);
+
+        // Trying to pop() the wrong type of token
+        CHECK(tokenQ.pop(TokenType::TOK_KEYWORD_LET) == false);
+
+        CHECK(tokenQ.size() == 1);
+        CHECK(tokenQ.front().getTokenType() == TokenType::TOK_LITTERAL_FLOAT);
+        CHECK(tokenQ.front().getFloatValue() == 5.0);
+
+        // Trying to eat the correct type of token
+        CHECK(tokenQ.pop(TokenType::TOK_LITTERAL_FLOAT) == true);
+
+        CHECK(tokenQ.empty());
+    }
 }
