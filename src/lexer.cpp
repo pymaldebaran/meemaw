@@ -31,13 +31,13 @@
 #include <iostream>
 
 const std::map<int, const char* const> Lexer::TOKEN_NAMES = {
-    { Lexer::TOK_FLOAT,                "TOK_FLOAT"                                                  },
-    { Lexer::TOK_EOF,                  "TOK_EOF"                                                    },
-    { Lexer::TOK_KEYWORD_LET,          "TOK_KEYWORD_LET"                                            },
-    { Lexer::TOK_IDENTIFIER,           "TOK_IDENTIFIER"                                             },
-    { Lexer::TOK_OPERATOR_AFFECTATION, "TOK_OPERATOR_AFFECTATION"                                   },
-    { Lexer::TOK_LEXER_ERROR,          "TOK_LEXER_ERROR"                                            },
-    { Lexer::TOK_NONE,                 "TOK_NONE"                                                   },
+    { Lexer::TOK_FLOAT,                "TOK_FLOAT"                                                                   },
+    { Lexer::TOK_EOF,                  "TOK_EOF"                                                                     },
+    { Lexer::TOK_KEYWORD_LET,          "TOK_KEYWORD_LET"                                                             },
+    { Lexer::TOK_IDENTIFIER,           "TOK_IDENTIFIER"                                                              },
+    { Lexer::TOK_OPERATOR_AFFECTATION, "TOK_OPERATOR_AFFECTATION"                                                    },
+    { Lexer::TOK_LEXER_ERROR,          "TOK_LEXER_ERROR"                                                             },
+    { Lexer::TOK_NONE,                 "TOK_NONE"                                                                    },
 };
 
 int Lexer::gettok() {
@@ -186,80 +186,26 @@ float Token::getFloatValue() const {
 }
 
 TokenQueue::TokenQueue() :
-    dummyToken(Token::CreateNone())
+    tokens(std::deque<Token>())
 {}
 
 bool TokenQueue::empty() const {
-    std::cerr << "TokenQueue::empty() Not implemented.\n";
-
-    return false;
+    return tokens.empty();
 }
 
 unsigned int TokenQueue::size() const {
-    std::cerr << "TokenQueue::size() Not implemented.\n";
-
-    return 255;
-}
-
-const Token& TokenQueue::at(const unsigned int pos) {
-    std::cerr << "TokenQueue::at() Not implemented.\n";
-
-    return dummyToken;
+    return tokens.size();
 }
 
 const Token& TokenQueue::at(const unsigned int pos) const {
-    std::cerr << "TokenQueue::at() const Not implemented.\n";
-
-    return dummyToken;
-}
-
-const Token& TokenQueue::front() {
-    std::cerr << "TokenQueue::front() Not implemented.\n";
-
-    return dummyToken;
+    return tokens.at(pos);
 }
 
 const Token& TokenQueue::front() const {
-    std::cerr << "TokenQueue::front() const Not implemented.\n";
-
-    return dummyToken;
+    return tokens.front();
 }
 
 bool TokenQueue::pop() {
-    std::cerr << "TokenQueue::pop() Not implemented.\n";
-
-    return false;
-}
-
-bool TokenQueue::pop(const TokenType typ) {
-    std::cerr << "TokenQueue::pop() const Not implemented.\n";
-
-    return false;
-}
-
-void TokenQueue::push(const Token tok) {
-    std::cerr << "TokenQueue::push() Not implemented.\n";
-}
-
-NewLexer::NewLexer(std::istream& stream, TokenQueue& tokenQ) :
-    input(stream)
-{}
-
-std::deque<Token>& NewLexer::getTokens() {
-    return tokens;
-}
-
-unsigned int NewLexer::tokenize() {
-    unsigned int productedTokens = 0;
-
-    while (tokenizeOne()) {
-        ++productedTokens;
-    }
-
-    return productedTokens;
-}
-
-bool NewLexer::eatToken() {
     if (tokens.empty()) {
         return false;
     }
@@ -268,7 +214,7 @@ bool NewLexer::eatToken() {
     return true;
 }
 
-bool NewLexer::eatToken(TokenType typ) {
+bool TokenQueue::pop(const TokenType typ) {
     if (tokens.empty()) {
         return false;
     }
@@ -279,6 +225,25 @@ bool NewLexer::eatToken(TokenType typ) {
 
     tokens.pop_front();
     return true;
+}
+
+void TokenQueue::push(const Token tok) {
+    tokens.push_back(tok);
+}
+
+NewLexer::NewLexer(std::istream& stream, TokenQueue& tokenQ) :
+    input(stream),
+    tokens(tokenQ)
+{}
+
+unsigned int NewLexer::tokenize() {
+    unsigned int productedTokens = 0;
+
+    while (tokenizeOne()) {
+        ++productedTokens;
+    }
+
+    return productedTokens;
 }
 
 bool NewLexer::tokenizeOne() {
@@ -301,11 +266,11 @@ bool NewLexer::tokenizeOne() {
         }
 
         if (identifierBuffer == "let") {
-            pushToken(Token::CreateKeywordLet());
+            tokens.push(Token::CreateKeywordLet());
             return true;
         }
 
-        pushToken(Token::CreateIdentifier(identifierBuffer));
+        tokens.push(Token::CreateIdentifier(identifierBuffer));
         return true;
     }
 
@@ -320,7 +285,7 @@ bool NewLexer::tokenizeOne() {
 
         float floatValue = strtof(floatStr.c_str(), nullptr);
 
-        pushToken(Token::CreateLitteralFloat(floatValue));
+        tokens.push(Token::CreateLitteralFloat(floatValue));
         return true;
     }
 
@@ -328,7 +293,7 @@ bool NewLexer::tokenizeOne() {
     if (lastChar == '=') {
         lastChar = input.get(); // eat the affectation operator
 
-        pushToken(Token::CreateOperatorAffectation());
+        tokens.push(Token::CreateOperatorAffectation());
         return true;
     }
 
@@ -343,10 +308,6 @@ bool NewLexer::tokenizeOne() {
     lastChar = input.get();     // eat the char
     // TODO replace this with a proper error function
     std::cerr << "[NEW LEXER ERROR] Unrecognized character.\n";
-    pushToken(Token::CreateLexerError(thisChar));
+    tokens.push(Token::CreateLexerError(thisChar));
     return true;
-}
-
-void NewLexer::pushToken(Token tok) {
-    tokens.push_back(tok);
 }

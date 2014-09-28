@@ -515,7 +515,7 @@ TEST_CASE("New lexer can eats token with type verification") {
     CHECK(out.front().getIdentifierString() == "aaa");
 }
 
-TEST_CASE("TokenQueue can be pushed and poped") {
+TEST_CASE("TokenQueue can be pushed and poped", "[tokenQ]") {
     TokenQueue tokenQ;
 
     CHECK(tokenQ.empty());
