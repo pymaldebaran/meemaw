@@ -419,42 +419,36 @@ TEST_CASE("Code generated for float litteral constant declaration expression is 
 
 // TODO add a test with usage of the created constant
 
-TEST_CASE("New lexer initially has no token") {
+TEST_CASE("New lexer can produce tokens depending on the input") {
     std::stringstream in;               // stream to parse by lexer
     TokenQueue out;                     // token conatainer
     NewLexer lex = NewLexer(in, out);   // the lexer
 
     REQUIRE(out.empty());
-}
 
-TEST_CASE("New lexer do not fill tokens when tokenise is called on empty input") {
-    std::stringstream in;               // stream to parse by lexer
-    TokenQueue out;                     // token conatainer
-    NewLexer lex = NewLexer(in, out);   // the lexer
+    SECTION("Tokenizing an empty input do not produce token") {
+        CHECK(lex.tokenize() == 0);
 
-    CHECK(lex.tokenize() == 0);
-    CHECK(out.size() == 0);
-}
+        CHECK(out.size() == 0);
+    }
 
-TEST_CASE("New lexer fills tokens when tokenise is called") {
-    std::stringstream in;               // stream to parse by lexer
-    TokenQueue out;                     // token conatainer
-    NewLexer lex = NewLexer(in, out);   // the lexer
+    SECTION("Tokenizing produce tokens") {
+        in << "let aaa = 1.0";
 
-    in << "let aaa = 1.0";
+        CHECK(lex.tokenize() == 4);
 
-    CHECK(lex.tokenize() == 4);
-    CHECK(out.size() == 4);
+        CHECK(out.size() == 4);
 
-    CHECK(out.at(0).getTokenType() == TokenType::TOK_KEYWORD_LET);
+        CHECK(out.at(0).getTokenType() == TokenType::TOK_KEYWORD_LET);
 
-    CHECK(out.at(1).getTokenType() == TokenType::TOK_IDENTIFIER);
-    CHECK(out.at(1).getIdentifierString() == "aaa");
+        CHECK(out.at(1).getTokenType() == TokenType::TOK_IDENTIFIER);
+        CHECK(out.at(1).getIdentifierString() == "aaa");
 
-    CHECK(out.at(2).getTokenType() == TokenType::TOK_OPERATOR_AFFECTATION);
+        CHECK(out.at(2).getTokenType() == TokenType::TOK_OPERATOR_AFFECTATION);
 
-    CHECK(out.at(3).getTokenType() == TokenType::TOK_LITTERAL_FLOAT);
-    CHECK(out.at(3).getFloatValue() == 1.0);
+        CHECK(out.at(3).getTokenType() == TokenType::TOK_LITTERAL_FLOAT);
+        CHECK(out.at(3).getFloatValue() == 1.0);
+    }
 }
 
 TEST_CASE("TokenQueue can be pushed and poped", "[tokenQ]") {
