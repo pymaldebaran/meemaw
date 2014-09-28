@@ -457,64 +457,6 @@ TEST_CASE("New lexer fills tokens when tokenise is called") {
     CHECK(out.at(3).getFloatValue() == 1.0);
 }
 
-TEST_CASE("New lexer eats token FIFO until there are no more token") {
-    std::stringstream in;               // stream to parse by lexer
-    TokenQueue out;                     // token conatainer
-    NewLexer lex = NewLexer(in, out);   // the lexer
-
-    in << "let aaa = 1.0";
-
-    CHECK(lex.tokenize() == 4);
-    CHECK(out.size() == 4);
-    CHECK(out.front().getTokenType() == TokenType::TOK_KEYWORD_LET);
-
-    CHECK(out.pop() == true);
-    CHECK(out.size() == 3);
-    CHECK(out.front().getTokenType() == TokenType::TOK_IDENTIFIER);
-    CHECK(out.front().getIdentifierString() == "aaa");
-
-    CHECK(out.pop() == true);
-    CHECK(out.size() == 2);
-    CHECK(out.front().getTokenType() == TokenType::TOK_OPERATOR_AFFECTATION);
-
-    CHECK(out.pop() == true);
-    CHECK(out.size() == 1);
-    CHECK(out.front().getTokenType() == TokenType::TOK_LITTERAL_FLOAT);
-    CHECK(out.front().getFloatValue() == 1.0);
-
-    CHECK(out.pop() == true);
-    CHECK(out.size() == 0);
-    CHECK(out.empty() == true);
-
-    CHECK(out.pop() == false);
-    CHECK(out.size() == 0);
-    CHECK(out.empty() == true);
-}
-
-TEST_CASE("New lexer can eats token with type verification") {
-    std::stringstream in;               // stream to parse by lexer
-    TokenQueue out;                     // token conatainer
-    NewLexer lex = NewLexer(in, out);   // the lexer
-
-    in << "let aaa = 1.0";
-
-    // Before eating
-    CHECK(lex.tokenize() == 4);
-    CHECK(out.size() == 4);
-    CHECK(out.front().getTokenType() == TokenType::TOK_KEYWORD_LET);
-
-    // Trying to eat the wrong type of token
-    CHECK(out.pop(TokenType::TOK_LITTERAL_FLOAT) == false);
-    CHECK(out.size() == 4);
-    CHECK(out.front().getTokenType() == TokenType::TOK_KEYWORD_LET);
-
-    // Trying to eat the correct type of token
-    CHECK(out.pop(TokenType::TOK_KEYWORD_LET) == true);
-    CHECK(out.size() == 3);
-    CHECK(out.front().getTokenType() == TokenType::TOK_IDENTIFIER);
-    CHECK(out.front().getIdentifierString() == "aaa");
-}
-
 TEST_CASE("TokenQueue can be pushed and poped", "[tokenQ]") {
     TokenQueue tokenQ;
 
