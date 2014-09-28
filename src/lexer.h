@@ -136,11 +136,22 @@ private:
 
 class TokenQueue {
 public:
+    // Constructor
     TokenQueue();
+
+    // Returns whether the queue is empty (i.e. whether its size is 0).
     bool empty() const;
+
+    // Returns the number of elements in the queue
     unsigned int size() const;
+
+    // Returns a reference to the element at position pos in the queue.
     const Token& at(const unsigned int pos) const;
+
+    // Returns a reference to the first element in the queue.
     const Token& front() const;
+
+    // Returns a reference to the last element in the queue.
     const Token& back() const;
 
     // Remove the older token from the token container.
