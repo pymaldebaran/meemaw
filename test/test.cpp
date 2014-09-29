@@ -602,3 +602,44 @@ TEST_CASE("TokenQueue can be pushed and poped", "[tokenQ]") {
         CHECK(tokenQ.empty());
     }
 }
+
+TEST_CASE("New parser consume tokens and produce abstract syntax tree depending on the input") {
+    std::stringstream in;                       // stream to parse by lexer
+    TokenQueue tokens;                          // token container
+    NewLexer lex = NewLexer(in, tokens);        // the lexer
+    AbstractSyntaxTree ast;                     // the Abstract Syntax Tree
+    NewParser parser = NewParser(tokens, ast);  // the parser
+
+    CHECK(ast.getTopLevel().empty());
+
+    SECTION("Parsing an empty input do not produce abstract Syntax Tree") {
+        lex.tokenize();
+
+        REQUIRE(tokens.empty());
+
+        CHECK(parser.parse() == 0);
+
+        CHECK(ast.getTopLevel().empty());
+        CHECK(tokens.empty());
+    }
+
+    SECTION("Parsing consume all tokens and produce abstract syntax tree") {
+        in << "let aaa = 1.0";
+
+        lex.tokenize();
+
+        REQUIRE(not tokens.empty());
+
+        // let's do the actual parsing
+        CHECK(parser.parse() == 1);
+
+        // all tokens should have been consumed
+        CHECK(tokens.empty());
+
+        // and one expression should have been produced
+        CHECK(not ast.getTopLevel().empty());
+        CHECK(ast.getTopLevel().size() == 1);
+    }
+
+    // TODO test with multiple expressions (handling \n)
+}

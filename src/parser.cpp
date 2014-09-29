@@ -132,3 +132,21 @@ FloatConstantVariableDeclarationExprAST* Parser::parseFloatConstantVariableDecla
     // everything went right... we can do AST node construction
     return new FloatConstantVariableDeclarationExprAST(name, rhsExpr);
 }
+
+AbstractSyntaxTree::AbstractSyntaxTree() :
+    topLevel()
+{}
+
+std::deque<ExprAST*>& AbstractSyntaxTree::getTopLevel() {
+    return topLevel;
+}
+
+
+NewParser::NewParser(TokenQueue& tokenQ, AbstractSyntaxTree& astree) :
+    tokens(tokenQ),
+    ast(astree)
+{}
+
+unsigned int NewParser::parse() {
+    return 255;
+}

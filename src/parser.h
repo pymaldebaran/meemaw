@@ -28,6 +28,7 @@
 
 #include <string>
 #include <vector>
+#include <deque>
 
 // Forward declarations
 class Lexer;
@@ -37,6 +38,7 @@ class FunctionAST;
 class ExprAST;
 class FloatLitteralExprAST;
 class FloatConstantVariableDeclarationExprAST;
+class TokenQueue;
 
 
 // Parser for the MeeMaw language.
@@ -107,6 +109,34 @@ public:
     //
     // floatconstdeclexp ::= let identifier = floatlitexp
     FloatConstantVariableDeclarationExprAST* parseFloatConstantVariableDeclarationExpr();
+};
+
+class AbstractSyntaxTree {
+public:
+    // Constructor
+    explicit AbstractSyntaxTree();
+
+    // Returns the container for all the top level AST nodes.
+    //
+    // It has a FIFO organisation : The first node, corresponding to the first
+    // expression, is stored at position 0 (front) and the last one,
+    // corresponding to the last expression, is stored at last position (back).
+    std::deque<ExprAST*>& getTopLevel();
+
+private:
+    std::deque<ExprAST*> topLevel; // Container for all the top level AST nodes
+};
+
+class NewParser {
+public:
+    // Constructor
+    explicit NewParser(TokenQueue& tokenQ, AbstractSyntaxTree& astree);
+
+    unsigned int parse();
+
+private:
+    TokenQueue& tokens;         // Container for the tokens to parse
+    AbstractSyntaxTree& ast;    // Container for the whole AST to produce
 };
 
 #endif // PARSER_H
