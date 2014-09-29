@@ -17,9 +17,9 @@ lint:
 	@echo === checking quality of files...
 	cppcheck test/test.cpp
 
-test: test/test.cpp parser.o lexer.o codegenerator.o ast.o
+test: test/test.cpp test/lexer_test.cpp test/parser_test.cpp test/codegenerator_test.cpp lexer.o parser.o codegenerator.o ast.o
 	@echo === compiling tests...
-	$(CXX) $(FLAGS) test/test.cpp -o bin/test -Iinclude/ build/parser.o build/lexer.o build/codegenerator.o build/ast.o `llvm-config --cppflags --ldflags --libs core engine`
+	$(CXX) $(FLAGS) test/test.cpp test/lexer_test.cpp test/parser_test.cpp test/codegenerator_test.cpp -o bin/test -Iinclude/ build/lexer.o build/parser.o build/codegenerator.o build/ast.o `llvm-config --cppflags --ldflags --libs core engine`
 
 parser.o: src/parser.cpp
 	@echo === compiling parser
