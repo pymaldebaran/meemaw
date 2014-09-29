@@ -133,6 +133,7 @@ public:
     explicit NewParser(TokenQueue& tokenQ, AbstractSyntaxTree& astree);
 
     unsigned int parse();
+    bool parseTopLevelExpr();
 
 private:
     TokenQueue& tokens;         // Container for the tokens to parse

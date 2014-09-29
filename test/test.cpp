@@ -642,4 +642,5 @@ TEST_CASE("New parser consume tokens and produce abstract syntax tree depending 
     }
 
     // TODO test with multiple expressions (handling \n)
+    // TODO test parseTopLevelExpr
 }

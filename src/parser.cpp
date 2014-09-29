@@ -148,5 +148,15 @@ NewParser::NewParser(TokenQueue& tokenQ, AbstractSyntaxTree& astree) :
 {}
 
 unsigned int NewParser::parse() {
-    return 255;
+    unsigned int productedTopLevelNodes = 0;
+
+    while (parseTopLevelExpr()) {
+        ++productedTopLevelNodes;
+    }
+
+    return productedTopLevelNodes;
+}
+
+bool NewParser::parseTopLevelExpr() {
+    return false;
 }
