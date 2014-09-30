@@ -40,6 +40,34 @@ const std::map<int, const char* const> Lexer::TOKEN_NAMES = {
     { Lexer::TOK_NONE,                 "TOK_NONE"                                                                                                      },
 };
 
+std::ostream& operator<<(std::ostream& os, const TokenType tok) {
+    std::string str = "";
+    switch (tok) {
+    case TokenType::TOK_LITTERAL_FLOAT :
+        str = "TOK_LITTERAL_FLOAT";
+        break;
+    case TokenType::TOK_KEYWORD_LET :
+        str = "TOK_KEYWORD_LET";
+        break;
+    case TokenType::TOK_IDENTIFIER :
+        str = "TOK_IDENTIFIER";
+        break;
+    case TokenType::TOK_OPERATOR_AFFECTATION :
+        str = "TOK_OPERATOR_AFFECTATION";
+        break;
+    case TokenType::TOK_LEXER_ERROR :
+        str = "TOK_LEXER_ERROR";
+        break;
+    case TokenType::TOK_NONE :
+        str = "TOK_NONE";
+        break;
+    default :
+        str = "!!!UNREFERENCED_TOKEN!!!";
+        break;
+    }
+    return os << str;
+}
+
 int Lexer::gettok() {
     // Skip any whitespace.
     while (isspace(lastChar)) {
@@ -177,12 +205,48 @@ const TokenType Token::getTokenType() const {
     return tokenType;
 }
 
-const std::string Token::getIdentifierString() const {
-    return identifierString;
+bool Token::getIdentifierString(std::string& idStr) const {
+    if (getTokenType() != TokenType::TOK_IDENTIFIER)
+    {
+        return false;
+    }
+
+    idStr = identifierString;
+    return true;
 }
 
-float Token::getFloatValue() const {
-    return floatValue;
+bool Token::getFloatValue(float& fVal) const {
+    if (getTokenType() != TokenType::TOK_LITTERAL_FLOAT)
+    {
+        return false;
+    }
+
+    fVal = floatValue;
+    return true;
+}
+
+std::ostream& operator<<(std::ostream& os, const Token& tok) {
+    std::string desc = "";
+
+    switch (tok.tokenType) {
+    case TokenType::TOK_LITTERAL_FLOAT :
+        desc = "floatValue=" + std::to_string(tok.floatValue);
+        break;
+    case TokenType::TOK_IDENTIFIER :
+        desc = "identifierString=" + tok.identifierString;
+        break;
+    case TokenType::TOK_KEYWORD_LET :
+    case TokenType::TOK_OPERATOR_AFFECTATION :
+    case TokenType::TOK_LEXER_ERROR :
+    case TokenType::TOK_NONE :
+        desc = "";
+        break;
+    default : // unknown token
+        desc = "tokenType=" + std::to_string(static_cast<unsigned int>(tok.tokenType));
+        break;
+    }
+
+    return os << tok.tokenType << "(" << desc << ")";
 }
 
 TokenQueue::TokenQueue() :
@@ -233,6 +297,17 @@ bool TokenQueue::pop(const TokenType typ) {
 
 void TokenQueue::push(const Token tok) {
     tokens.push_back(tok);
+}
+
+std::ostream& operator<<(std::ostream& os, const TokenQueue& tokQ) {
+    os << "TokenQueue[";
+
+    for (auto tok : tokQ.tokens)
+    {
+        os << tok  << " ";
+    }
+
+    return os << "]";
 }
 
 NewLexer::NewLexer(std::istream& stream, TokenQueue& tokenQ) :

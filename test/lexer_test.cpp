@@ -247,12 +247,16 @@ TEST_CASE("New lexer can produce tokens depending on the input") {
         CHECK(out.at(0).getTokenType() == TokenType::TOK_KEYWORD_LET);
 
         CHECK(out.at(1).getTokenType() == TokenType::TOK_IDENTIFIER);
-        CHECK(out.at(1).getIdentifierString() == "aaa");
+        std::string idStr = "";
+        REQUIRE(out.at(1).getIdentifierString(idStr));
+        CHECK(idStr == "aaa");
 
         CHECK(out.at(2).getTokenType() == TokenType::TOK_OPERATOR_AFFECTATION);
 
         CHECK(out.at(3).getTokenType() == TokenType::TOK_LITTERAL_FLOAT);
-        CHECK(out.at(3).getFloatValue() == 1.0);
+        float val = 0.0;
+        REQUIRE(out.at(3).getFloatValue(val));
+        CHECK(val == 1.0);
     }
 }
 
@@ -269,7 +273,9 @@ TEST_CASE("TokenQueue can be pushed and poped", "[tokenQ]") {
         CHECK(not tokenQ.empty());
         CHECK(tokenQ.size() == 1);
         CHECK(tokenQ.front().getTokenType() == TokenType::TOK_LITTERAL_FLOAT);
-        CHECK(tokenQ.front().getFloatValue() == 1.0);
+        float val = 0.0;
+        REQUIRE(tokenQ.front().getFloatValue(val));
+        CHECK(val == 1.0);
     }
 
     SECTION("Poping a token actualy remove a token from the queue") {
@@ -282,32 +288,48 @@ TEST_CASE("TokenQueue can be pushed and poped", "[tokenQ]") {
     }
 
     SECTION("Tokens are push to the back of the queue") {
+        float val = -1.0; // to store the float values
+
         tokenQ.push(Token::CreateLitteralFloat(2.0));
 
         CHECK(tokenQ.back().getTokenType() == TokenType::TOK_LITTERAL_FLOAT);
-        CHECK(tokenQ.back().getFloatValue() == 2.0);
+        val = -1.0;
+        REQUIRE(tokenQ.back().getFloatValue(val));
+        CHECK(val == 2.0);
 
         tokenQ.push(Token::CreateLitteralFloat(3.0));
 
         CHECK(tokenQ.back().getTokenType() == TokenType::TOK_LITTERAL_FLOAT);
-        CHECK(tokenQ.back().getFloatValue() == 3.0);
+        val = -1.0;
+        REQUIRE(tokenQ.back().getFloatValue(val));
+        CHECK(val == 3.0);
 
         tokenQ.push(Token::CreateLitteralFloat(4.0));
 
         CHECK(tokenQ.back().getTokenType() == TokenType::TOK_LITTERAL_FLOAT);
-        CHECK(tokenQ.back().getFloatValue() == 4.0);
+        val = -1.0;
+        REQUIRE(tokenQ.back().getFloatValue(val));
+        CHECK(val == 4.0);
 
         // check the final result
         REQUIRE(tokenQ.size() == 3);
         CHECK(tokenQ.at(0).getTokenType() == TokenType::TOK_LITTERAL_FLOAT);
-        CHECK(tokenQ.at(0).getFloatValue() == 2.0);
+        val = -1.0;
+        REQUIRE(tokenQ.at(0).getFloatValue(val));
+        CHECK(val == 2.0);
         CHECK(tokenQ.at(1).getTokenType() == TokenType::TOK_LITTERAL_FLOAT);
-        CHECK(tokenQ.at(1).getFloatValue() == 3.0);
+        val = -1.0;
+        REQUIRE(tokenQ.at(1).getFloatValue(val));
+        CHECK(val == 3.0);
         CHECK(tokenQ.at(2).getTokenType() == TokenType::TOK_LITTERAL_FLOAT);
-        CHECK(tokenQ.at(2).getFloatValue() == 4.0);
+        val = -1.0;
+        REQUIRE(tokenQ.at(2).getFloatValue(val));
+        CHECK(val == 4.0);
     }
 
     SECTION("Tokens are poped from the front of the queue") {
+        float val = -1.0; // to store the float values
+
         // put some few things in the queue
         tokenQ.push(Token::CreateLitteralFloat(2.0));
         tokenQ.push(Token::CreateLitteralFloat(3.0));
@@ -316,20 +338,29 @@ TEST_CASE("TokenQueue can be pushed and poped", "[tokenQ]") {
         // now let's pop them one by one
         REQUIRE(tokenQ.size() == 3);
         CHECK(tokenQ.front().getTokenType() == TokenType::TOK_LITTERAL_FLOAT);
-        CHECK(tokenQ.front().getFloatValue() == 2.0);
+        val = -1.0;
+        REQUIRE(tokenQ.front().getFloatValue(val));
+        CHECK(val == 2.0);
 
+        // Pop !
         CHECK(tokenQ.pop() == true);
 
         CHECK(tokenQ.size() == 2);
         CHECK(tokenQ.front().getTokenType() == TokenType::TOK_LITTERAL_FLOAT);
-        CHECK(tokenQ.front().getFloatValue() == 3.0);
+        val = -1.0;
+        REQUIRE(tokenQ.front().getFloatValue(val));
+        CHECK(val == 3.0);
 
+        // Pop !
         CHECK(tokenQ.pop() == true);
 
         CHECK(tokenQ.size() == 1);
         CHECK(tokenQ.front().getTokenType() == TokenType::TOK_LITTERAL_FLOAT);
-        CHECK(tokenQ.front().getFloatValue() == 4.0);
+        val = -1.0;
+        REQUIRE(tokenQ.front().getFloatValue(val));
+        CHECK(val == 4.0);
 
+        // Pop !
         CHECK(tokenQ.pop() == true);
 
         CHECK(tokenQ.size() == 0);
@@ -347,6 +378,8 @@ TEST_CASE("TokenQueue can be pushed and poped", "[tokenQ]") {
     }
 
     SECTION("Tokens are poped (with token type check) from the front of the queue") {
+        float val = -1.0; // to store the float values
+
         // put some few things in the queue
         tokenQ.push(Token::CreateLitteralFloat(2.0));
         tokenQ.push(Token::CreateLitteralFloat(3.0));
@@ -355,20 +388,29 @@ TEST_CASE("TokenQueue can be pushed and poped", "[tokenQ]") {
         // now let's pop them one by one
         REQUIRE(tokenQ.size() == 3);
         CHECK(tokenQ.front().getTokenType() == TokenType::TOK_LITTERAL_FLOAT);
-        CHECK(tokenQ.front().getFloatValue() == 2.0);
+        val = -1.0;
+        REQUIRE(tokenQ.front().getFloatValue(val));
+        CHECK(val == 2.0);
 
+        // Pop !
         CHECK(tokenQ.pop(TokenType::TOK_LITTERAL_FLOAT) == true);
 
         CHECK(tokenQ.size() == 2);
         CHECK(tokenQ.front().getTokenType() == TokenType::TOK_LITTERAL_FLOAT);
-        CHECK(tokenQ.front().getFloatValue() == 3.0);
+        val = -1.0;
+        REQUIRE(tokenQ.front().getFloatValue(val));
+        CHECK(val == 3.0);
 
+        // Pop !
         CHECK(tokenQ.pop(TokenType::TOK_LITTERAL_FLOAT) == true);
 
         CHECK(tokenQ.size() == 1);
         CHECK(tokenQ.front().getTokenType() == TokenType::TOK_LITTERAL_FLOAT);
-        CHECK(tokenQ.front().getFloatValue() == 4.0);
+        val = -1.0;
+        REQUIRE(tokenQ.front().getFloatValue(val));
+        CHECK(val == 4.0);
 
+        // Pop !
         CHECK(tokenQ.pop(TokenType::TOK_LITTERAL_FLOAT) == true);
 
         CHECK(tokenQ.size() == 0);
@@ -386,20 +428,26 @@ TEST_CASE("TokenQueue can be pushed and poped", "[tokenQ]") {
     }
 
     SECTION("Poping with token type verification works only if the correct type is specified") {
+        float val = -1.0; // to store the float values
+
         // put some few things in the queue
         tokenQ.push(Token::CreateLitteralFloat(5.0));
 
         // Before eating
         REQUIRE(tokenQ.size() == 1);
         REQUIRE(tokenQ.front().getTokenType() == TokenType::TOK_LITTERAL_FLOAT);
-        REQUIRE(tokenQ.front().getFloatValue() == 5.0);
+        val = -1.0;
+        REQUIRE(tokenQ.front().getFloatValue(val));
+        REQUIRE(val == 5.0);
 
         // Trying to pop() the wrong type of token
         CHECK(tokenQ.pop(TokenType::TOK_KEYWORD_LET) == false);
 
         CHECK(tokenQ.size() == 1);
         CHECK(tokenQ.front().getTokenType() == TokenType::TOK_LITTERAL_FLOAT);
-        CHECK(tokenQ.front().getFloatValue() == 5.0);
+        val = -1.0;
+        REQUIRE(tokenQ.front().getFloatValue(val));
+        CHECK(val == 5.0);
 
         // Trying to eat the correct type of token
         CHECK(tokenQ.pop(TokenType::TOK_LITTERAL_FLOAT) == true);

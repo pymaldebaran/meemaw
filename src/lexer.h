@@ -94,14 +94,19 @@ private:
 //TODO test the usage of TOK_LEXER_ERROR and TOK_NONE
 // The lexer returns tokens [0-255] if it is an unknown character, otherwise
 // one of these for known things.
-enum TokenType {
+enum TokenType : unsigned int {
     TOK_LITTERAL_FLOAT = 1,
-    TOK_KEYWORD_LET,
-    TOK_IDENTIFIER,
-    TOK_OPERATOR_AFFECTATION,
-    TOK_LEXER_ERROR,        // returned by lexer in case of error
-    TOK_NONE,               // initial value of the currentToken attribute
+    TOK_KEYWORD_LET = 2,
+    TOK_IDENTIFIER = 3,
+    TOK_OPERATOR_AFFECTATION = 4,
+    TOK_LEXER_ERROR = 255,        // returned by lexer in case of error
+    TOK_NONE = 256,               // initial value of the currentToken attribute
 };
+// TODO add an overloaded operator << and/or toString method
+// TODO make this an enum class and remove all the int<->enum crap from the
+//      lexer mecanic
+
+std::ostream& operator<<(std::ostream& os, const TokenType tok);
 
 class Token {
 public:
@@ -116,13 +121,24 @@ public:
     // Get the type of token
     const TokenType getTokenType() const;
 
-    // Get the identifier string (available only if getTokenType() is
-    // TOK_IDENTIFIER)
-    const std::string getIdentifierString() const;
+    // Get the identifier string and put it in the idStr reference.
+    //
+    // Returns true and set the idStr reference if getTokenType() is
+    // TOK_IDENTIFIER.
+    // Returns false and do not set the fVal reference if getTokenType() is
+    // anything but TOK_IDENTIFIER.
+    bool getIdentifierString(std::string& idStr) const;
 
-    // Get the value of a float litteral token (available only if getTokenType()
-    // is TOK_LITTERAL_FLOAT
-    float getFloatValue() const;
+    // Get the value of a float litteral token and put it in the fVal reference.
+    //
+    // Returns true and set the fVal reference if getTokenType() is
+    // TOK_LITTERAL_FLOAT.
+    // Returns false and do not set the fVal reference if getTokenType() is
+    // anything but TOK_LITTERAL_FLOAT.
+    bool getFloatValue(float& fVal) const;
+
+    // Stream operator for easy printing and debugging
+    friend std::ostream& operator<<(std::ostream& os, const Token& tok);
 
 private:
     const TokenType tokenType;              // Type of the token
@@ -180,6 +196,9 @@ public:
     //
     // This should be used instead of direct access to the tokens attribute.
     void push(const Token tok);
+
+    // Stream operator for easy printing and debugging
+    friend std::ostream& operator<<(std::ostream& os, const TokenQueue& tokQ);
 
 private:
     std::deque<Token> tokens;   // where to put all the tokens generated when colling nextToken()

@@ -39,7 +39,36 @@ class ExprAST;
 class FloatLitteralExprAST;
 class FloatConstantVariableDeclarationExprAST;
 class TokenQueue;
+enum TokenType : unsigned int;
+class Token;
 
+
+// Simple error display helper for use in parse* methods
+//
+// Always returns nullptr in order to be used like this :
+//     return ParseError("blahblah");
+//
+// No newline needed at the end of the message
+std::nullptr_t ParserError(const char* const msg);
+
+// Error display helper when handling with unexpected token but can't
+// specify which token was expected
+//
+// Always returns nullptr in order to be used like this :
+//     return ParseError("blahblah", t1);
+//
+// No newline needed at the end of the message
+std::nullptr_t ParserErrorUnexpectedToken(const char* const when, const int actualToken); // TODO remove this old function ASAP
+std::nullptr_t ParserErrorUnexpectedToken(const char* const when, const Token& actualToken);
+
+// Error display helper when handling with unexpected token
+//
+// Always returns nullptr in order to be used like this :
+//     return ParseError("blahblah", t1, t2);
+//
+// No newline needed at the end of the message
+std::nullptr_t ParserErrorUnexpectedToken(const char* const when, const int actualToken, const int expectedToken); // TODO remove this old function ASAP
+std::nullptr_t ParserErrorUnexpectedToken(const char* const when, const Token& actualToken, const TokenType expectedTokenType);
 
 // Parser for the MeeMaw language.
 // Generate the Abstract Syntax Tree for each token parsed.
@@ -47,30 +76,6 @@ class Parser {
 private:
     Lexer& lexer;
 
-    // Simple error display helper for use in parse* methods
-    //
-    // Always returns nullptr in order to be used like this :
-    //     return ParseError("blahblah");
-    //
-    // No newline needed at the end of the message
-    static std::nullptr_t ParserError(const char* const msg);
-
-    // Error display helper when handling with unexpected token but can't
-    // specify which token was expected
-    //
-    // Always returns nullptr in order to be used like this :
-    //     return ParseError("blahblah", t1);
-    //
-    // No newline needed at the end of the message
-    static std::nullptr_t ParserErrorUnexpectedToken(const char* const when, const int actualToken);
-
-    // Error display helper when handling with unexpected token
-    //
-    // Always returns nullptr in order to be used like this :
-    //     return ParseError("blahblah", t1, t2);
-    //
-    // No newline needed at the end of the message
-    static std::nullptr_t ParserErrorUnexpectedToken(const char* const when, const int actualToken, const int expectedToken);
 public:
     explicit Parser(Lexer& lexer);
 
@@ -111,6 +116,8 @@ public:
     FloatConstantVariableDeclarationExprAST* parseFloatConstantVariableDeclarationExpr();
 };
 
+// TODO manage memory used by all nodes (at the moment only the toplevel nodes
+//      are stored in a container)
 class AbstractSyntaxTree {
 public:
     // Constructor
@@ -132,12 +139,48 @@ public:
     // Constructor
     explicit NewParser(TokenQueue& tokenQ, AbstractSyntaxTree& astree);
 
+    // TODO document this method
     unsigned int parse();
-    bool parseTopLevelExpr();
+
+    // Parse top level expression wrapping them in an anonymous function
+    // returning the appropriate type.
+    //
+    // A top level expression is an expression that can be used outside of any
+    // other program structure. Only expression that could be used
+    // at module level (or directly in the interpreter) is a top level
+    // expression.
+    //
+    // A top level expression behave like an anonymous function that returns the
+    // value of the expression.
+    //
+    // top ::= primaryexpr
+    ExprAST* parseTopLevelExpr();
 
 private:
     TokenQueue& tokens;         // Container for the tokens to parse
     AbstractSyntaxTree& ast;    // Container for the whole AST to produce
+
+    // Parse primary expression by selecting the correct parse* method according
+    // according to the current token.
+    //
+    // A primary expression is an expression that can be used inside any other
+    // program structure. Since MeeMaw is an expression based language any
+    // expression is a primary expression.
+    //
+    // primaryexpr
+    //      ::= floatlitexp
+    //      ::= floatconstdeclexp
+    ExprAST* parsePrimaryExpr();
+
+    // Parse float litteral expression
+    //
+    // floatlitexp ::= float
+    FloatLitteralExprAST* parseFloatLitteralExpr();
+
+    // Parse floa constant declaration expression
+    //
+    // floatconstdeclexp ::= let identifier = floatlitexp
+    FloatConstantVariableDeclarationExprAST* parseFloatConstantVariableDeclarationExpr();
 };
 
 #endif // PARSER_H

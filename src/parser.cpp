@@ -30,24 +30,36 @@
 #include "ast.h"
 #include "lexer.h"
 
-std::nullptr_t Parser::ParserError(const char* const msg) {
+std::nullptr_t ParserError(const char* const msg) {
     std::cerr << "[PARSE ERROR] " << msg << "\n";
 
     return nullptr;
 }
 
-std::nullptr_t Parser::ParserErrorUnexpectedToken(const char* const msg, const int actualToken) {
+std::nullptr_t ParserErrorUnexpectedToken(const char* const msg, const int actualToken) {
     std::cerr   << "[PARSE ERROR] " << msg << Lexer::TOKEN_NAMES.at(actualToken) << "(" << actualToken << ")"
                 << "\n";
 
     return nullptr;
 }
 
-std::nullptr_t Parser::ParserErrorUnexpectedToken(const char* const when, const int actualToken, const int expectedToken) {
+std::nullptr_t ParserErrorUnexpectedToken(const char* const msg, const Token& actualToken) {
+    std::cerr   << "[PARSE ERROR] " << msg << " " << actualToken << "\n";
+
+    return nullptr;
+}
+
+std::nullptr_t ParserErrorUnexpectedToken(const char* const when, const int actualToken, const int expectedToken) {
     std::cerr   << "[PARSE ERROR] " << when
                 << "but current token is " << Lexer::TOKEN_NAMES.at(actualToken) << "(" << actualToken << ")"
-                << " instead of" << Lexer::TOKEN_NAMES.at(expectedToken) << "(" << expectedToken << ")"
+                << " instead of " << Lexer::TOKEN_NAMES.at(expectedToken) << "(" << expectedToken << ")"
                 << "\n";
+
+    return nullptr;
+}
+
+std::nullptr_t ParserErrorUnexpectedToken(const char* const when, const Token& actualToken, const TokenType expectedTokenType) {
+    std::cerr   << "[PARSE ERROR] " << when << " but current token is " << actualToken << " instead of " << expectedTokenType << "\n";
 
     return nullptr;
 }
@@ -150,13 +162,99 @@ NewParser::NewParser(TokenQueue& tokenQ, AbstractSyntaxTree& astree) :
 unsigned int NewParser::parse() {
     unsigned int productedTopLevelNodes = 0;
 
-    while (parseTopLevelExpr()) {
+    ExprAST* toplevel = nullptr;
+    while ((toplevel = parseTopLevelExpr())) {
         ++productedTopLevelNodes;
     }
 
     return productedTopLevelNodes;
 }
 
-bool NewParser::parseTopLevelExpr() {
-    return false;
+ExprAST* NewParser::parseTopLevelExpr() {
+    // For the moment any primary expression is a top level expression
+    ExprAST* primExpr = parsePrimaryExpr();
+
+    if (primExpr == nullptr) {
+        return ParserError("Can't parse top level expression.");
+    }
+
+    // Make an anonymous proto.
+    ProtoTypeAST* proto = new ProtoTypeAST("", std::vector<std::string>());
+
+    // Add the anonymous function to the AST
+    ExprAST* anonymousFunc = new FunctionAST(proto, primExpr);
+    ast.getTopLevel().push_back(anonymousFunc); // TODO move that to parseTopLevelExpr()
+
+    // return the anonymous function
+    return anonymousFunc;
+}
+
+ExprAST* NewParser::parsePrimaryExpr() {
+    ExprAST* expr;
+
+    std::cerr << "DURING PARSING tokens address=" << &tokens << std::endl;
+    std::cerr << "DURING PARSING tokens size=" << tokens.size() << std::endl;
+
+    // Just reading the first token and dispatching
+    switch (tokens.front().getTokenType()) {
+    case TokenType::TOK_LITTERAL_FLOAT:
+        expr = parseFloatLitteralExpr();
+        break;
+    case TokenType::TOK_KEYWORD_LET:
+        expr =  parseFloatConstantVariableDeclarationExpr();
+        break;
+    default:
+        return ParserErrorUnexpectedToken("Can't parse primary expression, unexpected token ", tokens.front());
+    }
+
+    if (expr == nullptr) {
+        return ParserError("Can't parse primary expression.");
+    }
+
+    return expr;
+}
+
+FloatLitteralExprAST* NewParser::parseFloatLitteralExpr() {
+    float fVal;
+
+    if (not tokens.front().getFloatValue(fVal)) {
+        return ParserError("Can't get a float value from the lexer.");
+    }
+
+    FloatLitteralExprAST* result = new FloatLitteralExprAST(fVal);
+
+    tokens.pop(); // eat the float
+    return result;
+}
+
+FloatConstantVariableDeclarationExprAST* NewParser::parseFloatConstantVariableDeclarationExpr() {
+    std::cerr << "PARSING FCVD tokens SIZE=" << tokens.size() << std::endl;
+    std::cerr << "PARSING FCVD tokens: " << tokens << std::endl;
+
+    // Consume "let" keyword
+    if (not tokens.pop(TokenType::TOK_KEYWORD_LET)) {
+        return ParserErrorUnexpectedToken("Parsing float constant variable declaration", tokens.front(), TokenType::TOK_KEYWORD_LET);
+    }
+
+    // Read and consume the constant name
+    std::string name; // variable to store the name to use it later during AST node construction
+    if (not tokens.front().getIdentifierString(name)) {
+        return ParserErrorUnexpectedToken("Parsing float constant variable declaration", tokens.front(), TokenType::TOK_IDENTIFIER);
+    }
+
+    tokens.pop(TokenType::TOK_IDENTIFIER); // consume identifier
+
+    // Consume the affectation operator "="
+    if (not tokens.pop(TokenType::TOK_OPERATOR_AFFECTATION)) {
+        return ParserErrorUnexpectedToken("Parsing float constant variable declaration", tokens.front(), TokenType::TOK_OPERATOR_AFFECTATION);
+    }
+
+    // Read the right hand side of the affectation
+    FloatLitteralExprAST* rhsExpr = parseFloatLitteralExpr();
+    if (rhsExpr == nullptr) {
+        return ParserError("Failed to parse Right Hand Side expression of the affectation.");
+    }
+
+    // everything went right... we can do AST node construction
+    return new FloatConstantVariableDeclarationExprAST(name, rhsExpr);
 }

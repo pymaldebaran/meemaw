@@ -28,6 +28,8 @@
 
 #include "../src/parser.h"
 
+#include <iostream>
+
 #include "../src/lexer.h"
 #include "../src/ast.h"
 
@@ -134,6 +136,30 @@ TEST_CASE("New parser consume tokens and produce abstract syntax tree depending 
     NewParser parser = NewParser(tokens, ast);  // the parser
 
     CHECK(ast.getTopLevel().empty());
+
+    SECTION("Parsing top level expression consume the tokens of that primary expression and produce abstract syntax tree for it") {
+        in << "let aaa = 1.0";
+
+        lex.tokenize();
+
+        std::cerr << "AFTER TOKENIZATION tokens address=" << &tokens << std::endl;
+        std::cerr << "AFTER TOKENIZATION tokens size=" << tokens.size() << std::endl;
+
+        REQUIRE(not tokens.empty());
+        REQUIRE(tokens.size() == 4);
+
+        // let's do the actual parsing
+        ExprAST* astTopLevel = parser.parseTopLevelExpr();
+
+        REQUIRE(astTopLevel != nullptr);
+
+        // all tokens should have been consumed
+        CHECK(tokens.empty());
+
+        // and one expression should have been produced
+        CHECK(not ast.getTopLevel().empty());
+        CHECK(ast.getTopLevel().size() == 1);
+    }
 
     SECTION("Parsing an empty input do not produce abstract Syntax Tree") {
         lex.tokenize();
