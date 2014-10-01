@@ -33,11 +33,10 @@
 // Lexer for the MeeMaw language
 class Lexer {
 public:
-    //TODO test the usage of TOK_LEXER_ERROR and TOK_NONE
     // The lexer returns tokens [0-255] if it is an unknown character, otherwise
     // one of these for known things.
     enum {
-        TOK_FLOAT = -1, // TODO change nae to TOK_LITTERAL_FLOAT
+        TOK_FLOAT = -1,
         TOK_EOF   = -2,
         TOK_KEYWORD_LET = -3,
         TOK_IDENTIFIER = -4,
@@ -64,10 +63,6 @@ public:
     // Returns false otherwise and the result parameter stay unmodified.
     bool getIdentifierString(std::string& result) const;
 
-    // TODO replace this method with nextToken() because it looks like a getter
-    // TODO add a "token safe" method that takes a token parameter and "eat" it
-    //      only if the next token is of the correct type
-    // TODO add a eat() method just to be more clear when using it ;)
     // Reads another token from the lexer and updates CurTok with its results
     int getNextToken();
 
@@ -94,7 +89,7 @@ private:
 //TODO test the usage of TOK_LEXER_ERROR and TOK_NONE
 // The lexer returns tokens [0-255] if it is an unknown character, otherwise
 // one of these for known things.
-enum TokenType : unsigned int {
+enum class TokenType : unsigned int {
     TOK_LITTERAL_FLOAT = 1,
     TOK_KEYWORD_LET = 2,
     TOK_IDENTIFIER = 3,
@@ -102,7 +97,7 @@ enum TokenType : unsigned int {
     TOK_LEXER_ERROR = 255,        // returned by lexer in case of error
     TOK_NONE = 256,               // initial value of the currentToken attribute
 };
-// TODO add an overloaded operator << and/or toString method
+
 // TODO make this an enum class and remove all the int<->enum crap from the
 //      lexer mecanic
 
@@ -148,6 +143,8 @@ private:
     // Private Constructor
     // You should use public static function to create valid tokens
     explicit Token(const TokenType typ, const std::string identifierstr = "", const float floatVal = 0.0);
+
+    static bool UnexpectedTokenError(const char* const when, const Token& actualToken, const TokenType expectedTokenType);
 };
 
 class TokenQueue {

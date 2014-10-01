@@ -39,7 +39,7 @@ class ExprAST;
 class FloatLitteralExprAST;
 class FloatConstantVariableDeclarationExprAST;
 class TokenQueue;
-enum TokenType : unsigned int;
+enum class TokenType : unsigned int;
 class Token;
 
 
@@ -139,7 +139,10 @@ public:
     // Constructor
     explicit NewParser(TokenQueue& tokenQ, AbstractSyntaxTree& astree);
 
-    // TODO document this method
+    // Parse the whole token queue consumming all tokens to produce a full
+    // abstract syntax tree.
+    //
+    // Returns the number of top level expression produced
     unsigned int parse();
 
     // Parse top level expression wrapping them in an anonymous function

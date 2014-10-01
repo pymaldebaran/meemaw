@@ -83,14 +83,14 @@ ExprAST* Parser::parsePrimaryExpr() {
     ExprAST* expr;
 
     switch (lexer.getCurrentToken()) {
-    default:
-        return ParserErrorUnexpectedToken("Can't parse primary expression, unexpected token ", lexer.getCurrentToken());
     case Lexer::TOK_FLOAT:
         expr = parseFloatLitteralExpr();
         break;
     case Lexer::TOK_KEYWORD_LET:
         expr =  parseFloatConstantVariableDeclarationExpr();
         break;
+    default:
+        return ParserErrorUnexpectedToken("Can't parse primary expression, unexpected token ", lexer.getCurrentToken());
     }
 
     if (expr == nullptr) {
@@ -162,8 +162,8 @@ NewParser::NewParser(TokenQueue& tokenQ, AbstractSyntaxTree& astree) :
 unsigned int NewParser::parse() {
     unsigned int productedTopLevelNodes = 0;
 
-    ExprAST* toplevel = nullptr;
-    while ((toplevel = parseTopLevelExpr())) {
+    while (not tokens.empty()) {
+        parseTopLevelExpr();
         ++productedTopLevelNodes;
     }
 
@@ -183,7 +183,7 @@ ExprAST* NewParser::parseTopLevelExpr() {
 
     // Add the anonymous function to the AST
     ExprAST* anonymousFunc = new FunctionAST(proto, primExpr);
-    ast.getTopLevel().push_back(anonymousFunc); // TODO move that to parseTopLevelExpr()
+    ast.getTopLevel().push_back(anonymousFunc);
 
     // return the anonymous function
     return anonymousFunc;
@@ -191,9 +191,6 @@ ExprAST* NewParser::parseTopLevelExpr() {
 
 ExprAST* NewParser::parsePrimaryExpr() {
     ExprAST* expr;
-
-    std::cerr << "DURING PARSING tokens address=" << &tokens << std::endl;
-    std::cerr << "DURING PARSING tokens size=" << tokens.size() << std::endl;
 
     // Just reading the first token and dispatching
     switch (tokens.front().getTokenType()) {
@@ -228,9 +225,6 @@ FloatLitteralExprAST* NewParser::parseFloatLitteralExpr() {
 }
 
 FloatConstantVariableDeclarationExprAST* NewParser::parseFloatConstantVariableDeclarationExpr() {
-    std::cerr << "PARSING FCVD tokens SIZE=" << tokens.size() << std::endl;
-    std::cerr << "PARSING FCVD tokens: " << tokens << std::endl;
-
     // Consume "let" keyword
     if (not tokens.pop(TokenType::TOK_KEYWORD_LET)) {
         return ParserErrorUnexpectedToken("Parsing float constant variable declaration", tokens.front(), TokenType::TOK_KEYWORD_LET);

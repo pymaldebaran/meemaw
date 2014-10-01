@@ -28,8 +28,6 @@
 
 #include "../src/parser.h"
 
-#include <iostream>
-
 #include "../src/lexer.h"
 #include "../src/ast.h"
 
@@ -141,9 +139,6 @@ TEST_CASE("New parser consume tokens and produce abstract syntax tree depending 
         in << "let aaa = 1.0";
 
         lex.tokenize();
-
-        std::cerr << "AFTER TOKENIZATION tokens address=" << &tokens << std::endl;
-        std::cerr << "AFTER TOKENIZATION tokens size=" << tokens.size() << std::endl;
 
         REQUIRE(not tokens.empty());
         REQUIRE(tokens.size() == 4);

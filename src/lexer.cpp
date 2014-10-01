@@ -201,6 +201,15 @@ Token::Token(const TokenType typ, const std::string identifierstr, const float f
     floatValue(floatVal)
 {}
 
+bool Token::UnexpectedTokenError(const char* const when, const Token& actualToken, const TokenType expectedTokenType) {
+    std::cerr << "[TOKEN ERROR] " << when
+              << " but current token is " << actualToken
+              << "while expecting " << expectedTokenType
+              << std::endl;
+
+    return false;
+}
+
 const TokenType Token::getTokenType() const {
     return tokenType;
 }
@@ -208,7 +217,7 @@ const TokenType Token::getTokenType() const {
 bool Token::getIdentifierString(std::string& idStr) const {
     if (getTokenType() != TokenType::TOK_IDENTIFIER)
     {
-        return false;
+        return UnexpectedTokenError("Accessing identifier string", *this, TokenType::TOK_IDENTIFIER);
     }
 
     idStr = identifierString;
@@ -218,7 +227,7 @@ bool Token::getIdentifierString(std::string& idStr) const {
 bool Token::getFloatValue(float& fVal) const {
     if (getTokenType() != TokenType::TOK_LITTERAL_FLOAT)
     {
-        return false;
+        return UnexpectedTokenError("Accessing float value", *this, TokenType::TOK_LITTERAL_FLOAT);
     }
 
     fVal = floatValue;
