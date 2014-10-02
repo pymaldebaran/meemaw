@@ -31,6 +31,7 @@
 #include "llvm/IR/IRBuilder.h"
 
 class ExprAST;
+class AbstractSyntaxTree;
 
 class CodeGenerator {
 private:
@@ -55,5 +56,32 @@ public:
     // Use a recursive call to AST node codeGen() method.
     llvm::Value* codeGen(ExprAST* ast);
 };
+
+class Code {};
+
+class NewCodeGenerator {
+public:
+    // Constructor
+    explicit NewCodeGenerator(AbstractSyntaxTree& theAst, Code& theCode);
+
+    // Generate code from the AST.
+    // Use a recursive call to AST node codeGen() method.
+    //
+    // Returns true if the generation succeed
+    //         false in al other case
+    bool codegen();
+};
+
+class CodeRunner {
+public:
+    // Constructor
+    explicit CodeRunner(Code& theCode);
+
+    // Run the code
+    //
+    // Return the result of the last expression
+    float run();
+};
+
 
 #endif // CODEGENERATOR_H

@@ -49,3 +49,18 @@ std::map<std::string, llvm::Value*>& CodeGenerator::getSymbolTable() {
 llvm::Value* CodeGenerator::codeGen(ExprAST* ast) {
     return ast->codeGen(this);
 }
+
+NewCodeGenerator::NewCodeGenerator(AbstractSyntaxTree& theAst, Code& theCode)
+{}
+
+
+bool NewCodeGenerator::codegen() {
+    return false;
+}
+
+CodeRunner::CodeRunner(Code& theCode)
+{}
+
+float CodeRunner::run() {
+    return 255.0;
+}
