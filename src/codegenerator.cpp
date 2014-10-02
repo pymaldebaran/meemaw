@@ -50,17 +50,14 @@ llvm::Value* CodeGenerator::codeGen(ExprAST* ast) {
     return ast->codeGen(this);
 }
 
+float Code::run() {
+    return 255.0;
+}
+
 NewCodeGenerator::NewCodeGenerator(AbstractSyntaxTree& theAst, Code& theCode)
 {}
 
 
 bool NewCodeGenerator::codegen() {
     return false;
-}
-
-CodeRunner::CodeRunner(Code& theCode)
-{}
-
-float CodeRunner::run() {
-    return 255.0;
 }

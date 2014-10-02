@@ -57,7 +57,13 @@ public:
     llvm::Value* codeGen(ExprAST* ast);
 };
 
-class Code {};
+class Code {
+public:
+    // Run the code
+    //
+    // Return the result of the last expression
+    float run();
+};
 
 class NewCodeGenerator {
 public:
@@ -71,17 +77,5 @@ public:
     //         false in al other case
     bool codegen();
 };
-
-class CodeRunner {
-public:
-    // Constructor
-    explicit CodeRunner(Code& theCode);
-
-    // Run the code
-    //
-    // Return the result of the last expression
-    float run();
-};
-
 
 #endif // CODEGENERATOR_H
