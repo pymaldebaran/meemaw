@@ -8,10 +8,9 @@ clean:
 	rm -fr build/* bin/*
 
 format:
-	@echo === formating files...
-	uncrustify -c uncrustify.cfg test/*.cpp --replace --no-backup
-	uncrustify -c uncrustify.cfg src/*.cpp --replace --no-backup
-	uncrustify -c uncrustify.cfg src/*.h --replace --no-backup
+	@echo === formating modified files...
+	git --no-pager diff --name-only | grep '\.h$$\|\.cpp$$' > build/to_format_list.txt || true
+	uncrustify -c uncrustify.cfg --replace --no-backup -F build/to_format_list.txt
 
 lint:
 	@echo === checking quality of files...
