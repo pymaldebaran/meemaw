@@ -34,196 +34,6 @@
 //maximum difference between 2 floats to be considered equal
 const float F_EPSILON = std::numeric_limits<float>::min() * 10.0;
 
-TEST_CASE("Lexer categorise float litteral") {
-    // stream to parse by lexer
-    std::stringstream test;
-
-    // the lexer
-    Lexer lex = Lexer(test);
-
-    // random generator initialisation
-    auto seed = std::chrono::system_clock::now().time_since_epoch().count();
-    std::default_random_engine engine(seed);
-
-    // float generator
-    std::uniform_real_distribution<float> floatDistribution(0.0, std::numeric_limits<float>::max());
-    auto randFloatGenerator = std::bind(floatDistribution, engine);
-
-    // unsigned char generator
-    std::uniform_int_distribution<unsigned char> ucharDistribution(0, std::numeric_limits<unsigned char>::max());
-    auto randUCharGenerator = std::bind(ucharDistribution, engine);
-
-    SECTION("1.0 is categorized as float litteral") {
-        test << "1.0";
-
-        int tokId = lex.getNextToken();
-
-        REQUIRE(tokId == Lexer::TOK_FLOAT);
-        float fVal;
-        REQUIRE(lex.getFloatValue(fVal));
-        REQUIRE(fVal == 1.0);
-    }
-
-    SECTION("Any float between 0.0 and max float is categorized as float litteral") {
-        float f = randFloatGenerator();
-
-        test << std::to_string(f);
-
-        int tokId = lex.getNextToken();
-
-        float fVal;
-        REQUIRE(lex.getFloatValue(fVal));
-        REQUIRE(abs(fVal - f) < F_EPSILON); // TODO replace this with Approx() from catch lib
-    }
-}
-
-TEST_CASE("Lexer categorise keyword let") {
-    // stream to parse by lexer
-    std::stringstream test;
-
-    // the lexer
-    Lexer lex = Lexer(test);
-
-    test << "let";
-
-    int tokId = lex.getNextToken();
-
-    REQUIRE(tokId == Lexer::TOK_KEYWORD_LET);
-}
-
-TEST_CASE("Lexer categorise identifier") {
-    // stream to parse by lexer
-    std::stringstream test;
-
-    // the lexer
-    Lexer lex = Lexer(test);
-
-    SECTION("Lexer categorise a lowercaser identifier") {
-        std::string identifier = "abc";
-
-        test << identifier;
-
-        int tokId = lex.getNextToken();
-
-        CHECK(tokId == Lexer::TOK_IDENTIFIER);
-        std::string idStr;
-        CHECK(lex.getIdentifierString(idStr));
-        CHECK(idStr == identifier);
-    }
-
-    SECTION("Lexer categorise an uppercase identifier") {
-        std::string identifier = "ABC";
-
-        test << identifier;
-
-        int tokId = lex.getNextToken();
-
-        CHECK(tokId == Lexer::TOK_IDENTIFIER);
-        std::string idStr;
-        CHECK(lex.getIdentifierString(idStr));
-        CHECK(idStr == identifier);
-    }
-
-    SECTION("Lexer categorise identifier with leading underscore") {
-        std::string identifier = "_ab";
-
-        test << identifier;
-
-        int tokId = lex.getNextToken();
-
-        CHECK(tokId == Lexer::TOK_IDENTIFIER);
-        std::string idStr;
-        CHECK(lex.getIdentifierString(idStr));
-        CHECK(idStr == identifier);
-    }
-
-    SECTION("Lexer categorise identifier with underscore") {
-        std::string identifier = "a_b";
-
-        test << identifier;
-
-        int tokId = lex.getNextToken();
-
-        CHECK(tokId == Lexer::TOK_IDENTIFIER);
-        std::string idStr;
-        CHECK(lex.getIdentifierString(idStr));
-        CHECK(idStr == identifier);
-    }
-
-    SECTION("Lexer categorise identifier with numbers") {
-        std::string identifier = "a2b";
-
-        test << identifier;
-
-        int tokId = lex.getNextToken();
-
-        CHECK(tokId == Lexer::TOK_IDENTIFIER);
-        std::string idStr;
-        CHECK(lex.getIdentifierString(idStr));
-        CHECK(idStr == identifier);
-    }
-}
-
-TEST_CASE("Lexer categorise affectation operator") {
-    // stream to parse by lexer
-    std::stringstream test;
-
-    // the lexer
-    Lexer lex = Lexer(test);
-
-    test << "=";
-
-    int tokId = lex.getNextToken();
-
-    CHECK(tokId == Lexer::TOK_OPERATOR_AFFECTATION);
-}
-
-TEST_CASE("Lexer handles whitespaces") {
-    // stream to parse by lexer
-    std::stringstream test;
-
-    // the lexer
-    Lexer lex = Lexer(test);
-
-    SECTION("Lexer does not skip EOF after a token") {
-        test << "1.0";
-
-        int tokId = lex.getNextToken();
-
-        CHECK(tokId == Lexer::TOK_FLOAT);
-        float fVal;
-        REQUIRE(lex.getFloatValue(fVal));
-        CHECK(fVal == 1.0);
-
-        tokId = lex.getNextToken();
-
-        CHECK(tokId == Lexer::TOK_EOF);
-    }
-
-    SECTION("Lexer skip one whitespace between tokens") {
-        test << "1.0 2.0";
-
-        int tokId = lex.getNextToken();
-        float fVal;
-
-        CHECK(tokId == Lexer::TOK_FLOAT);
-        REQUIRE(lex.getFloatValue(fVal));
-        CHECK(fVal == 1.0);
-
-        tokId = lex.getNextToken();
-
-        CHECK(tokId == Lexer::TOK_FLOAT);
-        REQUIRE(lex.getFloatValue(fVal));
-        CHECK(fVal == 2.0);
-
-        tokId = lex.getNextToken();
-
-        CHECK(tokId == Lexer::TOK_EOF);
-    }
-
-    // TODO test multiple whitespace between tokens
-}
-
 TEST_CASE("New lexer can produce tokens depending on the input") {
     std::stringstream in;               // stream to parse by lexer
     TokenQueue out;                     // token conatainer
@@ -454,4 +264,164 @@ TEST_CASE("TokenQueue can be pushed and poped", "[tokenQ]") {
 
         CHECK(tokenQ.empty());
     }
+}
+
+TEST_CASE("Lexer categorise float litteral") {
+    std::stringstream in;               // stream to parse by lexer
+    TokenQueue out;                     // token conatainer
+    NewLexer lex = NewLexer(in, out);   // the lexer
+
+    // random generator initialisation
+    auto seed = std::chrono::system_clock::now().time_since_epoch().count();
+    std::default_random_engine engine(seed);
+
+    // float generator
+    std::uniform_real_distribution<float> floatDistribution(0.0, std::numeric_limits<float>::max());
+    auto randFloatGenerator = std::bind(floatDistribution, engine);
+
+    // unsigned char generator
+    std::uniform_int_distribution<unsigned char> ucharDistribution(0, std::numeric_limits<unsigned char>::max());
+    auto randUCharGenerator = std::bind(ucharDistribution, engine);
+
+    SECTION("1.0 is categorized as float litteral") {
+        in << "1.0";
+
+        REQUIRE(lex.tokenize() == 1);
+
+        CHECK(out.at(0).getTokenType() == TokenType::TOK_LITTERAL_FLOAT);
+        float fVal;
+        CHECK(out.at(0).getFloatValue(fVal));
+        CHECK(fVal == 1.0); // TODO replace this with Approx() from catch lib
+    }
+
+    // TODO make a loop here to have real deep tests with peticular values instead of random ones
+    SECTION("Any float between 0.0 and max float is categorized as float litteral") {
+        float f = randFloatGenerator();
+
+        in << std::to_string(f);
+
+        REQUIRE(lex.tokenize() == 1);
+
+        CHECK(out.at(0).getTokenType() == TokenType::TOK_LITTERAL_FLOAT);
+        float fVal;
+        CHECK(out.at(0).getFloatValue(fVal));
+        CHECK(abs(fVal - f) < F_EPSILON); // TODO replace this with Approx() from catch lib
+    }
+}
+
+TEST_CASE("Lexer categorise keyword let") {
+    std::stringstream in;               // stream to parse by lexer
+    TokenQueue out;                     // token conatainer
+    NewLexer lex = NewLexer(in, out);   // the lexer
+
+    in << "let";
+
+    REQUIRE(lex.tokenize() == 1);
+
+    REQUIRE(out.size() == 1);
+    CHECK(out.at(0).getTokenType() == TokenType::TOK_KEYWORD_LET);
+}
+
+TEST_CASE("Lexer categorise identifier") {
+    std::stringstream in;               // stream to parse by lexer
+    TokenQueue out;                     // token conatainer
+    NewLexer lex = NewLexer(in, out);   // the lexer
+
+    // TODO refactor this serie of test as a loop
+    SECTION("Lexer categorise a lowercaser identifier") {
+        std::string identifier = "abc";
+
+        in << identifier;
+
+        REQUIRE(lex.tokenize() == 1);
+
+        CHECK(out.at(0).getTokenType() == TokenType::TOK_IDENTIFIER);
+        std::string idStr;
+        CHECK(out.at(0).getIdentifierString(idStr));
+        CHECK(idStr == identifier);
+    }
+
+    SECTION("Lexer categorise an uppercase identifier") {
+        std::string identifier = "ABC";
+
+        in << identifier;
+
+        REQUIRE(lex.tokenize() == 1);
+
+        CHECK(out.at(0).getTokenType() == TokenType::TOK_IDENTIFIER);
+        std::string idStr;
+        CHECK(out.at(0).getIdentifierString(idStr));
+        CHECK(idStr == identifier);
+    }
+
+    SECTION("Lexer categorise identifier with leading underscore") {
+        std::string identifier = "_ab";
+
+        in << identifier;
+
+        REQUIRE(lex.tokenize() == 1);
+
+        CHECK(out.at(0).getTokenType() == TokenType::TOK_IDENTIFIER);
+        std::string idStr;
+        CHECK(out.at(0).getIdentifierString(idStr));
+        CHECK(idStr == identifier);
+    }
+
+    SECTION("Lexer categorise identifier with underscore") {
+        std::string identifier = "a_b";
+
+        in << identifier;
+
+        REQUIRE(lex.tokenize() == 1);
+
+        CHECK(out.at(0).getTokenType() == TokenType::TOK_IDENTIFIER);
+        std::string idStr;
+        CHECK(out.at(0).getIdentifierString(idStr));
+        CHECK(idStr == identifier);
+    }
+
+    SECTION("Lexer categorise identifier with numbers") {
+        std::string identifier = "a2b";
+
+        in << identifier;
+
+        REQUIRE(lex.tokenize() == 1);
+
+        CHECK(out.at(0).getTokenType() == TokenType::TOK_IDENTIFIER);
+        std::string idStr;
+        CHECK(out.at(0).getIdentifierString(idStr));
+        CHECK(idStr == identifier);
+    }
+}
+
+TEST_CASE("Lexer categorise affectation operator") {
+    std::stringstream in;               // stream to parse by lexer
+    TokenQueue out;                     // token conatainer
+    NewLexer lex = NewLexer(in, out);   // the lexer
+
+    in << "=";
+
+    REQUIRE(lex.tokenize() == 1);
+
+    CHECK(out.at(0).getTokenType() == TokenType::TOK_OPERATOR_AFFECTATION);
+}
+
+// TODO test multiple whitespace between tokens
+TEST_CASE("Lexer skip one whitespace between tokens") {
+    std::stringstream in;               // stream to parse by lexer
+    TokenQueue out;                     // token conatainer
+    NewLexer lex = NewLexer(in, out);   // the lexer
+
+    in << "1.0 2.0";
+    float fVal;
+
+    REQUIRE(lex.tokenize() == 2);
+
+    CHECK(out.at(0).getTokenType() == TokenType::TOK_LITTERAL_FLOAT);
+    CHECK(out.at(0).getFloatValue(fVal));
+    CHECK(fVal == 1.0); // TODO replace this with Approx() from catch lib
+
+    CHECK(out.at(1).getTokenType() == TokenType::TOK_LITTERAL_FLOAT);
+    CHECK(out.at(1).getFloatValue(fVal));
+    CHECK(fVal == 2.0); // TODO replace this with Approx() from catch lib
 }
