@@ -75,10 +75,10 @@ std::nullptr_t ParserErrorUnexpectedToken(const char* const when, const Token& a
 
 // Parser for the MeeMaw language.
 // Generate the Abstract Syntax Tree for each token parsed.
-class NewParser {
+class Parser {
 public:
     // Constructor
-    explicit NewParser(TokenQueue& tokenQ, AbstractSyntaxTree& astree);
+    explicit Parser(TokenQueue& tokenQ, AbstractSyntaxTree& astree);
 
     // Parse the whole token queue consumming all tokens to produce a full
     // abstract syntax tree.

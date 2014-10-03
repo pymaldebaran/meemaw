@@ -64,12 +64,12 @@ std::nullptr_t ParserErrorUnexpectedToken(const char* const when, const Token& a
     return nullptr;
 }
 
-NewParser::NewParser(TokenQueue& tokenQ, AbstractSyntaxTree& astree) :
+Parser::Parser(TokenQueue& tokenQ, AbstractSyntaxTree& astree) :
     tokens(tokenQ),
     ast(astree)
 {}
 
-unsigned int NewParser::parse() {
+unsigned int Parser::parse() {
     unsigned int productedTopLevelNodes = 0;
 
     while (not tokens.empty()) {
@@ -80,7 +80,7 @@ unsigned int NewParser::parse() {
     return productedTopLevelNodes;
 }
 
-FunctionAST* NewParser::parseTopLevelExpr() {
+FunctionAST* Parser::parseTopLevelExpr() {
     // For the moment any primary expression is a top level expression
     ExprAST* primExpr = parsePrimaryExpr();
 
@@ -99,7 +99,7 @@ FunctionAST* NewParser::parseTopLevelExpr() {
     return anonymousFunc;
 }
 
-ExprAST* NewParser::parsePrimaryExpr() {
+ExprAST* Parser::parsePrimaryExpr() {
     ExprAST* expr;
 
     // Just reading the first token and dispatching
@@ -121,7 +121,7 @@ ExprAST* NewParser::parsePrimaryExpr() {
     return expr;
 }
 
-FloatLitteralExprAST* NewParser::parseFloatLitteralExpr() {
+FloatLitteralExprAST* Parser::parseFloatLitteralExpr() {
     float fVal;
 
     if (not tokens.front().getFloatValue(fVal)) {
@@ -134,7 +134,7 @@ FloatLitteralExprAST* NewParser::parseFloatLitteralExpr() {
     return result;
 }
 
-FloatConstantVariableDeclarationExprAST* NewParser::parseFloatConstantVariableDeclarationExpr() {
+FloatConstantVariableDeclarationExprAST* Parser::parseFloatConstantVariableDeclarationExpr() {
     // Consume "let" keyword
     if (not tokens.pop(TokenType::TOK_KEYWORD_LET)) {
         return ParserErrorUnexpectedToken("Parsing float constant variable declaration", tokens.front(), TokenType::TOK_KEYWORD_LET);

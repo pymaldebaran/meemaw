@@ -37,7 +37,7 @@ TEST_CASE("Code generator produce code for float litteral expression from ast") 
     TokenQueue tokens;                              // token container
     NewLexer lex = NewLexer(in, tokens);            // the lexer
     AbstractSyntaxTree ast;                         // the Abstract Syntax Tree
-    NewParser parser = NewParser(tokens, ast);      // the parser
+    Parser parser = Parser(tokens, ast);            // the parser
     Code code;                                      // code to generate
     CodeGenerator gen = CodeGenerator(ast, code);   // the code generator
 
@@ -56,7 +56,7 @@ TEST_CASE("Code generator produce code for float litteral constant declaration e
     TokenQueue tokens;                              // token container
     NewLexer lex = NewLexer(in, tokens);            // the lexer
     AbstractSyntaxTree ast;                         // the Abstract Syntax Tree
-    NewParser parser = NewParser(tokens, ast);      // the parser
+    Parser parser = Parser(tokens, ast);            // the parser
     Code code;                                      // code to generate
     CodeGenerator gen = CodeGenerator(ast, code);   // the code generator
 
@@ -76,7 +76,7 @@ TEST_CASE("Running code works for float litteral expression") {
     TokenQueue tokens;                              // token container
     NewLexer lex = NewLexer(in, tokens);            // the lexer
     AbstractSyntaxTree ast;                         // the Abstract Syntax Tree
-    NewParser parser = NewParser(tokens, ast);      // the parser
+    Parser parser = Parser(tokens, ast);            // the parser
     Code code;                                      // code to generate and run
     CodeGenerator gen = CodeGenerator(ast, code);   // the code generator
 
@@ -97,7 +97,7 @@ TEST_CASE("Running code works for float litteral constant declaration expression
     TokenQueue tokens;                              // token container
     NewLexer lex = NewLexer(in, tokens);            // the lexer
     AbstractSyntaxTree ast;                         // the Abstract Syntax Tree
-    NewParser parser = NewParser(tokens, ast);      // the parser
+    Parser parser = Parser(tokens, ast);            // the parser
     Code code;                                      // code to generate and run
     CodeGenerator gen = CodeGenerator(ast, code);   // the code generator
 
