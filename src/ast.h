@@ -34,7 +34,6 @@
 
 // Forward declarations
 class Lexer;
-class CodeGenerator;
 class NewCodeGenerator;
 
 // Specify ExprAST type without using RTTI.
@@ -82,7 +81,6 @@ public:
 
     // Generate LLVM Intermediary Representation for the node.
     // Call recursively codeGen() method on enclosing nodes if any.
-    virtual llvm::Value* codeGen(CodeGenerator* codeGenerator) = 0; // TODO remove this old method ASAP
     virtual llvm::Value* codeGen(NewCodeGenerator* codeGenerator) = 0;
 };
 
@@ -96,7 +94,6 @@ public:
     // value getter
     const float getValue() const;
 
-    virtual llvm::Value* codeGen(CodeGenerator* codeGenerator);
     virtual llvm::Value* codeGen(NewCodeGenerator* codeGenerator);
 };
 
@@ -114,7 +111,6 @@ public:
     // args getter
     const std::vector<std::string> getArgs() const;
 
-    virtual llvm::Function* codeGen(CodeGenerator* codeGenerator);
     virtual llvm::Function* codeGen(NewCodeGenerator* codeGenerator);
 };
 
@@ -132,7 +128,6 @@ public:
     // body getter
     ExprAST* getBody() const;
 
-    virtual llvm::Function* codeGen(CodeGenerator* codeGenerator);
     virtual llvm::Function* codeGen(NewCodeGenerator* codeGenerator);
 };
 
@@ -147,7 +142,6 @@ public:
     // value getter
     FloatLitteralExprAST* getRhsExpr() const;
 
-    virtual llvm::Value* codeGen(CodeGenerator* codeGenerator);
     virtual llvm::Value* codeGen(NewCodeGenerator* codeGenerator);
 
 private:

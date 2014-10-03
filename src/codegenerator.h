@@ -34,30 +34,6 @@
 class ExprAST;
 class AbstractSyntaxTree;
 
-class CodeGenerator {
-private:
-    llvm::Module* module;                               // module used for code generation
-    llvm::IRBuilder<> builder;                          // helper taht makes it easy to generate LLVM instructions
-
-    std::map<std::string, llvm::Value*> symbolTable;    // symbol table
-public:
-    // Constuctor
-    CodeGenerator(llvm::Module* mod);
-
-    // module getter
-    llvm::Module* getModule() const;
-
-    // builder getter
-    llvm::IRBuilder<>& getBuilder();
-
-    // namedValue getter
-    std::map<std::string, llvm::Value*>& getSymbolTable();
-
-    // Generate LLVM Intermediary Representation for the given AST.
-    // Use a recursive call to AST node codeGen() method.
-    llvm::Value* codeGen(ExprAST* ast);
-};
-
 class Code {
 public:
     // Constructor
@@ -79,8 +55,8 @@ public:
     bool run(float& result);
 
 private:
-    llvm::Value* codeIR; // LLVM value to put the IR code after generation
-    llvm::ExecutionEngine* execEngineJIT; // LLVM JIT execution engine to execute the code
+    llvm::Value* codeIR;                    // LLVM value to put the IR code after generation
+    llvm::ExecutionEngine* execEngineJIT;   // LLVM JIT execution engine to execute the code
 
     // Error function helper : display the error message and returns false.
     static bool Error(const std::string msg);
