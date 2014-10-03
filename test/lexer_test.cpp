@@ -34,42 +34,6 @@
 //maximum difference between 2 floats to be considered equal
 const float F_EPSILON = std::numeric_limits<float>::min() * 10.0;
 
-TEST_CASE("New lexer can produce tokens depending on the input") {
-    std::stringstream in;               // stream to parse by lexer
-    TokenQueue out;                     // token conatainer
-    NewLexer lex = NewLexer(in, out);   // the lexer
-
-    REQUIRE(out.empty());
-
-    SECTION("Tokenizing an empty input do not produce token") {
-        CHECK(lex.tokenize() == 0);
-
-        CHECK(out.size() == 0);
-    }
-
-    SECTION("Tokenizing produce tokens") {
-        in << "let aaa = 1.0";
-
-        CHECK(lex.tokenize() == 4);
-
-        CHECK(out.size() == 4);
-
-        CHECK(out.at(0).getTokenType() == TokenType::TOK_KEYWORD_LET);
-
-        CHECK(out.at(1).getTokenType() == TokenType::TOK_IDENTIFIER);
-        std::string idStr = "";
-        REQUIRE(out.at(1).getIdentifierString(idStr));
-        CHECK(idStr == "aaa");
-
-        CHECK(out.at(2).getTokenType() == TokenType::TOK_OPERATOR_AFFECTATION);
-
-        CHECK(out.at(3).getTokenType() == TokenType::TOK_LITTERAL_FLOAT);
-        float val = 0.0;
-        REQUIRE(out.at(3).getFloatValue(val));
-        CHECK(val == 1.0);
-    }
-}
-
 TEST_CASE("TokenQueue can be pushed and poped", "[tokenQ]") {
     TokenQueue tokenQ;
 
@@ -266,10 +230,46 @@ TEST_CASE("TokenQueue can be pushed and poped", "[tokenQ]") {
     }
 }
 
+TEST_CASE("Lexer can produce tokens depending on the input") {
+    std::stringstream in;           // stream to parse by lexer
+    TokenQueue out;                 // token conatainer
+    Lexer lex = Lexer(in, out);     // the lexer
+
+    REQUIRE(out.empty());
+
+    SECTION("Tokenizing an empty input do not produce token") {
+        CHECK(lex.tokenize() == 0);
+
+        CHECK(out.size() == 0);
+    }
+
+    SECTION("Tokenizing produce tokens") {
+        in << "let aaa = 1.0";
+
+        CHECK(lex.tokenize() == 4);
+
+        CHECK(out.size() == 4);
+
+        CHECK(out.at(0).getTokenType() == TokenType::TOK_KEYWORD_LET);
+
+        CHECK(out.at(1).getTokenType() == TokenType::TOK_IDENTIFIER);
+        std::string idStr = "";
+        REQUIRE(out.at(1).getIdentifierString(idStr));
+        CHECK(idStr == "aaa");
+
+        CHECK(out.at(2).getTokenType() == TokenType::TOK_OPERATOR_AFFECTATION);
+
+        CHECK(out.at(3).getTokenType() == TokenType::TOK_LITTERAL_FLOAT);
+        float val = 0.0;
+        REQUIRE(out.at(3).getFloatValue(val));
+        CHECK(val == 1.0);
+    }
+}
+
 TEST_CASE("Lexer categorise float litteral") {
-    std::stringstream in;               // stream to parse by lexer
-    TokenQueue out;                     // token conatainer
-    NewLexer lex = NewLexer(in, out);   // the lexer
+    std::stringstream in;           // stream to parse by lexer
+    TokenQueue out;                 // token conatainer
+    Lexer lex = Lexer(in, out);     // the lexer
 
     // random generator initialisation
     auto seed = std::chrono::system_clock::now().time_since_epoch().count();
@@ -310,9 +310,9 @@ TEST_CASE("Lexer categorise float litteral") {
 }
 
 TEST_CASE("Lexer categorise keyword let") {
-    std::stringstream in;               // stream to parse by lexer
-    TokenQueue out;                     // token conatainer
-    NewLexer lex = NewLexer(in, out);   // the lexer
+    std::stringstream in;           // stream to parse by lexer
+    TokenQueue out;                 // token conatainer
+    Lexer lex = Lexer(in, out);     // the lexer
 
     in << "let";
 
@@ -323,9 +323,9 @@ TEST_CASE("Lexer categorise keyword let") {
 }
 
 TEST_CASE("Lexer categorise identifier") {
-    std::stringstream in;               // stream to parse by lexer
-    TokenQueue out;                     // token conatainer
-    NewLexer lex = NewLexer(in, out);   // the lexer
+    std::stringstream in;           // stream to parse by lexer
+    TokenQueue out;                 // token conatainer
+    Lexer lex = Lexer(in, out);     // the lexer
 
     // TODO refactor this serie of test as a loop
     SECTION("Lexer categorise a lowercaser identifier") {
@@ -395,9 +395,9 @@ TEST_CASE("Lexer categorise identifier") {
 }
 
 TEST_CASE("Lexer categorise affectation operator") {
-    std::stringstream in;               // stream to parse by lexer
-    TokenQueue out;                     // token conatainer
-    NewLexer lex = NewLexer(in, out);   // the lexer
+    std::stringstream in;           // stream to parse by lexer
+    TokenQueue out;                 // token conatainer
+    Lexer lex = Lexer(in, out);     // the lexer
 
     in << "=";
 
@@ -408,9 +408,9 @@ TEST_CASE("Lexer categorise affectation operator") {
 
 // TODO test multiple whitespace between tokens
 TEST_CASE("Lexer skip one whitespace between tokens") {
-    std::stringstream in;               // stream to parse by lexer
-    TokenQueue out;                     // token conatainer
-    NewLexer lex = NewLexer(in, out);   // the lexer
+    std::stringstream in;           // stream to parse by lexer
+    TokenQueue out;                 // token conatainer
+    Lexer lex = Lexer(in, out);     // the lexer
 
     in << "1.0 2.0";
     float fVal;

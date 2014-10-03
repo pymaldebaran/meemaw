@@ -203,12 +203,12 @@ std::ostream& operator<<(std::ostream& os, const TokenQueue& tokQ) {
     return os << "]";
 }
 
-NewLexer::NewLexer(std::istream& stream, TokenQueue& tokenQ) :
+Lexer::Lexer(std::istream& stream, TokenQueue& tokenQ) :
     input(stream),
     tokens(tokenQ)
 {}
 
-unsigned int NewLexer::tokenize() {
+unsigned int Lexer::tokenize() {
     unsigned int productedTokens = 0;
 
     while (tokenizeOne()) {
@@ -218,7 +218,7 @@ unsigned int NewLexer::tokenize() {
     return productedTokens;
 }
 
-bool NewLexer::tokenizeOne() {
+bool Lexer::tokenizeOne() {
     int lastChar = input.get();
 
     // Skip any whitespace.

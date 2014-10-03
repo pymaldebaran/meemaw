@@ -35,7 +35,7 @@
 TEST_CASE("Code generator produce code for float litteral expression from ast") {
     std::stringstream in;                           // stream to parse by lexer
     TokenQueue tokens;                              // token container
-    NewLexer lex = NewLexer(in, tokens);            // the lexer
+    Lexer lex = Lexer(in, tokens);                  // the lexer
     AbstractSyntaxTree ast;                         // the Abstract Syntax Tree
     Parser parser = Parser(tokens, ast);            // the parser
     Code code;                                      // code to generate
@@ -54,7 +54,7 @@ TEST_CASE("Code generator produce code for float litteral expression from ast") 
 TEST_CASE("Code generator produce code for float litteral constant declaration expression from ast") {
     std::stringstream in;                           // stream to parse by lexer
     TokenQueue tokens;                              // token container
-    NewLexer lex = NewLexer(in, tokens);            // the lexer
+    Lexer lex = Lexer(in, tokens);                  // the lexer
     AbstractSyntaxTree ast;                         // the Abstract Syntax Tree
     Parser parser = Parser(tokens, ast);            // the parser
     Code code;                                      // code to generate
@@ -74,7 +74,7 @@ TEST_CASE("Code generator produce code for float litteral constant declaration e
 TEST_CASE("Running code works for float litteral expression") {
     std::stringstream in;                           // stream to parse by lexer
     TokenQueue tokens;                              // token container
-    NewLexer lex = NewLexer(in, tokens);            // the lexer
+    Lexer lex = Lexer(in, tokens);                  // the lexer
     AbstractSyntaxTree ast;                         // the Abstract Syntax Tree
     Parser parser = Parser(tokens, ast);            // the parser
     Code code;                                      // code to generate and run
@@ -95,7 +95,7 @@ TEST_CASE("Running code works for float litteral expression") {
 TEST_CASE("Running code works for float litteral constant declaration expression") {
     std::stringstream in;                           // stream to parse by lexer
     TokenQueue tokens;                              // token container
-    NewLexer lex = NewLexer(in, tokens);            // the lexer
+    Lexer lex = Lexer(in, tokens);                  // the lexer
     AbstractSyntaxTree ast;                         // the Abstract Syntax Tree
     Parser parser = Parser(tokens, ast);            // the parser
     Code code;                                      // code to generate and run

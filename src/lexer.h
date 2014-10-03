@@ -146,10 +146,10 @@ private:
 };
 
 // Lexer for the MeeMaw language
-class NewLexer {
+class Lexer {
 public:
     // Constructor
-    explicit NewLexer(std::istream& stream, TokenQueue& tokenQ);
+    explicit Lexer(std::istream& stream, TokenQueue& tokenQ);
 
     // Tokenize all the stream and put all the produced tokens in the token
     // container.

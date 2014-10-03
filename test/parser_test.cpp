@@ -35,7 +35,7 @@ TEST_CASE("Parser generate AST for float litteral") {
     SECTION("Parsing a float litteral expression generate a float litteral expression AST node") {
         std::stringstream in;                   // stream to parse by lexer
         TokenQueue tokens;                      // token container
-        NewLexer lex = NewLexer(in, tokens);    // the lexer
+        Lexer lex = Lexer(in, tokens);          // the lexer
         AbstractSyntaxTree ast;                 // the Abstract Syntax Tree
         Parser parser = Parser(tokens, ast);    // the parser
 
@@ -54,7 +54,7 @@ TEST_CASE("Parser generate AST for float litteral") {
     SECTION("Parser recognise float litteral expression as a top level expression") {
         std::stringstream in;                   // stream to parse by lexer
         TokenQueue tokens;                      // token container
-        NewLexer lex = NewLexer(in, tokens);    // the lexer
+        Lexer lex = Lexer(in, tokens);          // the lexer
         AbstractSyntaxTree ast;                 // the Abstract Syntax Tree
         Parser parser = Parser(tokens, ast);    // the parser
 
@@ -84,7 +84,7 @@ TEST_CASE("Parser generate AST for float litteral") {
 TEST_CASE("Parser generate AST for litteral constant declaration") {
     std::stringstream in;                   // stream to parse by lexer
     TokenQueue tokens;                      // token container
-    NewLexer lex = NewLexer(in, tokens);    // the lexer
+    Lexer lex = Lexer(in, tokens);          // the lexer
     AbstractSyntaxTree ast;                 // the Abstract Syntax Tree
     Parser parser = Parser(tokens, ast);    // the parser
 
@@ -138,7 +138,7 @@ TEST_CASE("Parser generate AST for litteral constant declaration") {
 TEST_CASE("New parser consume tokens and produce abstract syntax tree depending on the input") {
     std::stringstream in;                   // stream to parse by lexer
     TokenQueue tokens;                      // token container
-    NewLexer lex = NewLexer(in, tokens);    // the lexer
+    Lexer lex = Lexer(in, tokens);          // the lexer
     AbstractSyntaxTree ast;                 // the Abstract Syntax Tree
     Parser parser = Parser(tokens, ast);    // the parser
 
