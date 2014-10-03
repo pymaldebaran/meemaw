@@ -45,34 +45,6 @@ class Token;
 class CodeGenerator;
 class AbstractSyntaxTree;
 
-
-// Simple error display helper for use in parse* methods
-//
-// Always returns nullptr in order to be used like this :
-//     return ParseError("blahblah");
-//
-// No newline needed at the end of the message
-std::nullptr_t ParserError(const char* const msg);
-
-// Error display helper when handling with unexpected token but can't
-// specify which token was expected
-//
-// Always returns nullptr in order to be used like this :
-//     return ParseError("blahblah", t1);
-//
-// No newline needed at the end of the message
-std::nullptr_t ParserErrorUnexpectedToken(const char* const when, const int actualToken); // TODO remove this old function ASAP
-std::nullptr_t ParserErrorUnexpectedToken(const char* const when, const Token& actualToken);
-
-// Error display helper when handling with unexpected token
-//
-// Always returns nullptr in order to be used like this :
-//     return ParseError("blahblah", t1, t2);
-//
-// No newline needed at the end of the message
-std::nullptr_t ParserErrorUnexpectedToken(const char* const when, const int actualToken, const int expectedToken); // TODO remove this old function ASAP
-std::nullptr_t ParserErrorUnexpectedToken(const char* const when, const Token& actualToken, const TokenType expectedTokenType);
-
 // Parser for the MeeMaw language.
 // Generate the Abstract Syntax Tree for each token parsed.
 class Parser {
@@ -125,6 +97,31 @@ public:
 private:
     TokenQueue& tokens;         // Container for the tokens to parse
     AbstractSyntaxTree& ast;    // Container for the whole AST to produce
+
+    // Simple error display helper for use in parse* methods
+    //
+    // Always returns nullptr in order to be used like this :
+    //     return ParseError("blahblah");
+    //
+    // No newline needed at the end of the message
+    static std::nullptr_t Error(const std::string& msg);
+
+    // Error display helper when handling with unexpected token but can't
+    // specify which token was expected
+    //
+    // Always returns nullptr in order to be used like this :
+    //     return ParseError("blahblah", actual);
+    //
+    // No newline needed at the end of the message
+    static std::nullptr_t ErrorUnexpectedToken(const std::string& when, const Token& actualToken);
+
+    // Error display helper when handling with unexpected token
+    //
+    // Always returns nullptr in order to be used like this :
+    //     return ParseError("blahblah", actual, expectedType);
+    //
+    // No newline needed at the end of the message
+    static std::nullptr_t ErrorUnexpectedToken(const std::string& when, const Token& actualToken, const TokenType expectedTokenType);
 };
 
 #endif // PARSER_H
