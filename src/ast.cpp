@@ -32,10 +32,6 @@
 #include "codegenerator.h"
 #include "parser.h"
 
-Parser::Parser(Lexer& lex) :
-    lexer(lex)
-{}
-
 ExprAST::ExprAST(AstType ast) :
     astType(ast)
 {}
