@@ -31,6 +31,8 @@
 #include "../src/lexer.h"
 #include "../src/ast.h"
 
+using Catch::Detail::Approx;
+
 TEST_CASE("Parser generate AST for float litteral") {
     SECTION("Parsing a float litteral expression generate a float litteral expression AST node") {
         std::stringstream in;                   // stream to parse by lexer
@@ -48,7 +50,7 @@ TEST_CASE("Parser generate AST for float litteral") {
         // TODO add test for the presence in the AST container object
         REQUIRE(floatLittAst != nullptr);
         REQUIRE(floatLittAst->getAstType() == AstType::FLOAT_LITTERAL);
-        REQUIRE(floatLittAst->getValue() == 1.0);
+        REQUIRE(floatLittAst->getValue() == Approx(1.0));
     }
 
     SECTION("Parser recognise float litteral expression as a top level expression") {
@@ -77,7 +79,7 @@ TEST_CASE("Parser generate AST for float litteral") {
         REQUIRE(anonFuncAst->getBody() != nullptr);
         REQUIRE(anonFuncAst->getBody()->getAstType() == AstType::FLOAT_LITTERAL);
         FloatLitteralExprAST* bodyAst = static_cast<FloatLitteralExprAST*>(anonFuncAst->getBody());
-        REQUIRE(bodyAst->getValue() == 1.0);
+        REQUIRE(bodyAst->getValue() == Approx(1.0));
     }
 }
 
@@ -101,7 +103,7 @@ TEST_CASE("Parser generate AST for litteral constant declaration") {
         REQUIRE(declarationAst->getRhsExpr() != nullptr);
         REQUIRE(declarationAst->getRhsExpr()->getAstType() == AstType::FLOAT_LITTERAL);
         FloatLitteralExprAST* rhsAst = static_cast<FloatLitteralExprAST*>(declarationAst->getRhsExpr());
-        CHECK(rhsAst->getValue() == 1.0);
+        CHECK(rhsAst->getValue() == Approx(1.0));
     }
 
     SECTION("Parser recognise litteral constant declaration as a top level expression") {
@@ -129,7 +131,7 @@ TEST_CASE("Parser generate AST for litteral constant declaration") {
         REQUIRE(bodyAst->getRhsExpr() != nullptr);
         REQUIRE(bodyAst->getRhsExpr()->getAstType() == AstType::FLOAT_LITTERAL);
         FloatLitteralExprAST* rhsAst = static_cast<FloatLitteralExprAST*>(bodyAst->getRhsExpr());
-        CHECK(rhsAst->getValue() == 1.0);
+        CHECK(rhsAst->getValue() == Approx(1.0));
     }
 
     //TODO test constant declaration with an expr as value

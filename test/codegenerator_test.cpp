@@ -31,6 +31,8 @@
 #include "../src/codegenerator.h"
 #include "../src/ast.h"
 
+using Catch::Detail::Approx;
+
 // TODO add test for code generation from an empty input
 TEST_CASE("Code generator produce code for float litteral expression from ast") {
     std::stringstream in;                           // stream to parse by lexer
@@ -89,7 +91,7 @@ TEST_CASE("Running code works for float litteral expression") {
 
     float result = -100.0;
     REQUIRE(code.run(result) == true);
-    REQUIRE(result == 1.0);
+    REQUIRE(result == Approx(1.0));
 }
 
 TEST_CASE("Running code works for float litteral constant declaration expression") {
@@ -110,6 +112,6 @@ TEST_CASE("Running code works for float litteral constant declaration expression
 
     float result = -100.0;
     REQUIRE(code.run(result) == true);
-    REQUIRE(result == 3.0);
+    REQUIRE(result == Approx(3.0));
 }
 // TODO add a test with usage of the created constant

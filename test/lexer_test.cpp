@@ -30,9 +30,7 @@
 
 #include "../src/lexer.h"
 
-// TODO replace this with Approx() from catch lib
-//maximum difference between 2 floats to be considered equal
-const float F_EPSILON = std::numeric_limits<float>::min() * 10.0;
+using Catch::Detail::Approx;
 
 TEST_CASE("TokenQueue can be pushed and poped", "[tokenQ]") {
     TokenQueue tokenQ;
@@ -262,7 +260,7 @@ TEST_CASE("Lexer can produce tokens depending on the input") {
         CHECK(out.at(3).getTokenType() == TokenType::TOK_LITTERAL_FLOAT);
         float val = 0.0;
         REQUIRE(out.at(3).getFloatValue(val));
-        CHECK(val == 1.0);
+        CHECK(val == Approx(1.0));
     }
 }
 
@@ -291,7 +289,7 @@ TEST_CASE("Lexer categorise float litteral") {
         CHECK(out.at(0).getTokenType() == TokenType::TOK_LITTERAL_FLOAT);
         float fVal;
         CHECK(out.at(0).getFloatValue(fVal));
-        CHECK(fVal == 1.0); // TODO replace this with Approx() from catch lib
+        CHECK(fVal == Approx(1.0));
     }
 
     // TODO make a loop here to have real deep tests with peticular values instead of random ones
@@ -305,7 +303,7 @@ TEST_CASE("Lexer categorise float litteral") {
         CHECK(out.at(0).getTokenType() == TokenType::TOK_LITTERAL_FLOAT);
         float fVal;
         CHECK(out.at(0).getFloatValue(fVal));
-        CHECK(abs(fVal - f) < F_EPSILON); // TODO replace this with Approx() from catch lib
+        CHECK(fVal == Approx(f));
     }
 }
 
@@ -419,9 +417,9 @@ TEST_CASE("Lexer skip one whitespace between tokens") {
 
     CHECK(out.at(0).getTokenType() == TokenType::TOK_LITTERAL_FLOAT);
     CHECK(out.at(0).getFloatValue(fVal));
-    CHECK(fVal == 1.0); // TODO replace this with Approx() from catch lib
+    CHECK(fVal == Approx(1.0));
 
     CHECK(out.at(1).getTokenType() == TokenType::TOK_LITTERAL_FLOAT);
     CHECK(out.at(1).getFloatValue(fVal));
-    CHECK(fVal == 2.0); // TODO replace this with Approx() from catch lib
+    CHECK(fVal == Approx(2.0));
 }
