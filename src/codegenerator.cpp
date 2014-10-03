@@ -94,7 +94,7 @@ bool Code::Error(const std::string msg) {
     return false;
 }
 
-NewCodeGenerator::NewCodeGenerator(AbstractSyntaxTree& theAst, Code& theCode) :
+CodeGenerator::CodeGenerator(AbstractSyntaxTree& theAst, Code& theCode) :
     ast(theAst),
     code(theCode),
     symbolTable(),
@@ -102,7 +102,7 @@ NewCodeGenerator::NewCodeGenerator(AbstractSyntaxTree& theAst, Code& theCode) :
     builder(llvm::getGlobalContext())
 {}
 
-bool NewCodeGenerator::init() {
+bool CodeGenerator::init() {
     // Make the module, which holds all the code
     llvm::InitializeNativeTarget();
     llvm::LLVMContext& context = llvm::getGlobalContext();
@@ -116,7 +116,7 @@ bool NewCodeGenerator::init() {
     return true;
 }
 
-bool NewCodeGenerator::codegen() {
+bool CodeGenerator::codegen() {
     if (not code.createJIT(module)) {
         return Error("Can't initialise code before generation.");
     }
@@ -130,19 +130,19 @@ bool NewCodeGenerator::codegen() {
     return true;
 }
 
-llvm::Module* NewCodeGenerator::getModule() const {
+llvm::Module* CodeGenerator::getModule() const {
     return module;
 }
 
-llvm::IRBuilder<>& NewCodeGenerator::getBuilder() {
+llvm::IRBuilder<>& CodeGenerator::getBuilder() {
     return builder;
 }
 
-std::map<std::string, llvm::Value*>& NewCodeGenerator::getSymbolTable() {
+std::map<std::string, llvm::Value*>& CodeGenerator::getSymbolTable() {
     return symbolTable;
 }
 
-bool NewCodeGenerator::Error(const std::string msg) {
+bool CodeGenerator::Error(const std::string msg) {
     std::cerr << "[CODE GENERATOR ERROR] " << msg << std::endl;
 
     return false;

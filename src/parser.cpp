@@ -44,7 +44,7 @@ std::nullptr_t ParserErrorUnexpectedToken(const char* const msg, const int actua
 }
 
 std::nullptr_t ParserErrorUnexpectedToken(const char* const msg, const Token& actualToken) {
-    std::cerr   << "[PARSE ERROR] " << msg << " " << actualToken << "\n";
+    std::cerr << "[PARSE ERROR] " << msg << " " << actualToken << "\n";
 
     return nullptr;
 }
@@ -59,7 +59,7 @@ std::nullptr_t ParserErrorUnexpectedToken(const char* const when, const int actu
 }
 
 std::nullptr_t ParserErrorUnexpectedToken(const char* const when, const Token& actualToken, const TokenType expectedTokenType) {
-    std::cerr   << "[PARSE ERROR] " << when << " but current token is " << actualToken << " instead of " << expectedTokenType << "\n";
+    std::cerr << "[PARSE ERROR] " << when << " but current token is " << actualToken << " instead of " << expectedTokenType << "\n";
 
     return nullptr;
 }
@@ -153,9 +153,8 @@ std::deque<ExprAST*>& AbstractSyntaxTree::getTopLevel() {
     return topLevel;
 }
 
-llvm::Value* AbstractSyntaxTree::codegen(NewCodeGenerator* codeGenerator) {
-    if (topLevel.empty())
-    {
+llvm::Value* AbstractSyntaxTree::codegen(CodeGenerator* codeGenerator) {
+    if (topLevel.empty()) {
         return Error("No top level AST node to generate code from.");
     }
 
@@ -164,8 +163,7 @@ llvm::Value* AbstractSyntaxTree::codegen(NewCodeGenerator* codeGenerator) {
     }
 
     llvm::Value* codeIR = topLevel.front()->codeGen(codeGenerator);
-    if (codeIR == nullptr)
-    {
+    if (codeIR == nullptr) {
         return Error("No code generated from top level AST node.");
     }
 

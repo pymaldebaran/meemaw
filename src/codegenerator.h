@@ -62,10 +62,10 @@ private:
     static bool Error(const std::string msg);
 };
 
-class NewCodeGenerator {
+class CodeGenerator {
 public:
     // Constructor
-    explicit NewCodeGenerator(AbstractSyntaxTree& theAst, Code& theCode);
+    explicit CodeGenerator(AbstractSyntaxTree& theAst, Code& theCode);
 
     // Initialise the LLVM internals needed to generate code
     //

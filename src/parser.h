@@ -43,7 +43,7 @@ class FloatConstantVariableDeclarationExprAST;
 class TokenQueue;
 enum class TokenType : unsigned int;
 class Token;
-class NewCodeGenerator;
+class CodeGenerator;
 
 
 // Simple error display helper for use in parse* methods
@@ -139,7 +139,7 @@ public:
     // Returns LLVM Intermediary Representation for the node if the generation
     //         succeed
     // Returns nullptr in all other case
-    llvm::Value* codegen(NewCodeGenerator* codeGenerator);
+    llvm::Value* codegen(CodeGenerator* codeGenerator);
 
 private:
     std::deque<ExprAST*> topLevel; // Container for all the top level AST nodes

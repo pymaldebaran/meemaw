@@ -70,7 +70,7 @@ const float FloatLitteralExprAST::getValue() const {
     return value;
 }
 
-llvm::Value* FloatLitteralExprAST::codeGen(NewCodeGenerator* codeGenerator) {
+llvm::Value* FloatLitteralExprAST::codeGen(CodeGenerator* codeGenerator) {
     return llvm::ConstantFP::get(llvm::getGlobalContext(), llvm::APFloat(value));;
 }
 
@@ -88,7 +88,7 @@ const std::vector<std::string> ProtoTypeAST::getArgs() const {
     return args;
 }
 
-llvm::Function* ProtoTypeAST::codeGen(NewCodeGenerator* codeGenerator) {
+llvm::Function* ProtoTypeAST::codeGen(CodeGenerator* codeGenerator) {
     // TODO remove this as soon as we support real function in the language
     if (name != "") {
         return CodeGenError("Generation of code of named function not yet supported : name=", name);
@@ -156,7 +156,7 @@ ExprAST* FunctionAST::getBody() const {
     return body;
 }
 
-llvm::Function* FunctionAST::codeGen(NewCodeGenerator* codeGenerator) {
+llvm::Function* FunctionAST::codeGen(CodeGenerator* codeGenerator) {
     // check if the function node is valid
     if (prototype == nullptr) {
         return CodeGenError("Function AST node without prototype.");
@@ -218,7 +218,7 @@ FloatLitteralExprAST* FloatConstantVariableDeclarationExprAST::getRhsExpr() cons
     return rhsExpr;
 }
 
-llvm::Value* FloatConstantVariableDeclarationExprAST::codeGen(NewCodeGenerator* codeGenerator) {
+llvm::Value* FloatConstantVariableDeclarationExprAST::codeGen(CodeGenerator* codeGenerator) {
     // Check the validity of the name
     if (name == "") {
         return CodeGenError("Float Constant has no name.");

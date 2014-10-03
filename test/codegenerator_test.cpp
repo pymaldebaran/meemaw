@@ -33,13 +33,13 @@
 
 // TODO add test for code generation from an empty input
 TEST_CASE("Code generator produce code for float litteral expression from ast") {
-    std::stringstream in;                               // stream to parse by lexer
-    TokenQueue tokens;                                  // token container
-    NewLexer lex = NewLexer(in, tokens);                // the lexer
-    AbstractSyntaxTree ast;                             // the Abstract Syntax Tree
-    NewParser parser = NewParser(tokens, ast);          // the parser
-    Code code;                                          // code to generate
-    NewCodeGenerator gen = NewCodeGenerator(ast, code); // the code generator
+    std::stringstream in;                           // stream to parse by lexer
+    TokenQueue tokens;                              // token container
+    NewLexer lex = NewLexer(in, tokens);            // the lexer
+    AbstractSyntaxTree ast;                         // the Abstract Syntax Tree
+    NewParser parser = NewParser(tokens, ast);      // the parser
+    Code code;                                      // code to generate
+    CodeGenerator gen = CodeGenerator(ast, code);   // the code generator
 
     in << "1.0";
 
@@ -52,13 +52,13 @@ TEST_CASE("Code generator produce code for float litteral expression from ast") 
 }
 
 TEST_CASE("Code generator produce code for float litteral constant declaration expression from ast") {
-    std::stringstream in;                               // stream to parse by lexer
-    TokenQueue tokens;                                  // token container
-    NewLexer lex = NewLexer(in, tokens);                // the lexer
-    AbstractSyntaxTree ast;                             // the Abstract Syntax Tree
-    NewParser parser = NewParser(tokens, ast);          // the parser
-    Code code;                                          // code to generate
-    NewCodeGenerator gen = NewCodeGenerator(ast, code); // the code generator
+    std::stringstream in;                           // stream to parse by lexer
+    TokenQueue tokens;                              // token container
+    NewLexer lex = NewLexer(in, tokens);            // the lexer
+    AbstractSyntaxTree ast;                         // the Abstract Syntax Tree
+    NewParser parser = NewParser(tokens, ast);      // the parser
+    Code code;                                      // code to generate
+    CodeGenerator gen = CodeGenerator(ast, code);   // the code generator
 
     in << "let aaa = 3.0";
 
@@ -72,13 +72,13 @@ TEST_CASE("Code generator produce code for float litteral constant declaration e
 
 // TODO add test for code running from an empty input
 TEST_CASE("Running code works for float litteral expression") {
-    std::stringstream in;                               // stream to parse by lexer
-    TokenQueue tokens;                                  // token container
-    NewLexer lex = NewLexer(in, tokens);                // the lexer
-    AbstractSyntaxTree ast;                             // the Abstract Syntax Tree
-    NewParser parser = NewParser(tokens, ast);          // the parser
-    Code code;                                          // code to generate and run
-    NewCodeGenerator gen = NewCodeGenerator(ast, code); // the code generator
+    std::stringstream in;                           // stream to parse by lexer
+    TokenQueue tokens;                              // token container
+    NewLexer lex = NewLexer(in, tokens);            // the lexer
+    AbstractSyntaxTree ast;                         // the Abstract Syntax Tree
+    NewParser parser = NewParser(tokens, ast);      // the parser
+    Code code;                                      // code to generate and run
+    CodeGenerator gen = CodeGenerator(ast, code);   // the code generator
 
     in << "1.0";
 
@@ -93,13 +93,13 @@ TEST_CASE("Running code works for float litteral expression") {
 }
 
 TEST_CASE("Running code works for float litteral constant declaration expression") {
-    std::stringstream in;                               // stream to parse by lexer
-    TokenQueue tokens;                                  // token container
-    NewLexer lex = NewLexer(in, tokens);                // the lexer
-    AbstractSyntaxTree ast;                             // the Abstract Syntax Tree
-    NewParser parser = NewParser(tokens, ast);          // the parser
-    Code code;                                          // code to generate and run
-    NewCodeGenerator gen = NewCodeGenerator(ast, code); // the code generator
+    std::stringstream in;                           // stream to parse by lexer
+    TokenQueue tokens;                              // token container
+    NewLexer lex = NewLexer(in, tokens);            // the lexer
+    AbstractSyntaxTree ast;                         // the Abstract Syntax Tree
+    NewParser parser = NewParser(tokens, ast);      // the parser
+    Code code;                                      // code to generate and run
+    CodeGenerator gen = CodeGenerator(ast, code);   // the code generator
 
     in << "let aaa = 3.0";
 
