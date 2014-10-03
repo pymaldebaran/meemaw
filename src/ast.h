@@ -31,10 +31,41 @@
 
 #include <cstddef>
 #include <vector>
+#include <deque>
 
 // Forward declarations
 class Lexer;
 class CodeGenerator;
+class ExprAST;
+
+// TODO manage memory used by all nodes (at the moment only the toplevel nodes
+//      are stored in a container)
+class AbstractSyntaxTree {
+public:
+    // Constructor
+    explicit AbstractSyntaxTree();
+
+    // Returns the container for all the top level AST nodes.
+    //
+    // It has a FIFO organisation : The first node, corresponding to the first
+    // expression, is stored at position 0 (front) and the last one,
+    // corresponding to the last expression, is stored at last position (back).
+    std::deque<ExprAST*>& getTopLevel();
+
+    // Generate code from the AST.
+    // Use a recursive call to AST node codeGen() method.
+    //
+    // Returns LLVM Intermediary Representation for the node if the generation
+    //         succeed
+    // Returns nullptr in all other case
+    llvm::Value* codegen(CodeGenerator* codeGenerator);
+
+private:
+    std::deque<ExprAST*> topLevel; // Container for all the top level AST nodes
+
+    // Error function helper : display the error message and returns nullptr.
+    static std::nullptr_t Error(const std::string msg);
+};
 
 // Specify ExprAST type without using RTTI.
 // This is only usefull for tesing purpose and should not be used in actual
@@ -46,6 +77,8 @@ enum class AstType {
     FUNCTION = 3,
     FLOAT_CONSTANT_VARIABLE_DECLARATION = 4,
 };
+
+// TODO rename all *AST classes in *ASTNode classes
 
 // Base class for all expression nodes.
 class ExprAST {
