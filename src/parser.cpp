@@ -192,7 +192,7 @@ unsigned int NewParser::parse() {
     return productedTopLevelNodes;
 }
 
-ExprAST* NewParser::parseTopLevelExpr() {
+FunctionAST* NewParser::parseTopLevelExpr() {
     // For the moment any primary expression is a top level expression
     ExprAST* primExpr = parsePrimaryExpr();
 
@@ -204,7 +204,7 @@ ExprAST* NewParser::parseTopLevelExpr() {
     ProtoTypeAST* proto = new ProtoTypeAST("", std::vector<std::string>());
 
     // Add the anonymous function to the AST
-    ExprAST* anonymousFunc = new FunctionAST(proto, primExpr);
+    FunctionAST* anonymousFunc = new FunctionAST(proto, primExpr);
     ast.getTopLevel().push_back(anonymousFunc);
 
     // return the anonymous function

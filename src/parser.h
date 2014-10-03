@@ -148,6 +148,8 @@ private:
     static std::nullptr_t Error(const std::string msg);
 };
 
+// Parser for the MeeMaw language.
+// Generate the Abstract Syntax Tree for each token parsed.
 class NewParser {
 public:
     // Constructor
@@ -171,11 +173,7 @@ public:
     // value of the expression.
     //
     // top ::= primaryexpr
-    ExprAST* parseTopLevelExpr();
-
-private:
-    TokenQueue& tokens;         // Container for the tokens to parse
-    AbstractSyntaxTree& ast;    // Container for the whole AST to produce
+    FunctionAST* parseTopLevelExpr();
 
     // Parse primary expression by selecting the correct parse* method according
     // according to the current token.
@@ -198,6 +196,10 @@ private:
     //
     // floatconstdeclexp ::= let identifier = floatlitexp
     FloatConstantVariableDeclarationExprAST* parseFloatConstantVariableDeclarationExpr();
+
+private:
+    TokenQueue& tokens;         // Container for the tokens to parse
+    AbstractSyntaxTree& ast;    // Container for the whole AST to produce
 };
 
 #endif // PARSER_H

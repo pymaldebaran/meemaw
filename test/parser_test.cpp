@@ -33,56 +33,66 @@
 
 TEST_CASE("Parser generate AST for float litteral") {
     SECTION("Parsing a float litteral expression generate a float litteral expression AST node") {
-        std::stringstream test;         // stream to parse by lexer
-        Lexer lex = Lexer(test);        // the lexer
-        Parser parser = Parser(lex);    // the parser
+        std::stringstream in;                       // stream to parse by lexer
+        TokenQueue tokens;                          // token container
+        NewLexer lex = NewLexer(in, tokens);        // the lexer
+        AbstractSyntaxTree ast;                     // the Abstract Syntax Tree
+        NewParser parser = NewParser(tokens, ast);  // the parser
 
-        test << "1.0";
+        in << "1.0";
 
-        lex.getNextToken();
-        FloatLitteralExprAST* ast = parser.parseFloatLitteralExpr();
+        lex.tokenize();
 
-        REQUIRE(ast != nullptr);
-        REQUIRE(ast->getAstType() == AstType::FLOAT_LITTERAL);
-        REQUIRE(ast->getValue() == 1.0);
+        FloatLitteralExprAST* floatLittAst = parser.parseFloatLitteralExpr();
+
+        // TODO add test for the presence in the AST container object
+        REQUIRE(floatLittAst != nullptr);
+        REQUIRE(floatLittAst->getAstType() == AstType::FLOAT_LITTERAL);
+        REQUIRE(floatLittAst->getValue() == 1.0);
     }
 
     SECTION("Parser recognise float litteral expression as a top level expression") {
-        std::stringstream test;         // stream to parse by lexer
-        Lexer lex = Lexer(test);        // the lexer
-        Parser parser = Parser(lex);    // the parser
+        std::stringstream in;                       // stream to parse by lexer
+        TokenQueue tokens;                          // token container
+        NewLexer lex = NewLexer(in, tokens);        // the lexer
+        AbstractSyntaxTree ast;                     // the Abstract Syntax Tree
+        NewParser parser = NewParser(tokens, ast);  // the parser
 
-        test << "1.0";
+        in << "1.0";
 
-        lex.getNextToken();
-        FunctionAST* ast = parser.parseTopLevelExpr();
+        lex.tokenize();
+
+        FunctionAST* anonFuncAst = parser.parseTopLevelExpr();
 
         // Do we have an float expression ?
         // i.e. an anonymous function returning a float
-        REQUIRE(ast != nullptr);
+        REQUIRE(anonFuncAst != nullptr);
 
-        REQUIRE(ast->getPrototype() != nullptr);
-        REQUIRE(ast->getPrototype()->getAstType() == AstType::PROTOTYPE);
-        ProtoTypeAST* protoAst = static_cast<ProtoTypeAST*>(ast->getPrototype());
+        REQUIRE(anonFuncAst->getPrototype() != nullptr);
+        REQUIRE(anonFuncAst->getPrototype()->getAstType() == AstType::PROTOTYPE);
+        ProtoTypeAST* protoAst = static_cast<ProtoTypeAST*>(anonFuncAst->getPrototype());
         REQUIRE(protoAst->getName() == "");
         REQUIRE(protoAst->getArgs().empty());
 
-        REQUIRE(ast->getBody() != nullptr);
-        REQUIRE(ast->getBody()->getAstType() == AstType::FLOAT_LITTERAL);
-        FloatLitteralExprAST* bodyAst = static_cast<FloatLitteralExprAST*>(ast->getBody());
+        REQUIRE(anonFuncAst->getBody() != nullptr);
+        REQUIRE(anonFuncAst->getBody()->getAstType() == AstType::FLOAT_LITTERAL);
+        FloatLitteralExprAST* bodyAst = static_cast<FloatLitteralExprAST*>(anonFuncAst->getBody());
         REQUIRE(bodyAst->getValue() == 1.0);
     }
 }
 
 TEST_CASE("Parser generate AST for litteral constant declaration") {
-    std::stringstream test;         // stream to parse by lexer
-    Lexer lex = Lexer(test);        // the lexer
-    Parser parser = Parser(lex);    // the parser
+    std::stringstream in;                       // stream to parse by lexer
+    TokenQueue tokens;                          // token container
+    NewLexer lex = NewLexer(in, tokens);        // the lexer
+    AbstractSyntaxTree ast;                     // the Abstract Syntax Tree
+    NewParser parser = NewParser(tokens, ast);  // the parser
 
-    test << "let aaa = 1.0";
+    in << "let aaa = 1.0";
+
+    lex.tokenize();
 
     SECTION("Parsing a litteral constant declaration generate a float expression AST node") {
-        lex.getNextToken();
         FloatConstantVariableDeclarationExprAST* declarationAst = parser.parseFloatConstantVariableDeclarationExpr();
 
         REQUIRE(declarationAst != nullptr);
@@ -95,15 +105,14 @@ TEST_CASE("Parser generate AST for litteral constant declaration") {
     }
 
     SECTION("Parser recognise litteral constant declaration as a top level expression") {
-        lex.getNextToken();
-        ExprAST* ast = parser.parseTopLevelExpr();
+        ExprAST* topLevelAst = parser.parseTopLevelExpr();
 
         // Do we have an float expression ?
         // i.e. an anonymous function returning a float
-        REQUIRE(ast != nullptr);
-        REQUIRE(ast->getAstType() == AstType::FUNCTION);
+        REQUIRE(topLevelAst != nullptr);
+        REQUIRE(topLevelAst->getAstType() == AstType::FUNCTION);
 
-        FunctionAST* funcAst = static_cast<FunctionAST*>(ast);
+        FunctionAST* funcAst = static_cast<FunctionAST*>(topLevelAst);
 
         REQUIRE(funcAst->getPrototype() != nullptr);
         REQUIRE(funcAst->getPrototype()->getAstType() == AstType::PROTOTYPE);
