@@ -30,62 +30,6 @@
 #include <map>
 #include <deque>
 
-// Lexer for the MeeMaw language
-class Lexer {
-public:
-    // The lexer returns tokens [0-255] if it is an unknown character, otherwise
-    // one of these for known things.
-    enum {
-        TOK_FLOAT = -1,
-        TOK_EOF   = -2,
-        TOK_KEYWORD_LET = -3,
-        TOK_IDENTIFIER = -4,
-        TOK_OPERATOR_AFFECTATION = -5,
-        TOK_LEXER_ERROR = -254,     // returned by lexer in case of error
-        TOK_NONE  = -255            // initial value of the currentToken attribute
-    };
-
-    // Store the names of the enums for easy printing
-    static const std::map<int, const char* const> TOKEN_NAMES;
-
-    // Constructor
-    explicit Lexer(std::istream& strm);
-
-    // floatValue getter
-    // Returns true if the current token is a float litteral and put its value
-    // in the result parameter.
-    // Returns false otherwise and the result parameter stay unmodified.
-    bool getFloatValue(float& result) const;
-
-    // identifierString getter
-    // Returns true if the current token is an identifier and put the identifier
-    // string in the result parameter.
-    // Returns false otherwise and the result parameter stay unmodified.
-    bool getIdentifierString(std::string& result) const;
-
-    // Reads another token from the lexer and updates CurTok with its results
-    int getNextToken();
-
-    // currentToken getter
-    int getCurrentToken();
-
-private:
-    std::istream& stream;           // input stream to parse
-    std::string identifierString;   // Filled in if currentToken == TOK_IDENTIFIER or TOK_KEYWORD_*
-    float floatValue;               // Filled in if currentToken == TOK_FLOAT
-    int currentToken;               // Current token i.e. the last returned by getNextToken()
-    int lastChar;                   // Store the last char read by gettok()
-
-    // Return the next token from standard input.
-    int gettok();
-
-    // Simple error display helper
-    static void PrintError(const char* const msg);
-
-    // Error display helper when handling with unexpected token
-    static void PrintUnexpectedTokenError(const char* const when, const int actualToken, const int expectedToken);
-};
-
 //TODO test the usage of TOK_LEXER_ERROR and TOK_NONE
 // The lexer returns tokens [0-255] if it is an unknown character, otherwise
 // one of these for known things.
@@ -94,8 +38,8 @@ enum class TokenType : unsigned int {
     TOK_KEYWORD_LET = 2,
     TOK_IDENTIFIER = 3,
     TOK_OPERATOR_AFFECTATION = 4,
-    TOK_LEXER_ERROR = 255,        // returned by lexer in case of error
-    TOK_NONE = 256,               // initial value of the currentToken attribute
+    TOK_LEXER_ERROR = 255,          // returned by lexer in case of error
+    TOK_NONE = 256,                 // initial value of the currentToken attribute
 };
 
 // TODO make this an enum class and remove all the int<->enum crap from the
@@ -201,6 +145,7 @@ private:
     std::deque<Token> tokens;   // where to put all the tokens generated when colling nextToken()
 };
 
+// Lexer for the MeeMaw language
 class NewLexer {
 public:
     // Constructor
