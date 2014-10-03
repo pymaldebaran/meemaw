@@ -35,6 +35,7 @@
 // Forward declarations
 class Lexer;
 class CodeGenerator;
+class NewCodeGenerator;
 
 // Specify ExprAST type without using RTTI.
 // This is only usefull for tesing purpose and should not be used in actual
@@ -81,7 +82,8 @@ public:
 
     // Generate LLVM Intermediary Representation for the node.
     // Call recursively codeGen() method on enclosing nodes if any.
-    virtual llvm::Value* codeGen(CodeGenerator* codeGenerator) = 0;
+    virtual llvm::Value* codeGen(CodeGenerator* codeGenerator) = 0; // TODO remove this old method ASAP
+    virtual llvm::Value* codeGen(NewCodeGenerator* codeGenerator) = 0;
 };
 
 class FloatLitteralExprAST : public ExprAST {
@@ -95,6 +97,7 @@ public:
     const float getValue() const;
 
     virtual llvm::Value* codeGen(CodeGenerator* codeGenerator);
+    virtual llvm::Value* codeGen(NewCodeGenerator* codeGenerator);
 };
 
 class ProtoTypeAST : public ExprAST {
@@ -112,6 +115,7 @@ public:
     const std::vector<std::string> getArgs() const;
 
     virtual llvm::Function* codeGen(CodeGenerator* codeGenerator);
+    virtual llvm::Function* codeGen(NewCodeGenerator* codeGenerator);
 };
 
 class FunctionAST : public ExprAST {
@@ -129,6 +133,7 @@ public:
     ExprAST* getBody() const;
 
     virtual llvm::Function* codeGen(CodeGenerator* codeGenerator);
+    virtual llvm::Function* codeGen(NewCodeGenerator* codeGenerator);
 };
 
 class FloatConstantVariableDeclarationExprAST : public ExprAST {
@@ -143,6 +148,7 @@ public:
     FloatLitteralExprAST* getRhsExpr() const;
 
     virtual llvm::Value* codeGen(CodeGenerator* codeGenerator);
+    virtual llvm::Value* codeGen(NewCodeGenerator* codeGenerator);
 
 private:
     const std::string name;         // Name of the constant

@@ -26,6 +26,8 @@
 #ifndef PARSER_H
 #define PARSER_H
 
+#include "llvm/IR/Value.h"
+
 #include <string>
 #include <vector>
 #include <deque>
@@ -41,6 +43,7 @@ class FloatConstantVariableDeclarationExprAST;
 class TokenQueue;
 enum class TokenType : unsigned int;
 class Token;
+class NewCodeGenerator;
 
 
 // Simple error display helper for use in parse* methods
@@ -130,8 +133,19 @@ public:
     // corresponding to the last expression, is stored at last position (back).
     std::deque<ExprAST*>& getTopLevel();
 
+    // Generate code from the AST.
+    // Use a recursive call to AST node codeGen() method.
+    //
+    // Returns LLVM Intermediary Representation for the node if the generation
+    //         succeed
+    // Returns nullptr in all other case
+    llvm::Value* codegen(NewCodeGenerator* codeGenerator);
+
 private:
     std::deque<ExprAST*> topLevel; // Container for all the top level AST nodes
+
+    // Error function helper : display the error message and returns nullptr.
+    static std::nullptr_t Error(const std::string msg);
 };
 
 class NewParser {

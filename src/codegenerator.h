@@ -29,6 +29,7 @@
 #include "llvm/IR/Module.h"
 #include "llvm/IR/Value.h"
 #include "llvm/IR/IRBuilder.h"
+#include "llvm/ExecutionEngine/ExecutionEngine.h"
 
 class ExprAST;
 class AbstractSyntaxTree;
@@ -59,10 +60,30 @@ public:
 
 class Code {
 public:
+    // Constructor
+    explicit Code();
+
+    // Set the codeIR
+    bool setCodeIR(llvm::Value* ir);
+
+    // Create a Just In Time engine to run the code
+    //
+    // Must be call only once and before any call to run() method.
+    bool createJIT(llvm::Module* module);
+
     // Run the code
     //
-    // Return the result of the last expression
-    float run();
+    // Returns true and the result of the last expression in the float reference
+    //        if code execution worked.
+    // Returns flase otherwise.
+    bool run(float& result);
+
+private:
+    llvm::Value* codeIR; // LLVM value to put the IR code after generation
+    llvm::ExecutionEngine* execEngineJIT; // LLVM JIT execution engine to execute the code
+
+    // Error function helper : display the error message and returns false.
+    static bool Error(const std::string msg);
 };
 
 class NewCodeGenerator {
@@ -70,12 +91,38 @@ public:
     // Constructor
     explicit NewCodeGenerator(AbstractSyntaxTree& theAst, Code& theCode);
 
+    // Initialise the LLVM internals needed to generate code
+    //
+    // Returns true if the initialisation when well
+    //         false elsewise.
+    bool init();
+
     // Generate code from the AST.
     // Use a recursive call to AST node codeGen() method.
     //
     // Returns true if the generation succeed
     //         false in al other case
     bool codegen();
+
+    // LLVM module getter
+    llvm::Module* getModule() const;
+
+    // LLVM IR builder getter
+    llvm::IRBuilder<>& getBuilder();
+
+    // symbol table getter
+    std::map<std::string, llvm::Value*>& getSymbolTable();
+
+private:
+    AbstractSyntaxTree& ast;                            // Abstract syntax tree to convert in code
+    Code& code;                                         // Code to produce from AST
+    std::map<std::string, llvm::Value*> symbolTable;    // Symbol table
+
+    llvm::Module* module;                               // Module used for code generation
+    llvm::IRBuilder<> builder;                          // Helper taht makes it easy to generate LLVM instructions
+
+    // Error function helper : display the error message and returns false.
+    bool Error(const std::string msg);
 };
 
 #endif // CODEGENERATOR_H

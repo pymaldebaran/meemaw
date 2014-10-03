@@ -153,6 +153,30 @@ std::deque<ExprAST*>& AbstractSyntaxTree::getTopLevel() {
     return topLevel;
 }
 
+llvm::Value* AbstractSyntaxTree::codegen(NewCodeGenerator* codeGenerator) {
+    if (topLevel.empty())
+    {
+        return Error("No top level AST node to generate code from.");
+    }
+
+    if (topLevel.size() > 1) {
+        return Error("Multiple top level AST node not yet supported.");
+    }
+
+    llvm::Value* codeIR = topLevel.front()->codeGen(codeGenerator);
+    if (codeIR == nullptr)
+    {
+        return Error("No code generated from top level AST node.");
+    }
+
+    return codeIR;
+}
+
+std::nullptr_t AbstractSyntaxTree::Error(const std::string msg) {
+    std::cerr << "[AST ERROR] " << msg << std::endl;
+
+    return nullptr;
+}
 
 NewParser::NewParser(TokenQueue& tokenQ, AbstractSyntaxTree& astree) :
     tokens(tokenQ),
